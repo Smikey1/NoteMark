@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.ui.theme
+package com.twugteam.admin.notemark.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
