@@ -1,6 +1,5 @@
-package com.twugteam.admin.notemark.ui.theme
+package com.twugteam.admin.notemark.presentation.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -53,6 +52,7 @@ fun NoteMarkTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+        shapes = RoundedShape,
         content = content
     )
 }

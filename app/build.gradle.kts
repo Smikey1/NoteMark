@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+
 }
 
 android {
@@ -66,18 +67,17 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //Adaptive Layout
+    implementation(libs.androidx.material3.window.size.class1)
 
     // Splashscreen & Widget
     implementation(libs.androidx.core.splashscreen)
-//    implementation(libs.bundles.widget.glance)
+    // implementation(libs.bundles.widget.glance)
 
     // Database - Room
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
-
-    // DI - Koin
-    implementation(libs.bundles.koin)
 
     // Navigation
     implementation(libs.androidx.compose.navigation)
@@ -88,5 +88,9 @@ dependencies {
 
     // Logging
     implementation(libs.timber)
+    
+    //collectAsStateWithLifecycle()
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
 
 }
