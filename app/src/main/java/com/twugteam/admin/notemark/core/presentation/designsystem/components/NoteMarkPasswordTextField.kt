@@ -47,7 +47,7 @@ fun NoteMarkPasswordTextField(
     isPasswordVisible: Boolean,
     hint: String,
     title: String,
-    startIcon: ImageVector?,
+    startIcon: ImageVector? = null,
     onTogglePasswordVisibilityClick: () -> Unit,
     modifier: Modifier = Modifier,
     error: String? = null,
@@ -81,7 +81,7 @@ fun NoteMarkPasswordTextField(
                 .clip(MaterialTheme.shapes.medium)
                 .background(
                     if (isFocused) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                        alpha = 0.2f
+                        alpha = 0.1f
                     )
                 )
                 .border(
@@ -138,7 +138,8 @@ fun NoteMarkPasswordTextField(
             Text(
                 text = additionalInfo,
                 color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 12.sp,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.W400,
                 modifier = Modifier
                     .padding(start = 12.dp)
             )
@@ -147,7 +148,8 @@ fun NoteMarkPasswordTextField(
             Text(
                 text = error,
                 color = MaterialTheme.colorScheme.error,
-                fontSize = 12.sp,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.W400,
                 modifier = Modifier
                     .padding(start = 12.dp)
             )

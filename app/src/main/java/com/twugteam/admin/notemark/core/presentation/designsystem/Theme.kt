@@ -64,7 +64,7 @@ fun NoteMarkTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = LightColorScheme,
         typography = Typography,
         shapes = RoundedShape,
         content = content

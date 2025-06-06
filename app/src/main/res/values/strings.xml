@@ -2,4 +2,20 @@
     <string name="app_name">NoteMark</string>
     <string name="show_password">Show Password</string>
     <string name="hide_password">Hide Password</string>
+    <string name="registration_successful">Registration Successful</string>
+    <string name="create_account">Create account</string>
+    <string name="capture_your_thoughts_and_ideas">Capture your thoughts and ideas.</string>
+    <string name="example_email">john.doe@example.com</string>
+    <string name="example_username">John.doe</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="repeat_password">Repeat Password</string>
+    <string name="username_info">Use between 3 and 20 characters for your username</string>
+    <string name="username_error">Username must be at least %d characters</string>
+    <string name="invalid_email">Invalid email provided</string>
+    <string name="password_do_not_match">Passwords do not match</string>
+    <string name="password_info">Use 8+ characters with a number or symbol for better security</string>
+    <string name="password_error">Password must be at least %d characters and include a number or symbol</string>
+    <string name="already_have_an_account">Already have an account?</string>
 </resources>

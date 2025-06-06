@@ -30,6 +30,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,10 +42,10 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 @Composable
 fun NoteMarkTextField(
     state: TextFieldState,
-    startIcon: ImageVector?,
-    endIcon: ImageVector?,
     hint: String,
     title: String,
+    startIcon: ImageVector? = null,
+    endIcon: ImageVector?=null,
     modifier: Modifier = Modifier,
     error: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -76,15 +77,15 @@ fun NoteMarkTextField(
                 .clip(MaterialTheme.shapes.medium)
                 .background(
                     if (isFocused) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                        alpha = 0.2f
+                        alpha = 0.1f
                     )
                 )
                 .border(
                     width = 1.dp,
                     color = if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent,
-                    shape = MaterialTheme.shapes.medium
+                    shape = MaterialTheme.shapes.small
                 )
-                .padding(16.dp)
+                .padding(vertical = 12.dp, horizontal = 16.dp)
                 .onFocusChanged {
                     isFocused = it.isFocused
                 },
@@ -126,20 +127,22 @@ fun NoteMarkTextField(
             }
         )
         if (isFocused && additionalInfo != null) {
-            Spacer(modifier= Modifier.height(7.dp))
+            Spacer(modifier = Modifier.height(7.dp))
             Text(
                 text = additionalInfo,
                 color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 12.sp,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.W400,
                 modifier = Modifier
                     .padding(start = 12.dp)
             )
-        } else if(isFocused && error != null){
-            Spacer(modifier= Modifier.height(7.dp))
+        } else if (isFocused && error != null) {
+            Spacer(modifier = Modifier.height(7.dp))
             Text(
                 text = error,
                 color = MaterialTheme.colorScheme.error,
-                fontSize = 12.sp,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.W400,
                 modifier = Modifier
                     .padding(start = 12.dp)
             )

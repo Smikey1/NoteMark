@@ -80,7 +80,7 @@ dependencies {
     implementation(libs.androidx.security.crypto.ktx)
 
     // Koin
-    implementation(libs.bundles.koin)
+    implementation(libs.bundles.koin.compose)
 
     //Adaptive Layout
     implementation(libs.androidx.material3.window.size.class1)
