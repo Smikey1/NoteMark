@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.presentation.theme
+package com.twugteam.admin.notemark.core.presentation.designsystem
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes

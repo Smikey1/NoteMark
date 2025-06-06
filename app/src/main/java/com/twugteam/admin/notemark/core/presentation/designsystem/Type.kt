@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.presentation.theme
+package com.twugteam.admin.notemark.core.presentation.designsystem
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.graphics.Color
@@ -15,7 +15,7 @@ private val medium = Font(resId = R.font.space_grotesk_medium, weight = FontWeig
 private val normal = Font(resId = R.font.space_grotesk_regular, weight = FontWeight.Normal)
 private val semiBold = Font(resId = R.font.space_grotesk_semibold, weight = FontWeight.SemiBold)
 
-private val noteMarkFontFamily = FontFamily(fonts = listOf(bold,light, normal, medium, semiBold))
+private val noteMarkFontFamily = FontFamily(fonts = listOf(bold, light, normal, medium, semiBold))
 
 val Typography = Typography(
     titleLarge = TextStyle(

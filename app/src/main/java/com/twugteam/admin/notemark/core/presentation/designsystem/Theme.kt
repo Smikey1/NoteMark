@@ -1,6 +1,7 @@
-package com.twugteam.admin.notemark.presentation.theme
+package com.twugteam.admin.notemark.core.presentation.designsystem
 
 import android.os.Build
+import android.provider.CalendarContract.Colors
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -8,6 +9,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
@@ -21,10 +23,17 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = Primary,
-    onPrimary = PrimaryOpacity10,
+    onPrimary = OnPrimary,
     secondary = PrimaryOpacity10,
     primaryContainer = OnPrimary,
     onPrimaryContainer = OnPrimaryOpacity12,
+    surface = Surface,
+    onSurface = OnSurface,
+    onSurfaceVariant = OnSurfaceVar,
+    background = Color.White,
+    onBackground = Color.Black,
+    error = Error,
+    errorContainer = Error5
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

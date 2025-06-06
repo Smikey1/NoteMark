@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.presentation.theme
+package com.twugteam.admin.notemark.core.presentation.designsystem
 
 import androidx.compose.ui.graphics.Color
 
@@ -21,3 +21,4 @@ val OnSurfaceVar = Color(0xFF535364)
 val Surface = Color(0xFFEFEFF2)
 val SurfaceLowest = Color(0xFFFFFFFF)
 val Error = Color(0xFFE1294B)
+val Error5 = Color(0x0DBB3D3D)
