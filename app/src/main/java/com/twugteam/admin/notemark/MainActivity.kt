@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
+import com.twugteam.admin.notemark.core.presentation.ui.ProvideDeviceInfo
 
 class MainActivity : ComponentActivity() {
     val mainViewModel: MainViewModel by lazy { MainViewModel() }
@@ -25,18 +26,20 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             NoteMarkTheme {
-                Scaffold { innerPadding ->
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                    ) {
-                        val navController = rememberNavController()
-                        if (!mainViewModel.state.isCheckingAuth) {
-                            NavigationRoot(
-                                isLoggedInPreviously = mainViewModel.state.isLoggedInPreviously,
-                                navController = navController
-                            )
+                ProvideDeviceInfo(this) {
+                    val navController = rememberNavController()
+                    Scaffold { innerPadding ->
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(innerPadding),
+                        ) {
+                            if (!mainViewModel.state.isCheckingAuth) {
+                                NavigationRoot(
+                                    isLoggedInPreviously = mainViewModel.state.isLoggedInPreviously,
+                                    navController = navController
+                                )
+                            }
                         }
                     }
                 }
