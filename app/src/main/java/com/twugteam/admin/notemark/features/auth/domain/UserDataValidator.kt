@@ -26,6 +26,8 @@ class UserDataValidator(
 
     fun isUsernameValid(username: String): Boolean = username.length >= MIN_USERNAME_LENGTH
 
-    fun isValidConfirmPassword(password: String, confirmPassword: String): Boolean =
-        password == confirmPassword
+    fun isValidConfirmPassword(password: String, confirmPassword: String): Boolean {
+        val bothPasswordFieldsAreNotEmpty = password.isNotEmpty() && confirmPassword.isNotEmpty()
+        return bothPasswordFieldsAreNotEmpty && password == confirmPassword
+    }
 }

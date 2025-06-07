@@ -27,25 +27,27 @@ val Typography = Typography(
     ),
     titleMedium = TextStyle(
         fontFamily = noteMarkFontFamily,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.W700,
         fontSize = 32.sp,
         lineHeight = 36.sp,
         color = Color.Black
     ),
     titleSmall = TextStyle(
         fontFamily = noteMarkFontFamily,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.W500,
         fontSize = 17.sp,
         lineHeight = 24.sp,
         color = Color.Black
     ),
+    //TODO: bodyLarge FontFamily is Inter
     bodyLarge = TextStyle(
         fontFamily = noteMarkFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.W400,
         fontSize = 17.sp,
         lineHeight = 24.sp,
         color = Color.Black
     ),
+    //TODO: bodyMedium FontFamily is Inter
     bodyMedium = TextStyle(
         fontFamily = noteMarkFontFamily,
         fontWeight = FontWeight.Medium,
@@ -53,9 +55,10 @@ val Typography = Typography(
         lineHeight = 20.sp,
         color = Color.Black
     ),
+    //TODO: bodySmall FontFamily is Inter
     bodySmall = TextStyle(
         fontFamily = noteMarkFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.W400,
         fontSize = 15.sp,
         lineHeight = 20.sp,
         color = Color.Black

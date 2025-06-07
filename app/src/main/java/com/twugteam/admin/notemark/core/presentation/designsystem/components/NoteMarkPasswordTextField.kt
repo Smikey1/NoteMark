@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
+import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 
 @Composable
 fun NoteMarkPasswordTextField(
@@ -61,8 +62,9 @@ fun NoteMarkPasswordTextField(
     ) {
         Text(
             text = title,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontWeight = FontWeight.W500
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            ),
         )
         Spacer(modifier = Modifier.height(7.dp))
         BasicSecureTextField(
@@ -78,16 +80,20 @@ fun NoteMarkPasswordTextField(
             ),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             modifier = Modifier
-                .clip(MaterialTheme.shapes.medium)
+                .clip(MaterialTheme.shapes.small)
                 .background(
-                    if (isFocused) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                        alpha = 0.1f
-                    )
+                    if (isFocused) SurfaceLowest else MaterialTheme.colorScheme.surface
                 )
                 .border(
                     width = 1.dp,
-                    color = if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent,
-                    shape = MaterialTheme.shapes.medium
+                    color = if (isFocused) {
+                        MaterialTheme.colorScheme.primary
+                    } else if (state.text.isNotEmpty() && error != null) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        Color.Transparent
+                    },
+                    shape = MaterialTheme.shapes.small
                 )
                 .padding(horizontal = 16.dp)
                 .onFocusChanged {
@@ -127,19 +133,18 @@ fun NoteMarkPasswordTextField(
                                 id = R.string.hide_password
                             ),
                             tint = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.padding(end = 8.dp)
                         )
                     }
                 }
             }
         )
-        if (isFocused && additionalInfo != null) {
+        if (isFocused && state.text.isEmpty() && additionalInfo != null) {
             Spacer(modifier = Modifier.height(7.dp))
             Text(
                 text = additionalInfo,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.W400,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
                 modifier = Modifier
                     .padding(start = 12.dp)
             )
@@ -147,11 +152,11 @@ fun NoteMarkPasswordTextField(
             Spacer(modifier = Modifier.height(7.dp))
             Text(
                 text = error,
-                color = MaterialTheme.colorScheme.error,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.W400,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.error,
+                ),
                 modifier = Modifier
-                    .padding(start = 12.dp)
+                    .padding(start = 12.dp),
             )
         }
     }

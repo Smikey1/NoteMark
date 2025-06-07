@@ -30,14 +30,14 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
+import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 
 @Composable
 fun NoteMarkTextField(
@@ -45,7 +45,7 @@ fun NoteMarkTextField(
     hint: String,
     title: String,
     startIcon: ImageVector? = null,
-    endIcon: ImageVector?=null,
+    endIcon: ImageVector? = null,
     modifier: Modifier = Modifier,
     error: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -59,8 +59,9 @@ fun NoteMarkTextField(
     ) {
         Text(
             text = title,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontWeight = FontWeight.W500
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            ),
         )
         Spacer(modifier = Modifier.height(7.dp))
         BasicTextField(
@@ -69,20 +70,25 @@ fun NoteMarkTextField(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             ),
             keyboardOptions = KeyboardOptions(
-                keyboardType = keyboardType
+                keyboardType = keyboardType,
+                imeAction = ImeAction.Default
             ),
             lineLimits = TextFieldLineLimits.SingleLine,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             modifier = Modifier
-                .clip(MaterialTheme.shapes.medium)
+                .clip(MaterialTheme.shapes.small)
                 .background(
-                    if (isFocused) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                        alpha = 0.1f
-                    )
+                    if (isFocused) SurfaceLowest else MaterialTheme.colorScheme.surface
                 )
                 .border(
                     width = 1.dp,
-                    color = if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent,
+                    color = if (isFocused) {
+                        MaterialTheme.colorScheme.primary
+                    } else if (state.text.isNotEmpty() && error != null) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        Color.Transparent
+                    },
                     shape = MaterialTheme.shapes.small
                 )
                 .padding(vertical = 12.dp, horizontal = 16.dp)
@@ -126,25 +132,25 @@ fun NoteMarkTextField(
                 }
             }
         )
-        if (isFocused && additionalInfo != null) {
+        if (isFocused && state.text.isEmpty() && additionalInfo != null) {
             Spacer(modifier = Modifier.height(7.dp))
             Text(
                 text = additionalInfo,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.W400,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
                 modifier = Modifier
                     .padding(start = 12.dp)
             )
-        } else if (isFocused && error != null) {
+        } else if (!state.text.isEmpty() && error != null) {
             Spacer(modifier = Modifier.height(7.dp))
             Text(
                 text = error,
-                color = MaterialTheme.colorScheme.error,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.W400,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.error,
+                ),
                 modifier = Modifier
-                    .padding(start = 12.dp)
+                    .padding(start = 12.dp),
             )
         }
     }

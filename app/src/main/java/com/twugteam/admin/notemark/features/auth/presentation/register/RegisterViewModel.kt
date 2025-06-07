@@ -8,10 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twugteam.admin.notemark.features.auth.domain.UserDataValidator
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 class RegisterViewModel(
     val userDataValidator: UserDataValidator
@@ -38,7 +40,8 @@ class RegisterViewModel(
                     isUserNameValid = isUsernameValid,
                     canRegister = isUsernameValid && canRegister
                 )
-            }
+            }.launchIn(viewModelScope)
+
             email.onEach { emailChar ->
                 val isEmailValid = userDataValidator.isValidEmail(emailChar.toString())
                 val isBothPasswordValid =
@@ -50,6 +53,7 @@ class RegisterViewModel(
                     canRegister = isEmailValid && canRegister
                 )
             }.launchIn(viewModelScope)
+
             password.onEach { passwordChar ->
                 val passwordValidationState =
                     userDataValidator.validatePassword(passwordChar.toString())
@@ -60,6 +64,7 @@ class RegisterViewModel(
                     canRegister = passwordValidationState.isPasswordValid && canRegister
                 )
             }.launchIn(viewModelScope)
+
             confirmPassword.onEach { confirmPasswordChar ->
                 val isConfirmPasswordValid = userDataValidator.isValidConfirmPassword(
                     state.password.text.toString(),
@@ -76,6 +81,7 @@ class RegisterViewModel(
             }.launchIn(viewModelScope)
         }
     }
+
 
     fun onAction(action: RegisterAction) {
         when (action) {
@@ -96,6 +102,7 @@ class RegisterViewModel(
         viewModelScope.launch {
             state = state.copy(isRegistering = true)
             //TODO: Register Api call
+            delay(2.seconds)
             state = state.copy(isRegistering = false)
         }
     }

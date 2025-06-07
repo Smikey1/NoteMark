@@ -2,7 +2,6 @@ package com.twugteam.admin.notemark.features.auth.presentation.register
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,17 +20,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
+import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkActionButton
+import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkNoOutlineActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkPasswordTextField
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkTextField
 import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
@@ -105,15 +103,14 @@ private fun RegisterScreen(
             ) {
                 Text(
                     text = stringResource(R.string.create_account),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.SemiBold
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = stringResource(R.string.capture_your_thoughts_and_ideas),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.W400
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 )
                 Spacer(modifier = Modifier.height(40.dp))
                 NoteMarkTextField(
@@ -121,10 +118,10 @@ private fun RegisterScreen(
                     hint = stringResource(R.string.example_username),
                     title = stringResource(R.string.username),
                     additionalInfo = stringResource(R.string.username_info),
-                    error = stringResource(
+                    error = if (!state.isUserNameValid) stringResource(
                         R.string.username_error,
                         UserDataValidator.MIN_USERNAME_LENGTH
-                    ),
+                    ) else null,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardType = KeyboardType.Text
                 )
@@ -133,7 +130,7 @@ private fun RegisterScreen(
                     state = state.email,
                     hint = stringResource(R.string.example_email),
                     title = stringResource(R.string.email),
-                    error = stringResource(R.string.invalid_email),
+                    error = if (!state.isEmailValid) stringResource(R.string.invalid_email) else null,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardType = KeyboardType.Email
                 )
@@ -143,10 +140,10 @@ private fun RegisterScreen(
                     hint = stringResource(R.string.password),
                     title = stringResource(R.string.password),
                     additionalInfo = stringResource(R.string.password_info),
-                    error = stringResource(
+                    error = if (!state.passwordValidationState.isPasswordValid) stringResource(
                         R.string.password_error,
                         UserDataValidator.MIN_PASSWORD_LENGTH
-                    ),
+                    ) else null,
                     modifier = Modifier.fillMaxWidth(),
                     isPasswordVisible = state.isPasswordVisible,
                     onTogglePasswordVisibilityClick = {
@@ -158,28 +155,31 @@ private fun RegisterScreen(
                     state = state.confirmPassword,
                     hint = stringResource(R.string.password),
                     title = stringResource(R.string.repeat_password),
-                    error = stringResource(R.string.password_do_not_match),
+                    error = if (!state.isConfirmPasswordValid) stringResource(R.string.password_do_not_match) else null,
                     modifier = Modifier.fillMaxWidth(),
                     isPasswordVisible = state.isConfirmPasswordVisible,
                     onTogglePasswordVisibilityClick = {
                         onAction(RegisterAction.OnToggleConfirmPasswordVisibilityClick)
                     }
                 )
-                Spacer(
-                    modifier = Modifier.height(16.dp)
+                Spacer(modifier = Modifier.height(24.dp))
+                NoteMarkActionButton(
+                    text = stringResource(R.string.create_account),
+                    enabled = state.canRegister,
+                    isLoading = state.isRegistering,
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        onAction(RegisterAction.OnRegisterClick)
+                    }
                 )
-                Text(
+                Spacer(modifier = Modifier.height(12.dp))
+                NoteMarkNoOutlineActionButton(
                     text = stringResource(R.string.already_have_an_account),
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onTap = {
-                                    onAction(RegisterAction.OnAlreadyHaveAnAccountClick)
-                                }
-                            )
-                        }
-                        .align(Alignment.CenterHorizontally)
+                    isLoading = false,
+                    enabled = true,
+                    onClick = {
+                        onAction(RegisterAction.OnAlreadyHaveAnAccountClick)
+                    }
                 )
             }
         }
