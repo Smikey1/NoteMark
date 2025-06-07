@@ -18,8 +18,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        installSplashScreen().setKeepOnScreenCondition {
-            mainViewModel.state.isCheckingAuth
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                mainViewModel.state.isCheckingAuth
+            }
         }
         setContent {
             NoteMarkTheme {
