@@ -1,6 +1,7 @@
 package com.twugteam.admin.notemark
 
 import android.app.Application
+import com.twugteam.admin.notemark.core.di.coreModule
 import com.twugteam.admin.notemark.features.auth.di.authModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -24,6 +25,7 @@ class NoteMarkApp : Application() {
             modules(
                 appModule,
                 authModule,
+                coreModule
             )
         }
     }

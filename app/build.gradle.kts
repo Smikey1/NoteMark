@@ -1,3 +1,7 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,7 +9,7 @@ plugins {
 
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-//    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.serialization)
 
 }
 
@@ -23,7 +27,21 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(FileInputStream(localPropertiesFile))
+    }
+
     buildTypes {
+        debug {
+            buildConfigField("String","NOTEMARK_API_BASE_URL","\"${localProperties.getProperty("NOTEMARK_API_BASE_URL")}\"")
+            buildConfigField("String","REGISTER_ENDPOINT","\"${localProperties.getProperty("REGISTER_ENDPOINT")}\"")
+            buildConfigField("String","LOGIN_ENDPOINT","\"${localProperties.getProperty("LOGIN_ENDPOINT")}\"")
+            buildConfigField("String","REFRESH_TOKEN_ENDPOINT","\"${localProperties.getProperty("REFRESH_TOKEN_ENDPOINT")}\"")
+            buildConfigField("String","EMAIL","\"${localProperties.getProperty("EMAIL")}\"")
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -48,6 +66,7 @@ android {
         schemaDirectory("$projectDir/schemas")
     }
 }
+
 
 dependencies {
 
@@ -102,5 +121,7 @@ dependencies {
     // Logging
     implementation(libs.timber)
 
+    // ktor
+    implementation(libs.bundles.ktor)
 
 }
