@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
                         Surface(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(innerPadding),
+                                .padding(bottom = innerPadding.calculateBottomPadding()),
                         ) {
                             if (!mainViewModel.state.isCheckingAuth) {
                                 NavigationRoot(
