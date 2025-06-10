@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -32,7 +33,6 @@ fun NoteMarkActionButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = false,
     onClick: () -> Unit,
-
     ) {
     Button(
         onClick = onClick,
@@ -84,11 +84,12 @@ fun NoteMarkOutlineActionButton(
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = MaterialTheme.colorScheme.onPrimary
+            contentColor = MaterialTheme.colorScheme.primary,
+
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.background
+            color = MaterialTheme.colorScheme.primary
         ),
         shape = MaterialTheme.shapes.small,
         modifier = modifier.height(IntrinsicSize.Min)
@@ -111,7 +112,7 @@ fun NoteMarkOutlineActionButton(
                 modifier = Modifier
                     .alpha(if (isLoading) 0f else 1f),
                 style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primary,
+                    color = LocalContentColor.current,
                 ),
             )
         }

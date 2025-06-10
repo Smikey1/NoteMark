@@ -18,4 +18,9 @@
     <string name="password_info">Use 8+ characters with a number or symbol for better security</string>
     <string name="password_error">Password must be at least %d characters and include a number or symbol</string>
     <string name="already_have_an_account">Already have an account?</string>
+    <string name="your_own_collection_of_notes">Your Own Collection of Notes</string>
+    <string name="get_started">Get Started</string>
+    <string name="login">Log In</string>
+    <string name="landing_screen">Landing Screen</string>
+
 </resources>

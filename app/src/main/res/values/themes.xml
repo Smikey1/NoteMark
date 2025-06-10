@@ -2,5 +2,7 @@
 <resources>
     <style name="Theme.NoteMark" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:fitsSystemWindows">false</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 </resources>
