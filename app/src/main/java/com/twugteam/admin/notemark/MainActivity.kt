@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
@@ -16,6 +18,7 @@ import com.twugteam.admin.notemark.core.presentation.ui.ProvideDeviceInfo
 
 class MainActivity : ComponentActivity() {
     val mainViewModel: MainViewModel by lazy { MainViewModel() }
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,11 +34,12 @@ class MainActivity : ComponentActivity() {
                     Scaffold { innerPadding ->
                         Surface(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(bottom = innerPadding.calculateBottomPadding()),
+                                .fillMaxSize(),
                         ) {
+                            val windowSize = calculateWindowSizeClass(this)
                             if (!mainViewModel.state.isCheckingAuth) {
                                 NavigationRoot(
+                                    windowSize = windowSize.widthSizeClass,
                                     isLoggedInPreviously = mainViewModel.state.isLoggedInPreviously,
                                     navController = navController
                                 )
