@@ -1,6 +1,7 @@
 package com.twugteam.admin.notemark.features.auth.presentation.register
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -39,7 +41,7 @@ fun RegisterScreenTablet(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary),
+            .background(MaterialTheme.colorScheme.primary)
     ) {
         Surface(
             modifier = Modifier
@@ -53,98 +55,110 @@ fun RegisterScreenTablet(
         ) {
             Column(
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-                    .padding(vertical = 32.dp)
-                    .padding(bottom = 16.dp),
+                    .padding(top = 100.dp)
+                    .padding(horizontal = 120.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = stringResource(R.string.create_account),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = stringResource(R.string.capture_your_thoughts_and_ideas),
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.create_account),
+                        style = MaterialTheme.typography.titleMedium
                     )
-                )
-                Spacer(modifier = Modifier.height(40.dp))
-                NoteMarkTextField(
-                    state = state.username,
-                    hint = stringResource(R.string.example_username),
-                    title = stringResource(R.string.username),
-                    additionalInfo = stringResource(R.string.username_info),
-                    error = if (!state.isUserNameValid) stringResource(
-                        R.string.username_error,
-                        UserDataValidator.MIN_USERNAME_LENGTH
-                    ) else null,
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardType = KeyboardType.Text
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                NoteMarkTextField(
-                    state = state.email,
-                    hint = stringResource(R.string.example_email),
-                    title = stringResource(R.string.email),
-                    error = if (!state.isEmailValid) stringResource(R.string.invalid_email) else null,
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardType = KeyboardType.Email
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                NoteMarkPasswordTextField(
-                    state = state.password,
-                    hint = stringResource(R.string.password),
-                    title = stringResource(R.string.password),
-                    additionalInfo = stringResource(R.string.password_info),
-                    error = if (!state.passwordValidationState.isPasswordValid) stringResource(
-                        R.string.password_error,
-                        UserDataValidator.MIN_PASSWORD_LENGTH
-                    ) else null,
-                    modifier = Modifier.fillMaxWidth(),
-                    isPasswordVisible = state.isPasswordVisible,
-                    onTogglePasswordVisibilityClick = {
-                        onAction(RegisterAction.OnTogglePasswordVisibilityClick)
-                    }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                NoteMarkPasswordTextField(
-                    state = state.confirmPassword,
-                    hint = stringResource(R.string.password),
-                    title = stringResource(R.string.repeat_password),
-                    error = if (!state.isConfirmPasswordValid) stringResource(R.string.password_do_not_match) else null,
-                    modifier = Modifier.fillMaxWidth(),
-                    isPasswordVisible = state.isConfirmPasswordVisible,
-                    onTogglePasswordVisibilityClick = {
-                        onAction(RegisterAction.OnToggleConfirmPasswordVisibilityClick)
-                    }
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                NoteMarkActionButton(
-                    text = stringResource(R.string.create_account),
-                    enabled = state.canRegister,
-                    isLoading = state.isRegistering,
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        onAction(RegisterAction.OnRegisterClick)
-                    }
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                NoteMarkNoOutlineActionButton(
-                    text = stringResource(R.string.already_have_an_account),
-                    isLoading = false,
-                    enabled = true,
-                    onClick = {
-                        onAction(RegisterAction.OnAlreadyHaveAnAccountClick)
-                    }
-                )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = stringResource(R.string.capture_your_thoughts_and_ideas),
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.height(32.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    NoteMarkTextField(
+                        state = state.username,
+                        hint = stringResource(R.string.example_username),
+                        title = stringResource(R.string.username),
+                        additionalInfo = stringResource(R.string.username_info),
+                        error = if (!state.isUserNameValid) stringResource(
+                            R.string.username_error,
+                            UserDataValidator.MIN_USERNAME_LENGTH
+                        ) else null,
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardType = KeyboardType.Text
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    NoteMarkTextField(
+                        state = state.email,
+                        hint = stringResource(R.string.example_email),
+                        title = stringResource(R.string.email),
+                        error = if (!state.isEmailValid) stringResource(R.string.invalid_email) else null,
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardType = KeyboardType.Email
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    NoteMarkPasswordTextField(
+                        state = state.password,
+                        hint = stringResource(R.string.password),
+                        title = stringResource(R.string.password),
+                        additionalInfo = stringResource(R.string.password_info),
+                        error = if (!state.passwordValidationState.isPasswordValid) stringResource(
+                            R.string.password_error,
+                            UserDataValidator.MIN_PASSWORD_LENGTH
+                        ) else null,
+                        modifier = Modifier.fillMaxWidth(),
+                        isPasswordVisible = state.isPasswordVisible,
+                        onTogglePasswordVisibilityClick = {
+                            onAction(RegisterAction.OnTogglePasswordVisibilityClick)
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    NoteMarkPasswordTextField(
+                        state = state.confirmPassword,
+                        hint = stringResource(R.string.password),
+                        title = stringResource(R.string.repeat_password),
+                        error = if (!state.isConfirmPasswordValid) stringResource(R.string.password_do_not_match) else null,
+                        modifier = Modifier.fillMaxWidth(),
+                        isPasswordVisible = state.isConfirmPasswordVisible,
+                        onTogglePasswordVisibilityClick = {
+                            onAction(RegisterAction.OnToggleConfirmPasswordVisibilityClick)
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    NoteMarkActionButton(
+                        text = stringResource(R.string.create_account),
+                        enabled = state.canRegister,
+                        isLoading = state.isRegistering,
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            onAction(RegisterAction.OnRegisterClick)
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    NoteMarkNoOutlineActionButton(
+                        text = stringResource(R.string.already_have_an_account),
+                        isLoading = false,
+                        enabled = true,
+                        onClick = {
+                            onAction(RegisterAction.OnAlreadyHaveAnAccountClick)
+                        }
+                    )
+                }
             }
         }
     }
 }
 
-@Preview
+@Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable
 private fun RegisterScreenTabletPreview() {
     NoteMarkTheme {
