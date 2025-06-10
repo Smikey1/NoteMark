@@ -16,6 +16,7 @@ fun LandingScreen(
     when (windowSize) {
         //MOBILE PORTRAIT
         WindowWidthSizeClass.Compact -> {
+            Timber.tag("MyTag").d("Compact")
             LandingScreenMobilePortrait(
                 modifier = modifier,
                 onActions = onActions
@@ -33,6 +34,7 @@ fun LandingScreen(
 
         //LANDSCAPE
         WindowWidthSizeClass.Expanded -> {
+            Timber.tag("MyTag").d("Expanded")
             LandingScreenLandscape(
                 modifier = modifier.background(color = LandingBackground),
                 onActions = onActions
