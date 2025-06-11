@@ -1,11 +1,9 @@
 package com.twugteam.admin.notemark.features.auth.presentation.landing
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,7 +19,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.R
-import com.twugteam.admin.notemark.core.presentation.designsystem.LandingBackground
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkOutlineActionButton
@@ -49,8 +46,7 @@ fun LandingScreenLandscapeComponent(
     onClickLogIn: () -> Unit,
 ) {
     Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        modifier = modifier
     ) {
         Image(
             modifier = Modifier.weight(1f).padding(start = 19.dp, end = 15.dp),
@@ -110,9 +106,9 @@ fun LandingLandscapeBottomComponent(
 
             NoteMarkActionButton(
                 text = stringResource(R.string.get_started),
-                isLoading = false,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = true,
+                isLoading = false,
                 onClick = onClickGetStarted
             )
 
@@ -121,9 +117,9 @@ fun LandingLandscapeBottomComponent(
 
             NoteMarkOutlineActionButton(
                 text = stringResource(R.string.login),
-                isLoading = false,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = true,
+                isLoading = false,
                 onClick = onClickLogIn
             )
         }

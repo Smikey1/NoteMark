@@ -1,45 +1,25 @@
-package com.twugteam.admin.notemark
+package com.twugteam.admin.notemark.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingEvents
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreen
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreenViewModel
-import com.twugteam.admin.notemark.features.auth.presentation.login.LogInViewModel
-import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterScreenRoot
-import kotlinx.serialization.Serializable
-import org.koin.androidx.compose.koinViewModel
-import androidx.compose.runtime.getValue
 import com.twugteam.admin.notemark.features.auth.presentation.login.LogInEvents
 import com.twugteam.admin.notemark.features.auth.presentation.login.LogInScreen
+import com.twugteam.admin.notemark.features.auth.presentation.login.LogInViewModel
+import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterScreenRoot
+import org.koin.androidx.compose.koinViewModel
 
-@Composable
-fun NavigationRoot(
-    modifier: Modifier = Modifier,
-    windowSize: WindowWidthSizeClass,
-    isLoggedInPreviously: Boolean,
-    navController: NavHostController
-) {
-    NavHost(
-        modifier = Modifier,
-        navController = navController,
-        startDestination = if (isLoggedInPreviously) Screens.NoteMark else Screens.AuthGraph
-    ) {
-        authGraph(modifier = modifier, navController = navController, windowSize = windowSize)
-    }
-}
-
-private fun NavGraphBuilder.authGraph(
+fun NavGraphBuilder.authGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController, windowSize: WindowWidthSizeClass
 ) {
@@ -84,43 +64,16 @@ private fun NavGraphBuilder.authGraph(
         composable<Screens.Register> {
             RegisterScreenRoot(
                 onSuccessfulRegistration = {
-                    navController.navigate("login") {
-                        popUpTo(route = "register") {
+                    navController.navigate(Screens.LogIn) {
+                        popUpTo(Screens.Register) {
                             inclusive = true
-                            saveState = true
                         }
-                        restoreState = true
-                        // restoreState for login screen, if with mistakenly navigate
                     }
                 },
                 onAlreadyHaveAnAccountClick = {
-                    navController.navigate("login")
+                    navController.navigate(Screens.LogIn)
                 }
             )
         }
     }
 }
-
-@Serializable
-sealed interface Screens {
-
-    //auth navGraph
-    @Serializable
-    data object AuthGraph : Screens
-
-    //auth screens
-    @Serializable
-    data object Landing : Screens
-
-    @Serializable
-    data object LogIn : Screens
-
-    @Serializable
-    data object Register : Screens
-
-    //noteMark navGraph
-    @Serializable
-    data object NoteMark : Screens
-
-}
-
