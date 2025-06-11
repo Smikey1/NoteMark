@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
+import com.twugteam.admin.notemark.core.presentation.designsystem.OnSurface
 import com.twugteam.admin.notemark.core.presentation.designsystem.OnSurfaceOpacity12
 
 @Composable
@@ -40,8 +41,9 @@ fun NoteMarkActionButton(
         colors = ButtonDefaults.buttonColors(
             contentColor = MaterialTheme.colorScheme.onPrimary,
             containerColor = MaterialTheme.colorScheme.primary,
-            disabledContentColor = MaterialTheme.colorScheme.onSurface,
-            disabledContainerColor = OnSurfaceOpacity12
+            disabledContentColor = OnSurface.copy(alpha = 0.5f),
+            disabledContainerColor = OnSurfaceOpacity12,
+
         ),
         shape = MaterialTheme.shapes.small,
         modifier = modifier.height(IntrinsicSize.Min)
@@ -64,7 +66,7 @@ fun NoteMarkActionButton(
                 modifier = Modifier
                     .alpha(if (isLoading) 0f else 1f),
                 style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = Color.Unspecified,
                 ),
             )
         }
@@ -126,13 +128,13 @@ fun NoteMarkNoOutlineActionButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = false,
     onClick: () -> Unit,
-
     ) {
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = MaterialTheme.colorScheme.onPrimary
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+
         ),
         border = BorderStroke(width = 0.dp, color = Color.Transparent),
         shape = MaterialTheme.shapes.small,

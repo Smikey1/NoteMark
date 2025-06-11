@@ -6,18 +6,36 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.twugteam.admin.notemark.core.presentation.ui.UiText
 import com.twugteam.admin.notemark.features.auth.domain.UserDataValidator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
+sealed interface RegisterAction {
+    data object OnTogglePasswordVisibilityClick : RegisterAction
+    data object OnToggleConfirmPasswordVisibilityClick : RegisterAction
+    data object OnRegisterClick : RegisterAction
+    data object OnAlreadyHaveAnAccountClick : RegisterAction
+}
+
+sealed interface RegisterEvent {
+    data class Error(val error: UiText) : RegisterEvent
+    data object RegistrationSuccess : RegisterEvent
+}
+
 class RegisterViewModel(
     val userDataValidator: UserDataValidator
 ) : ViewModel() {
+    private val _registerState: MutableStateFlow<RegisterState> = MutableStateFlow(RegisterState())
+    val registerState = _registerState.asStateFlow()
+
     var state by mutableStateOf(RegisterState())
         private set
 

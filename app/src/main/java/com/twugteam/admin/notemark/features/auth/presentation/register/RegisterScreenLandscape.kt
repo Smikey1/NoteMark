@@ -1,10 +1,9 @@
 package com.twugteam.admin.notemark.features.auth.presentation.register
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,22 +19,21 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.components.Not
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkTextField
 import com.twugteam.admin.notemark.features.auth.domain.UserDataValidator
 
-
 @Composable
-fun RegisterScreenPortrait(
+fun RegisterScreenLandscape(
     modifier: Modifier = Modifier,
     state: RegisterState,
     onAction: (RegisterAction) -> Unit
 ) {
     NoteMarkSharedScreen(
         modifier = modifier,
-        portraitModifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-            .padding(vertical = 32.dp),
         title = R.string.create_account,
         description = R.string.capture_your_thoughts_and_ideas,
-        content = {
+        isPortrait = false
+    ) { contentModifier ->
+        Column(
+            modifier = contentModifier
+        ) {
             NoteMarkTextField(
                 state = state.username,
                 hint = stringResource(R.string.example_username),
@@ -89,6 +87,7 @@ fun RegisterScreenPortrait(
             NoteMarkActionButton(
                 text = stringResource(R.string.create_account),
                 enabled = state.canRegister,
+
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     onAction(RegisterAction.OnRegisterClick)
@@ -97,20 +96,21 @@ fun RegisterScreenPortrait(
             Spacer(modifier = Modifier.height(12.dp))
             NoteMarkNoOutlineActionButton(
                 text = stringResource(R.string.already_have_an_account),
+
                 enabled = true,
                 onClick = {
                     onAction(RegisterAction.OnAlreadyHaveAnAccountClick)
                 }
             )
         }
-    )
+    }
 }
 
-@Preview
+@Preview(device = "spec:parent=pixel_5,orientation=landscape")
 @Composable
-private fun RegisterScreenPortraitPreview() {
+private fun RegisterScreenLandscapePreview() {
     NoteMarkTheme {
-        RegisterScreenPortrait(
+        RegisterScreenLandscape(
             state = RegisterState(),
             onAction = {}
         )
