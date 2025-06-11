@@ -98,6 +98,7 @@ class RegisterViewModel(
         }
     }
 
+
     private fun register() {
         viewModelScope.launch {
             state = state.copy(isRegistering = true)

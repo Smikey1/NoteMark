@@ -4,6 +4,7 @@ import com.twugteam.admin.notemark.features.auth.data.EmailPatternValidator
 import com.twugteam.admin.notemark.features.auth.domain.PatternValidator
 import com.twugteam.admin.notemark.features.auth.domain.UserDataValidator
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreenViewModel
+import com.twugteam.admin.notemark.features.auth.presentation.login.LogInViewModel
 import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterViewModel
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -14,5 +15,6 @@ val authModule = module {
     singleOf(::UserDataValidator)
     viewModelOf(::LandingScreenViewModel)
     viewModelOf(::RegisterViewModel)
+    viewModelOf(::LogInViewModel)
 
 }

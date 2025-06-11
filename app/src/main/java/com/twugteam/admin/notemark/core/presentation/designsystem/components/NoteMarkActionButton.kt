@@ -29,7 +29,7 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.OnSurfaceOpaci
 @Composable
 fun NoteMarkActionButton(
     text: String,
-    isLoading: Boolean,
+    isLoading: Boolean = false,
     modifier: Modifier = Modifier,
     enabled: Boolean = false,
     onClick: () -> Unit,
@@ -52,12 +52,12 @@ fun NoteMarkActionButton(
                 .padding(vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator(
+ CircularProgressIndicator(
                 modifier = Modifier
-                    .size(16.dp)
+                    .size(24.dp)
                     .alpha(if (isLoading) 1f else 0f),
                 strokeWidth = 1.5.dp,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
                 text = text,
@@ -74,7 +74,7 @@ fun NoteMarkActionButton(
 @Composable
 fun NoteMarkOutlineActionButton(
     text: String,
-    isLoading: Boolean,
+    isLoading: Boolean = false,
     modifier: Modifier = Modifier,
     enabled: Boolean = false,
     onClick: () -> Unit,
@@ -100,12 +100,12 @@ fun NoteMarkOutlineActionButton(
                 .padding(vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator(
+ CircularProgressIndicator(
                 modifier = Modifier
-                    .size(16.dp)
+                    .size(24.dp)
                     .alpha(if (isLoading) 1f else 0f),
                 strokeWidth = 1.5.dp,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
                 text = text,
@@ -122,7 +122,7 @@ fun NoteMarkOutlineActionButton(
 @Composable
 fun NoteMarkNoOutlineActionButton(
     text: String,
-    isLoading: Boolean,
+    isLoading: Boolean = false,
     modifier: Modifier = Modifier,
     enabled: Boolean = false,
     onClick: () -> Unit,
@@ -144,12 +144,12 @@ fun NoteMarkNoOutlineActionButton(
                 .padding(vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator(
+ CircularProgressIndicator(
                 modifier = Modifier
-                    .size(16.dp)
+                    .size(24.dp)
                     .alpha(if (isLoading) 1f else 0f),
                 strokeWidth = 1.5.dp,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
                 text = text,

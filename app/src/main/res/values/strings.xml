@@ -22,5 +22,6 @@
     <string name="get_started">Get Started</string>
     <string name="login">Log In</string>
     <string name="landing_screen">Landing Screen</string>
+    <string name="dont_have_account">Don’t have an account?</string>
 
 </resources>

@@ -1,11 +1,11 @@
 package com.twugteam.admin.notemark
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -15,9 +15,13 @@ import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingEvents
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreen
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreenViewModel
+import com.twugteam.admin.notemark.features.auth.presentation.login.LogInViewModel
 import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterScreenRoot
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.runtime.getValue
+import com.twugteam.admin.notemark.features.auth.presentation.login.LogInEvents
+import com.twugteam.admin.notemark.features.auth.presentation.login.LogInScreen
 
 @Composable
 fun NavigationRoot(
@@ -27,23 +31,26 @@ fun NavigationRoot(
     navController: NavHostController
 ) {
     NavHost(
-        modifier = modifier,
+        modifier = Modifier,
         navController = navController,
         startDestination = if (isLoggedInPreviously) Screens.NoteMark else Screens.AuthGraph
     ) {
-        authGraph(navController = navController, windowSize = windowSize)
+        authGraph(modifier = modifier, navController = navController, windowSize = windowSize)
     }
 }
 
-private fun NavGraphBuilder.authGraph(navController: NavHostController, windowSize: WindowWidthSizeClass) {
+private fun NavGraphBuilder.authGraph(
+    modifier: Modifier = Modifier,
+    navController: NavHostController, windowSize: WindowWidthSizeClass
+) {
     navigation<Screens.AuthGraph>(
         startDestination = Screens.Landing,
     ) {
         composable<Screens.Landing> {
             val landingViewModel = koinViewModel<LandingScreenViewModel>()
 
-            ObserveAsEvents(flow = landingViewModel.landingEvents){ events->
-                when(events){
+            ObserveAsEvents(flow = landingViewModel.landingEvents) { events ->
+                when (events) {
                     LandingEvents.NavigateToLogInScreen -> navController.navigate(Screens.LogIn)
                     LandingEvents.NavigateToRegisterScreen -> navController.navigate(Screens.Register)
                 }
@@ -57,9 +64,21 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController, windowSi
         }
 
         composable<Screens.LogIn> {
-            Text(
-                text = "LOGIN"
+            val logInViewModel = koinViewModel<LogInViewModel>()
+            val logInUiState by logInViewModel.logInUiState.collectAsStateWithLifecycle()
+
+            ObserveAsEvents(logInViewModel.events) { events->
+                when(events){
+                    LogInEvents.NavigateToRegister -> navController.navigate(Screens.Register)
+                }
+            }
+            LogInScreen(
+                modifier = modifier.fillMaxSize(),
+                windowSize = windowSize,
+                state = logInUiState,
+                onActions = logInViewModel::onActions
             )
+
         }
 
         composable<Screens.Register> {
