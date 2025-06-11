@@ -1,7 +1,6 @@
 package com.twugteam.admin.notemark.core.presentation.designsystem
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -48,41 +47,41 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 36.sp,
         lineHeight = 40.sp,
-        color = Color.Black
+        color = OnSurface
     ),
     titleMedium = TextStyle(
         fontFamily = spaceGroteskFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 32.sp,
         lineHeight = 36.sp,
-        color = Color.Black
+        color = OnSurface
     ),
     titleSmall = TextStyle(
         fontFamily = spaceGroteskFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 17.sp,
         lineHeight = 24.sp,
-        color = Color.Black
+        color = OnSurface
     ),
     bodyLarge = TextStyle(
         fontFamily = interFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 17.sp,
         lineHeight = 24.sp,
-        color = Color.Black
+        color = OnSurface
     ),
     bodyMedium = TextStyle(
         fontFamily = interFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 15.sp,
         lineHeight = 20.sp,
-        color = Color.Black
+        color = OnSurface
     ),
     bodySmall = TextStyle(
         fontFamily = interFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 15.sp,
         lineHeight = 20.sp,
-        color = Color.Black
+        color = OnSurface
     ),
 )

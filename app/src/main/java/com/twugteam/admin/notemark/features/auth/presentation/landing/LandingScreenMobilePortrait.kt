@@ -105,7 +105,6 @@ fun LandingBottomComponent(
 
                 NoteMarkActionButton(
                     text = stringResource(R.string.get_started),
-                    isLoading = false,
                     modifier = Modifier.fillMaxWidth(),
                     enabled = true,
                     onClick = onClickGetStarted
@@ -116,7 +115,6 @@ fun LandingBottomComponent(
 
                 NoteMarkOutlineActionButton(
                     text = stringResource(R.string.login),
-                    isLoading = false,
                     modifier = Modifier.fillMaxWidth(),
                     enabled = true,
                     onClick = onClickLogIn

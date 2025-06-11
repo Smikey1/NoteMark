@@ -136,7 +136,7 @@ fun RegisterScreenLandscape(
                     NoteMarkActionButton(
                         text = stringResource(R.string.create_account),
                         enabled = state.canRegister,
-                        isLoading = state.isRegistering,
+
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
                             onAction(RegisterAction.OnRegisterClick)
@@ -145,7 +145,7 @@ fun RegisterScreenLandscape(
                     Spacer(modifier = Modifier.height(12.dp))
                     NoteMarkNoOutlineActionButton(
                         text = stringResource(R.string.already_have_an_account),
-                        isLoading = false,
+                        
                         enabled = true,
                         onClick = {
                             onAction(RegisterAction.OnAlreadyHaveAnAccountClick)
