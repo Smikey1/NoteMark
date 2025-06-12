@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkActionButton
+import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkInputTextField
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkNoOutlineActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkPasswordTextField
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkSharedScreen
@@ -34,7 +35,8 @@ fun RegisterScreenLandscape(
         Column(
             modifier = contentModifier
         ) {
-            NoteMarkTextField(
+            NoteMarkInputTextField(
+
                 state = state.username,
                 hint = stringResource(R.string.example_username),
                 title = stringResource(R.string.username),

@@ -1,17 +1,16 @@
 package com.twugteam.admin.notemark.features.auth.presentation.register
 
-import androidx.compose.foundation.text.input.TextFieldState
 import com.twugteam.admin.notemark.features.auth.domain.PasswordValidationState
 
 data class RegisterState(
-    val username: TextFieldState = TextFieldState(),
+    val username: String = "",
     val isUserNameValid: Boolean = false,
-    val email: TextFieldState = TextFieldState(),
+    val email: String = "",
     val isEmailValid: Boolean = false,
-    val password: TextFieldState = TextFieldState(),
+    val password: String = "",
     val isPasswordVisible: Boolean = false,
     val passwordValidationState: PasswordValidationState = PasswordValidationState(),
-    val confirmPassword: TextFieldState = TextFieldState(),
+    val confirmPassword: String = "",
     val isConfirmPasswordVisible: Boolean = false,
     val isConfirmPasswordValid: Boolean = false,
     val isRegistering: Boolean = false,

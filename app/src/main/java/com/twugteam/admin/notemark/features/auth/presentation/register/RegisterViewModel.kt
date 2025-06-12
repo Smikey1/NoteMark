@@ -1,9 +1,5 @@
 package com.twugteam.admin.notemark.features.auth.presentation.register
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twugteam.admin.notemark.core.presentation.ui.UiText
@@ -12,13 +8,16 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 sealed interface RegisterAction {
+    data class UpdateUsername(val username: String) : RegisterAction
+    data class UpdateEmail(val email: String) : RegisterAction
+    data class UpdatePassword(val password: String) : RegisterAction
+    data class UpdateConfirmPassword(val confirmPassword: String) : RegisterAction
     data object OnTogglePasswordVisibilityClick : RegisterAction
     data object OnToggleConfirmPasswordVisibilityClick : RegisterAction
     data object OnRegisterClick : RegisterAction
@@ -28,101 +27,102 @@ sealed interface RegisterAction {
 sealed interface RegisterEvent {
     data class Error(val error: UiText) : RegisterEvent
     data object RegistrationSuccess : RegisterEvent
+    data object NavigateToLogin : RegisterEvent
 }
 
 class RegisterViewModel(
-    val userDataValidator: UserDataValidator
+    private val userDataValidator: UserDataValidator
 ) : ViewModel() {
-    private val _registerState: MutableStateFlow<RegisterState> = MutableStateFlow(RegisterState())
-    val registerState = _registerState.asStateFlow()
 
-    var state by mutableStateOf(RegisterState())
-        private set
+    private val _state = MutableStateFlow(RegisterState())
+    val state = _state.asStateFlow()
 
-    private val username = snapshotFlow { state.username.text }
-    private val email = snapshotFlow { state.email.text }
-    private val password = snapshotFlow { state.password.text }
-    private val confirmPassword = snapshotFlow { state.confirmPassword.text }
-
-    private var _eventChannel = Channel<RegisterEvent>()
+    private val _eventChannel = Channel<RegisterEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    init {
-        viewModelScope.launch {
-            username.onEach { usernameChar ->
-                val isUsernameValid = userDataValidator.isUsernameValid(usernameChar.toString())
-                val isBothPasswordValid =
-                    state.passwordValidationState.isPasswordValid && state.isConfirmPasswordValid
-                val canRegister = state.isEmailValid && isBothPasswordValid && !state.isRegistering
-                state = state.copy(
-                    isUserNameValid = isUsernameValid,
-                    canRegister = isUsernameValid && canRegister
-                )
-            }.launchIn(viewModelScope)
-
-            email.onEach { emailChar ->
-                val isEmailValid = userDataValidator.isValidEmail(emailChar.toString())
-                val isBothPasswordValid =
-                    state.passwordValidationState.isPasswordValid && state.isConfirmPasswordValid
-                val canRegister =
-                    state.isUserNameValid && isBothPasswordValid && !state.isRegistering
-                state = state.copy(
-                    isEmailValid = isEmailValid,
-                    canRegister = isEmailValid && canRegister
-                )
-            }.launchIn(viewModelScope)
-
-            password.onEach { passwordChar ->
-                val passwordValidationState =
-                    userDataValidator.validatePassword(passwordChar.toString())
-                val canRegister =
-                    state.isUserNameValid && state.isEmailValid && state.isConfirmPasswordValid && !state.isRegistering
-                state = state.copy(
-                    passwordValidationState = passwordValidationState,
-                    canRegister = passwordValidationState.isPasswordValid && canRegister
-                )
-            }.launchIn(viewModelScope)
-
-            confirmPassword.onEach { confirmPasswordChar ->
-                val isConfirmPasswordValid = userDataValidator.isValidConfirmPassword(
-                    state.password.text.toString(),
-                    confirmPasswordChar.toString()
-                )
-                val isBothPasswordValid =
-                    state.passwordValidationState.isPasswordValid && isConfirmPasswordValid
-                val canRegister =
-                    state.isUserNameValid && isBothPasswordValid && !state.isRegistering
-                state = state.copy(
-                    isConfirmPasswordValid = isConfirmPasswordValid,
-                    canRegister = state.isEmailValid && canRegister
-                )
-            }.launchIn(viewModelScope)
-        }
-    }
-
-
     fun onAction(action: RegisterAction) {
-        when (action) {
-            RegisterAction.OnRegisterClick -> register()
-            RegisterAction.OnToggleConfirmPasswordVisibilityClick -> {
-                state = state.copy(isConfirmPasswordVisible = !state.isConfirmPasswordVisible)
+        viewModelScope.launch {
+            when (action) {
+                is RegisterAction.UpdateUsername -> updateUsername(action.username)
+                is RegisterAction.UpdateEmail -> updateEmail(action.email)
+                is RegisterAction.UpdatePassword -> updatePassword(action.password)
+                is RegisterAction.UpdateConfirmPassword -> updateConfirmPassword(action.confirmPassword)
+                RegisterAction.OnTogglePasswordVisibilityClick -> togglePasswordVisibility()
+                RegisterAction.OnToggleConfirmPasswordVisibilityClick -> toggleConfirmPasswordVisibility()
+                RegisterAction.OnRegisterClick -> register()
+                RegisterAction.OnAlreadyHaveAnAccountClick -> navigateToLogin()
             }
-
-            RegisterAction.OnTogglePasswordVisibilityClick -> {
-                state = state.copy(isPasswordVisible = !state.isPasswordVisible)
-            }
-
-            else -> Unit
         }
     }
 
-
-    private fun register() {
-        viewModelScope.launch {
-            state = state.copy(isRegistering = true)
-            //TODO: Register Api call
-            delay(2.seconds)
-            state = state.copy(isRegistering = false)
+    private fun updateUsername(username: String) {
+        val isValid = userDataValidator.isUsernameValid(username)
+        _state.update {
+            it.copy(
+                username = username,
+                isUserNameValid = isValid,
+                canRegister = isValid && it.isEmailValid && it.passwordValidationState.isPasswordValid && it.isConfirmPasswordValid
+            )
         }
+    }
+
+    private fun updateEmail(email: String) {
+        val isValid = userDataValidator.isValidEmail(email)
+        _state.update {
+            it.copy(
+                email = email,
+                isEmailValid = isValid,
+                canRegister = isValid && it.isUserNameValid && it.passwordValidationState.isPasswordValid && it.isConfirmPasswordValid
+            )
+        }
+    }
+
+    private fun updatePassword(password: String) {
+        val validationState = userDataValidator.validatePassword(password)
+        val isConfirmValid = userDataValidator.isValidConfirmPassword(password, _state.value.confirmPassword)
+        _state.update {
+            it.copy(
+                password = password,
+                passwordValidationState = validationState,
+                isConfirmPasswordValid = isConfirmValid,
+                canRegister = it.isUserNameValid && it.isEmailValid && validationState.isPasswordValid && isConfirmValid
+            )
+        }
+    }
+
+    private fun updateConfirmPassword(confirmPassword: String) {
+        val isValid = userDataValidator.isValidConfirmPassword(_state.value.password, confirmPassword)
+        _state.update {
+            it.copy(
+                confirmPassword = confirmPassword,
+                isConfirmPasswordValid = isValid,
+                canRegister = it.isUserNameValid && it.isEmailValid && it.passwordValidationState.isPasswordValid && isValid
+            )
+        }
+    }
+
+    private fun togglePasswordVisibility() {
+        _state.update {
+            it.copy(isPasswordVisible = !it.isPasswordVisible)
+        }
+    }
+
+    private fun toggleConfirmPasswordVisibility() {
+        _state.update {
+            it.copy(isConfirmPasswordVisible = !it.isConfirmPasswordVisible)
+        }
+    }
+
+    private suspend fun register() {
+        _state.update { it.copy(isRegistering = true) }
+        delay(2.seconds)
+
+        // TODO: Replace with actual API call and error handling
+        _state.update { it.copy(isRegistering = false) }
+        _eventChannel.send(RegisterEvent.RegistrationSuccess)
+    }
+
+    private suspend fun navigateToLogin() {
+        _eventChannel.send(RegisterEvent.NavigateToLogin)
     }
 }
