@@ -37,8 +37,21 @@ fun NavGraphBuilder.authGraph(
 
             ObserveAsEvents(flow = landingViewModel.landingEvents) { events ->
                 when (events) {
-                    LandingEvents.NavigateToLogInScreen -> navController.navigate(Screens.LogIn)
-                    LandingEvents.NavigateToRegisterScreen -> navController.navigate(Screens.Register)
+                    LandingEvents.NavigateToLogInScreen -> {
+                        navController.navigate(Screens.LogIn) {
+                            popUpTo<Screens.Landing> {
+                                inclusive = true
+                            }
+                        }
+                    }
+
+                    LandingEvents.NavigateToRegisterScreen -> {
+                        navController.navigate(Screens.Register) {
+                            popUpTo<Screens.Landing> {
+                                inclusive = true
+                            }
+                        }
+                    }
                 }
             }
 
@@ -55,9 +68,16 @@ fun NavGraphBuilder.authGraph(
 
             ObserveAsEvents(logInViewModel.events) { events ->
                 when (events) {
-                    LogInEvents.NavigateToRegister -> navController.navigate(Screens.Register)
+                    LogInEvents.NavigateToRegister -> navController.navigate(Screens.Register) {
+                        popUpTo<Screens.LogIn> {
+                            inclusive = true
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
                 }
             }
+
             LogInScreen(
                 modifier = modifier.fillMaxSize(),
                 windowSize = windowSize,
@@ -69,7 +89,7 @@ fun NavGraphBuilder.authGraph(
 
         composable<Screens.Register> {
             val registerViewModel = koinViewModel<RegisterViewModel>()
-            val registerState by registerViewModel.registerState.collectAsStateWithLifecycle()
+            val registerState by registerViewModel.state.collectAsStateWithLifecycle()
 
             val context = LocalContext.current
             val keyboardController = LocalSoftwareKeyboardController.current
@@ -89,8 +109,18 @@ fun NavGraphBuilder.authGraph(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+
+
+                    RegisterEvent.NavigateToLogin -> navController.navigate(Screens.LogIn) {
+                        popUpTo<Screens.Register> {
+                            inclusive = true
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
                 }
             }
+
             RegisterScreenRoot(
                 modifier = modifier.fillMaxSize(),
                 windowSize = windowSize,

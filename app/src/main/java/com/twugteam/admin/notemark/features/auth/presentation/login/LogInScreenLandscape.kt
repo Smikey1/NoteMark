@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,6 +25,8 @@ onActions: (LogInActions) -> Unit,
         title = R.string.login,
         isPortrait = false,
         description = R.string.capture_your_thoughts_and_ideas,
+        showSnackBar = state.error,
+        snackBarError = "Invalid login credentials",
     ) { contentModifier->
         Column(
             modifier = contentModifier
@@ -53,6 +53,7 @@ onActions: (LogInActions) -> Unit,
                 hint = R.string.password,
                 enabled = state.isEnabled,
                 inputValue = state.password,
+                isLastField = true,
                 onValueChange = { passwordValue ->
                     onActions(LogInActions.UpdatePassword(passwordValue = passwordValue))
                 },

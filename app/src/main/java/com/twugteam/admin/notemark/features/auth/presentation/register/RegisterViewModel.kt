@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 
 sealed interface RegisterAction {
@@ -18,8 +19,6 @@ sealed interface RegisterAction {
     data class UpdateEmail(val email: String) : RegisterAction
     data class UpdatePassword(val password: String) : RegisterAction
     data class UpdateConfirmPassword(val confirmPassword: String) : RegisterAction
-    data object OnTogglePasswordVisibilityClick : RegisterAction
-    data object OnToggleConfirmPasswordVisibilityClick : RegisterAction
     data object OnRegisterClick : RegisterAction
     data object OnAlreadyHaveAnAccountClick : RegisterAction
 }
@@ -40,6 +39,16 @@ class RegisterViewModel(
     private val _eventChannel = Channel<RegisterEvent>()
     val events = _eventChannel.receiveAsFlow()
 
+    init {
+        Timber.tag("viewModel").d("Register: initialized")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Timber.tag("viewModel").d("Register: Cleared!")
+
+    }
+
     fun onAction(action: RegisterAction) {
         viewModelScope.launch {
             when (action) {
@@ -47,8 +56,6 @@ class RegisterViewModel(
                 is RegisterAction.UpdateEmail -> updateEmail(action.email)
                 is RegisterAction.UpdatePassword -> updatePassword(action.password)
                 is RegisterAction.UpdateConfirmPassword -> updateConfirmPassword(action.confirmPassword)
-                RegisterAction.OnTogglePasswordVisibilityClick -> togglePasswordVisibility()
-                RegisterAction.OnToggleConfirmPasswordVisibilityClick -> toggleConfirmPasswordVisibility()
                 RegisterAction.OnRegisterClick -> register()
                 RegisterAction.OnAlreadyHaveAnAccountClick -> navigateToLogin()
             }
@@ -56,13 +63,21 @@ class RegisterViewModel(
     }
 
     private fun updateUsername(username: String) {
-        val isValid = userDataValidator.isUsernameValid(username)
+        val validityState = userDataValidator.isUsernameValid(username)
+        Timber.tag("MyTag").d("$validityState")
         _state.update {
             it.copy(
-                username = username,
-                isUserNameValid = isValid,
-                canRegister = isValid && it.isEmailValid && it.passwordValidationState.isPasswordValid && it.isConfirmPasswordValid
+                username = it.username.copy(
+                    value = username,
+                    isValid = validityState.isValid,
+                    isError = if(username.isNotBlank()) !validityState.isValid else false,
+                    errorText = validityState.errorText
+                )
             )
+        }
+        val canRegister = canRegister()
+        _state.update { newState->
+            newState.copy(canRegister = canRegister)
         }
     }
 
@@ -70,46 +85,54 @@ class RegisterViewModel(
         val isValid = userDataValidator.isValidEmail(email)
         _state.update {
             it.copy(
-                email = email,
-                isEmailValid = isValid,
-                canRegister = isValid && it.isUserNameValid && it.passwordValidationState.isPasswordValid && it.isConfirmPasswordValid
+                email = it.email.copy(
+                    value = email,
+                    isValid = isValid,
+                    isError = if(email.isNotBlank())!isValid else false,
+                ),
             )
+        }
+        val canRegister = canRegister()
+        _state.update { newState->
+            newState.copy(canRegister = canRegister)
         }
     }
 
     private fun updatePassword(password: String) {
-        val validationState = userDataValidator.validatePassword(password)
-        val isConfirmValid = userDataValidator.isValidConfirmPassword(password, _state.value.confirmPassword)
+        val isValid = userDataValidator.validatePassword(password)
         _state.update {
             it.copy(
-                password = password,
-                passwordValidationState = validationState,
-                isConfirmPasswordValid = isConfirmValid,
-                canRegister = it.isUserNameValid && it.isEmailValid && validationState.isPasswordValid && isConfirmValid
+                password = it.password.copy(
+                    value = password,
+                    isValid = isValid,
+                    isError = !isValid,
+                ),
             )
+        }
+        val canRegister = canRegister()
+        _state.update { newState->
+            newState.copy(canRegister = canRegister)
         }
     }
 
     private fun updateConfirmPassword(confirmPassword: String) {
-        val isValid = userDataValidator.isValidConfirmPassword(_state.value.password, confirmPassword)
+        val isValid = userDataValidator.isValidConfirmPassword(
+            password = _state.value.password.value,
+            confirmPassword = confirmPassword
+        )
         _state.update {
             it.copy(
-                confirmPassword = confirmPassword,
-                isConfirmPasswordValid = isValid,
-                canRegister = it.isUserNameValid && it.isEmailValid && it.passwordValidationState.isPasswordValid && isValid
-            )
+                confirmPassword = it.confirmPassword.copy(
+                    value = confirmPassword,
+                    isValid = isValid,
+                    isError = !isValid
+                ),
+                )
         }
-    }
 
-    private fun togglePasswordVisibility() {
-        _state.update {
-            it.copy(isPasswordVisible = !it.isPasswordVisible)
-        }
-    }
-
-    private fun toggleConfirmPasswordVisibility() {
-        _state.update {
-            it.copy(isConfirmPasswordVisible = !it.isConfirmPasswordVisible)
+        val canRegister = canRegister()
+        _state.update { newState->
+            newState.copy(canRegister = canRegister)
         }
     }
 
@@ -122,7 +145,13 @@ class RegisterViewModel(
         _eventChannel.send(RegisterEvent.RegistrationSuccess)
     }
 
+
+    private fun canRegister(): Boolean{
+        val state = _state.value
+        return state.username.isValid && state.email.isValid && state.password.isValid  && (state.password.value == state.confirmPassword.value)
+    }
     private suspend fun navigateToLogin() {
         _eventChannel.send(RegisterEvent.NavigateToLogin)
     }
+
 }

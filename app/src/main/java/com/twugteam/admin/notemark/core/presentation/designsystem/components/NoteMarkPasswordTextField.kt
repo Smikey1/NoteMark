@@ -44,7 +44,7 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 
 @Composable
 fun NoteMarkPasswordTextField(
-    state: TextFieldState,
+    state: String,
     isPasswordVisible: Boolean,
     hint: String,
     title: String,
@@ -68,7 +68,7 @@ fun NoteMarkPasswordTextField(
         )
         Spacer(modifier = Modifier.height(7.dp))
         BasicSecureTextField(
-            state = state,
+            state = TextFieldState(initialText = state),
             textObfuscationMode = if (isPasswordVisible) {
                 TextObfuscationMode.Visible
             } else TextObfuscationMode.Hidden,
@@ -88,7 +88,7 @@ fun NoteMarkPasswordTextField(
                     width = 1.dp,
                     color = if (isFocused) {
                         MaterialTheme.colorScheme.primary
-                    } else if (state.text.isNotEmpty() && error != null) {
+                    } else if (state.isNotEmpty() && error != null) {
                         MaterialTheme.colorScheme.error
                     } else {
                         Color.Transparent
@@ -116,7 +116,7 @@ fun NoteMarkPasswordTextField(
                     Box(
                         modifier = Modifier.weight(1f)
                     ) {
-                        if (state.text.isEmpty() && !isFocused) {
+                        if (state.isEmpty() && !isFocused) {
                             Text(
                                 text = hint,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -138,7 +138,7 @@ fun NoteMarkPasswordTextField(
                 }
             }
         )
-        if (isFocused && state.text.isEmpty() && additionalInfo != null) {
+        if (isFocused && state.isEmpty() && additionalInfo != null) {
             Spacer(modifier = Modifier.height(7.dp))
             Text(
                 text = additionalInfo,
@@ -167,7 +167,7 @@ fun NoteMarkPasswordTextField(
 private fun NoteMarkPasswordTextFieldPreview() {
     NoteMarkTheme {
         NoteMarkPasswordTextField(
-            state = TextFieldState(),
+            state = "",
             startIcon = null,
             isPasswordVisible = true,
             onTogglePasswordVisibilityClick = {

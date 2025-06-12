@@ -1,10 +1,11 @@
 package com.twugteam.admin.notemark.features.auth.data
 
-import android.util.Patterns
 import com.twugteam.admin.notemark.features.auth.domain.PatternValidator
 
 object EmailPatternValidator : PatternValidator {
+    private val STRICT_EMAIL_REGEX =
+        Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")
     override fun matches(values: String): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(values).matches()
+        return STRICT_EMAIL_REGEX.matches(values.trim())
     }
 }

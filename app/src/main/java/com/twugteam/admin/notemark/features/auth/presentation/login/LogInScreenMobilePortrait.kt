@@ -30,7 +30,9 @@ fun LogInScreenMobilePortrait(
             .padding(vertical = 32.dp),
         title = R.string.login,
         description = R.string.capture_your_thoughts_and_ideas,
-    ) {
+        snackBarError = "Invalid login credentials",
+        showSnackBar = state.error,
+        ) {
         Column(
             modifier = Modifier
         ) {
@@ -56,6 +58,7 @@ fun LogInScreenMobilePortrait(
                 hint = R.string.password,
                 enabled = state.isEnabled,
                 inputValue = state.password,
+                isLastField = true,
                 onValueChange = { passwordValue ->
                     onActions(LogInActions.UpdatePassword(passwordValue = passwordValue))
                 },

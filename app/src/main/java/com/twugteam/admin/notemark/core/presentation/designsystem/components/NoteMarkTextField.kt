@@ -40,7 +40,7 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 
 @Composable
 fun NoteMarkTextField(
-    state: TextFieldState,
+    state: String,
     hint: String,
     title: String,
     startIcon: ImageVector? = null,
@@ -64,7 +64,7 @@ fun NoteMarkTextField(
         )
         Spacer(modifier = Modifier.height(7.dp))
         BasicTextField(
-            state = state,
+            state = TextFieldState(initialText = state),
             textStyle = LocalTextStyle.current.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             ),
@@ -83,7 +83,7 @@ fun NoteMarkTextField(
                     width = 1.dp,
                     color = if (isFocused) {
                         MaterialTheme.colorScheme.primary
-                    } else if (state.text.isNotEmpty() && error != null) {
+                    } else if (state.isNotEmpty() && error != null) {
                         MaterialTheme.colorScheme.error
                     } else {
                         Color.Transparent
@@ -111,7 +111,7 @@ fun NoteMarkTextField(
                     Box(
                         modifier = Modifier.weight(1f)
                     ) {
-                        if (state.text.isEmpty() && !isFocused) {
+                        if (state.isEmpty() && !isFocused) {
                             Text(
                                 text = hint,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -131,7 +131,7 @@ fun NoteMarkTextField(
                 }
             }
         )
-        if (isFocused && state.text.isEmpty() && additionalInfo != null) {
+        if (isFocused && state.isEmpty() && additionalInfo != null) {
             Spacer(modifier = Modifier.height(7.dp))
             Text(
                 text = additionalInfo,
@@ -141,7 +141,7 @@ fun NoteMarkTextField(
                 modifier = Modifier
                     .padding(start = 12.dp)
             )
-        } else if (!state.text.isEmpty() && error != null) {
+        } else if (!state.isEmpty() && error != null) {
             Spacer(modifier = Modifier.height(7.dp))
             Text(
                 text = error,
@@ -160,7 +160,7 @@ fun NoteMarkTextField(
 private fun NoteMarkTextFieldPreview() {
     NoteMarkTheme {
         NoteMarkTextField(
-            state = TextFieldState(),
+            state = "",
             startIcon = null,
             endIcon = NoteMarkIcons.EyeClosed,
             hint = "Text field hints text",

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.R
@@ -15,10 +14,7 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkInputTextField
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkNoOutlineActionButton
-import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkPasswordTextField
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkSharedScreen
-import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkTextField
-import com.twugteam.admin.notemark.features.auth.domain.UserDataValidator
 
 @Composable
 fun RegisterScreenLandscape(
@@ -35,61 +31,79 @@ fun RegisterScreenLandscape(
         Column(
             modifier = contentModifier
         ) {
+            //USERNAME
             NoteMarkInputTextField(
+                modifier = Modifier,
+                inputLabel = R.string.username,
+                hint = R.string.example_username,
+                inputValue = state.username.value,
+                showLabel = true,
+                isTrailingShowing = false,
+                enabled = true,
+                supportingText = state.username.supportingText,
+                isError = state.username.isError,
+                errorText = state.username.errorText,
+                onValueChange = { username ->
+                    onAction(RegisterAction.UpdateUsername(username = username))
+                },
+            )
 
-                state = state.username,
-                hint = stringResource(R.string.example_username),
-                title = stringResource(R.string.username),
-                additionalInfo = stringResource(R.string.username_info),
-                error = if (!state.isUserNameValid) stringResource(
-                    R.string.username_error,
-                    UserDataValidator.MIN_USERNAME_LENGTH
-                ) else null,
-                modifier = Modifier.fillMaxWidth(),
-                keyboardType = KeyboardType.Text
+            //EMAIL
+            NoteMarkInputTextField(
+                modifier = Modifier,
+                inputLabel = R.string.email,
+                hint = R.string.example_email,
+                inputValue = state.email.value,
+                showLabel = true,
+                isTrailingShowing = false,
+                enabled = true,
+                supportingText = state.email.supportingText,
+                isError = state.email.isError,
+                errorText = state.email.errorText,
+                onValueChange = { email ->
+                    onAction(RegisterAction.UpdateEmail(email = email))
+                },
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            NoteMarkTextField(
-                state = state.email,
-                hint = stringResource(R.string.example_email),
-                title = stringResource(R.string.email),
-                error = if (!state.isEmailValid) stringResource(R.string.invalid_email) else null,
-                modifier = Modifier.fillMaxWidth(),
-                keyboardType = KeyboardType.Email
+
+            //PASSWORD
+            NoteMarkInputTextField(
+                modifier = Modifier,
+                inputLabel = R.string.password,
+                hint = R.string.password,
+                inputValue = state.password.value,
+                showLabel = true,
+                isTrailingShowing = true,
+                enabled = true,
+                supportingText = state.password.supportingText,
+                isError = state.password.isError,
+                errorText = state.password.errorText,
+                onValueChange = { password ->
+                    onAction(RegisterAction.UpdatePassword(password = password))
+                },
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            NoteMarkPasswordTextField(
-                state = state.password,
-                hint = stringResource(R.string.password),
-                title = stringResource(R.string.password),
-                additionalInfo = stringResource(R.string.password_info),
-                error = if (!state.passwordValidationState.isPasswordValid) stringResource(
-                    R.string.password_error,
-                    UserDataValidator.MIN_PASSWORD_LENGTH
-                ) else null,
-                modifier = Modifier.fillMaxWidth(),
-                isPasswordVisible = state.isPasswordVisible,
-                onTogglePasswordVisibilityClick = {
-                    onAction(RegisterAction.OnTogglePasswordVisibilityClick)
-                }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            NoteMarkPasswordTextField(
-                state = state.confirmPassword,
-                hint = stringResource(R.string.password),
-                title = stringResource(R.string.repeat_password),
-                error = if (!state.isConfirmPasswordValid) stringResource(R.string.password_do_not_match) else null,
-                modifier = Modifier.fillMaxWidth(),
-                isPasswordVisible = state.isConfirmPasswordVisible,
-                onTogglePasswordVisibilityClick = {
-                    onAction(RegisterAction.OnToggleConfirmPasswordVisibilityClick)
-                }
+
+            //CONFIRM PASSWORD
+            NoteMarkInputTextField(
+                modifier = Modifier,
+                inputLabel = R.string.repeat_password,
+                hint = R.string.password,
+                inputValue = state.confirmPassword.value,
+                showLabel = true,
+                isTrailingShowing = true,
+                enabled = true,
+                isLastField = true,
+                supportingText = state.confirmPassword.supportingText,
+                isError = state.confirmPassword.isError,
+                errorText = state.confirmPassword.errorText,
+                onValueChange = { confirmPassword ->
+                    onAction(RegisterAction.UpdateConfirmPassword(confirmPassword = confirmPassword))
+                },
             )
             Spacer(modifier = Modifier.height(24.dp))
             NoteMarkActionButton(
                 text = stringResource(R.string.create_account),
                 enabled = state.canRegister,
-
+                isLoading = state.isRegistering,
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     onAction(RegisterAction.OnRegisterClick)

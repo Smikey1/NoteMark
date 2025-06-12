@@ -30,7 +30,9 @@ fun LogInScreenTablet(
             .padding(vertical = 100.dp),
         title = R.string.login,
         description = R.string.capture_your_thoughts_and_ideas,
-    ) { contentModifier ->
+        snackBarError = "Invalid login credentials",
+        showSnackBar = state.error,
+        ) { contentModifier ->
         Column(
             modifier = contentModifier
         ) {
@@ -56,6 +58,7 @@ fun LogInScreenTablet(
                 hint = R.string.password,
                 enabled = state.isEnabled,
                 inputValue = state.password,
+                isLastField = true,
                 onValueChange = { passwordValue ->
                     onActions(LogInActions.UpdatePassword(passwordValue = passwordValue))
                 },

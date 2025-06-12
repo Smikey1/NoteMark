@@ -33,6 +33,16 @@ class LogInViewModel(
     private val _events = Channel<LogInEvents>()
     val events = _events.receiveAsFlow()
 
+    init {
+        Timber.tag("viewModel").d("LogIn: initialized")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Timber.tag("viewModel").d("LogIn: Cleared!")
+
+    }
+
     fun onActions(logInActions: LogInActions) {
         viewModelScope.launch {
             when (logInActions) {
@@ -91,6 +101,13 @@ class LogInViewModel(
         delay(2000)
         _logInUiState.update { newState ->
             newState.copy(isEnabled = true, isLoading = false)
+        }
+        _logInUiState.update { newState->
+            newState.copy(error = true)
+        }
+        delay(2000)
+        _logInUiState.update { newState->
+            newState.copy(error = false)
         }
     }
 
