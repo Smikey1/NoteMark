@@ -103,7 +103,7 @@ class LogInViewModel(
         }
     }
 
-    private suspend fun logIn() {
+    private fun logIn() {
         viewModelScope.launch {
             _logInUiState.update { newState ->
                 newState.copy(isEnabled = false, isLoading = true)

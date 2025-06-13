@@ -66,7 +66,7 @@ fun NavGraphBuilder.authGraph(
         composable<Screens.LogIn> {
             val logInViewModel = koinViewModel<LogInViewModel>()
             val logInUiState by logInViewModel.logInUiState.collectAsStateWithLifecycle()
-
+            val context = LocalContext.current
             ObserveAsEvents(logInViewModel.events) { events ->
                 when (events) {
                     LogInEvents.NavigateToRegister -> navController.navigate(Screens.Register) {
@@ -78,8 +78,9 @@ fun NavGraphBuilder.authGraph(
                     }
 
                     is LogInEvents.Error -> {
-                        Timber.tag("API").d("${events.error}")
+                        Timber.tag("API").d("SERVER ERROR --> ${events.error.asString(context)}")
                     }
+
                     LogInEvents.LoginSuccess -> {
                         navController.navigate(Screens.NoteGraph)
                     }
