@@ -52,7 +52,6 @@ fun LogInScreen(
                 onActions = onActions
             )
         }
-
     }
 
 

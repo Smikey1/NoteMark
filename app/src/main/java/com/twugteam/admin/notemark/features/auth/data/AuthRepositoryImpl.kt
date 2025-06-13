@@ -1,0 +1,37 @@
+package com.twugteam.admin.notemark.features.auth.data
+
+import com.twugteam.admin.notemark.core.constant.ApiEndpoints
+import com.twugteam.admin.notemark.core.data.networking.post
+import com.twugteam.admin.notemark.core.domain.AuthInfo
+import com.twugteam.admin.notemark.core.domain.SessionStorage
+import com.twugteam.admin.notemark.core.domain.util.DataError
+import com.twugteam.admin.notemark.core.domain.util.EmptyResult
+import com.twugteam.admin.notemark.core.domain.util.Result
+import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
+import com.twugteam.admin.notemark.features.auth.domain.AuthRepository
+import io.ktor.client.HttpClient
+
+class AuthRepositoryImpl(
+    private val httpClient: HttpClient,
+    private val sessionStorage: SessionStorage
+) : AuthRepository {
+    override suspend fun login(
+        email: String,
+        password: String
+    ): EmptyResult<DataError.Network> {
+        val result = httpClient.post<LoginRequest, LoginResponse>(
+            route = ApiEndpoints.LOGIN_ENDPOINT,
+            body = LoginRequest(email = email, password = password)
+        )
+        if (result is Result.Success) {
+            sessionStorage.setAuthInfo(
+                authInfo = AuthInfo(
+                    accessToken = result.data.accessToken,
+                    refreshToken = result.data.refreshToken,
+                    userId = result.data.userId
+                )
+            )
+        }
+        return result.asEmptyDataResult()
+    }
+}

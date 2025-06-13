@@ -2,6 +2,12 @@ package com.twugteam.admin.notemark.features.auth.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.twugteam.admin.notemark.R
+import com.twugteam.admin.notemark.core.domain.util.DataError
+import com.twugteam.admin.notemark.core.domain.util.Result
+import com.twugteam.admin.notemark.core.presentation.ui.UiText
+import com.twugteam.admin.notemark.core.presentation.ui.asUiText
+import com.twugteam.admin.notemark.features.auth.domain.AuthRepository
 import com.twugteam.admin.notemark.features.auth.domain.UserDataValidator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -21,11 +27,14 @@ sealed interface LogInActions {
 
 sealed interface LogInEvents {
     data object NavigateToRegister : LogInEvents
+    data object LoginSuccess : LogInEvents
+    data class Error(val error: UiText): LogInEvents
 
 }
 
 class LogInViewModel(
     private val userDataValidator: UserDataValidator,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     private val _logInUiState: MutableStateFlow<LogInUiState> = MutableStateFlow(LogInUiState())
     val logInUiState = _logInUiState.asStateFlow()
@@ -82,9 +91,9 @@ class LogInViewModel(
                 _logInUiState.update { newState ->
                     newState.copy(isLogInEnabled = true)
                 }
-            }else{
-                    _logInUiState.update { newState ->
-                        newState.copy(isLogInEnabled = false)
+            } else {
+                _logInUiState.update { newState ->
+                    newState.copy(isLogInEnabled = false)
                 }
             }
         } else {
@@ -95,19 +104,29 @@ class LogInViewModel(
     }
 
     private suspend fun logIn() {
-        _logInUiState.update { newState ->
-            newState.copy(isEnabled = false, isLoading = true)
-        }
-        delay(2000)
-        _logInUiState.update { newState ->
-            newState.copy(isEnabled = true, isLoading = false)
-        }
-        _logInUiState.update { newState->
-            newState.copy(error = true)
-        }
-        delay(2000)
-        _logInUiState.update { newState->
-            newState.copy(error = false)
+        viewModelScope.launch {
+            _logInUiState.update { newState ->
+                newState.copy(isEnabled = false, isLoading = true)
+            }
+            val result = authRepository.login(
+                email = _logInUiState.value.email.trim(),
+                password = _logInUiState.value.password
+            )
+            _logInUiState.update { newState ->
+                newState.copy(isEnabled = true, isLoading = false)
+            }
+            when (result) {
+                is Result.Error -> {
+                    if (result.error == DataError.Network.UNAUTHORIZED) {
+                        _events.send(LogInEvents.Error(
+                            UiText.StringResource(R.string.error_email_password_incorrect)
+                        ))
+                    } else {
+                        _events.send(LogInEvents.Error(result.error.asUiText()))
+                    }
+                }
+                is Result.Success -> _events.send(LogInEvents.LoginSuccess)
+            }
         }
     }
 

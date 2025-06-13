@@ -75,6 +75,11 @@ fun NavGraphBuilder.authGraph(
                         }
                         restoreState = true
                     }
+
+                    is LogInEvents.Error -> TODO()
+                    LogInEvents.LoginSuccess -> {
+                        navController.navigate(Screens.NoteGraph)
+                    }
                 }
             }
 

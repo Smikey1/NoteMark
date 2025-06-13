@@ -3,6 +3,7 @@ package com.twugteam.admin.notemark.features.auth.presentation.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twugteam.admin.notemark.core.presentation.ui.UiText
+import com.twugteam.admin.notemark.features.auth.domain.AuthRepository
 import com.twugteam.admin.notemark.features.auth.domain.UserDataValidator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -30,7 +31,8 @@ sealed interface RegisterEvent {
 }
 
 class RegisterViewModel(
-    private val userDataValidator: UserDataValidator
+    private val userDataValidator: UserDataValidator,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RegisterState())
