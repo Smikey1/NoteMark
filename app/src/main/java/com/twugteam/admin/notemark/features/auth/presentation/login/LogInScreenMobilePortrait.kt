@@ -30,7 +30,7 @@ fun LogInScreenMobilePortrait(
             .padding(vertical = 32.dp),
         title = R.string.login,
         description = R.string.capture_your_thoughts_and_ideas,
-        snackBarError = "Invalid login credentials",
+        snackBarError = state.errorText,
         showSnackBar = state.error,
         ) {
         Column(

@@ -8,4 +8,5 @@ data class LogInUiState(
     val isLoading: Boolean = false,
     val isLogInEnabled: Boolean = false,
     val error: Boolean = false,
+    val errorText: String = ""
 )

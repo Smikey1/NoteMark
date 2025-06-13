@@ -17,6 +17,7 @@ import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingEvents
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreen
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreenViewModel
+import com.twugteam.admin.notemark.features.auth.presentation.login.LogInActions
 import com.twugteam.admin.notemark.features.auth.presentation.login.LogInEvents
 import com.twugteam.admin.notemark.features.auth.presentation.login.LogInScreen
 import com.twugteam.admin.notemark.features.auth.presentation.login.LogInViewModel
@@ -79,6 +80,7 @@ fun NavGraphBuilder.authGraph(
 
                     is LogInEvents.Error -> {
                         Timber.tag("API").d("SERVER ERROR --> ${events.error.asString(context)}")
+                        logInViewModel.onActions(LogInActions.ShowError(events.error.asString(context)))
                     }
 
                     LogInEvents.LoginSuccess -> {

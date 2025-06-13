@@ -17,12 +17,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.time.Duration.Companion.seconds
 
 sealed interface LogInActions {
     data class UpdateEmail(val emailValue: String) : LogInActions
     data class UpdatePassword(val passwordValue: String) : LogInActions
     data object OnLogInClick : LogInActions
     data object OnDontHaveAccountClick : LogInActions
+    data class ShowError(val errorMessage: String): LogInActions
 }
 
 sealed interface LogInEvents {
@@ -59,6 +61,7 @@ class LogInViewModel(
                 is LogInActions.UpdatePassword -> updatePassword(passwordValue = logInActions.passwordValue)
                 LogInActions.OnLogInClick -> logIn()
                 LogInActions.OnDontHaveAccountClick -> onDontHaveAccountClick()
+                is LogInActions.ShowError -> showError(errorMessage = logInActions.errorMessage)
             }
         }
     }
@@ -137,6 +140,20 @@ class LogInViewModel(
         _events.send(element = LogInEvents.NavigateToRegister)
         _logInUiState.update { newState ->
             newState.copy(isEnabled = true, isLoading = false)
+        }
+    }
+
+    private suspend fun showError(errorMessage: String){
+        _logInUiState.update{ newState->
+            newState.copy(
+                error = true,
+                errorText = errorMessage)
+        }
+        delay(2.seconds)
+        _logInUiState.update{ newState->
+            newState.copy(
+                error = false,
+                errorText = "")
         }
     }
 }

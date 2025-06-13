@@ -26,7 +26,7 @@ onActions: (LogInActions) -> Unit,
         isPortrait = false,
         description = R.string.capture_your_thoughts_and_ideas,
         showSnackBar = state.error,
-        snackBarError = "Invalid login credentials",
+        snackBarError = state.errorText,
     ) { contentModifier->
         Column(
             modifier = contentModifier
