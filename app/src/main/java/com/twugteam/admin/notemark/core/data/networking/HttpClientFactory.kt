@@ -49,7 +49,7 @@ class HttpClientFactory(
 
             defaultRequest {
                 contentType(ContentType.Application.Json)
-                header("X-User-Email ", ApiEndpoints.EMAIL)
+                header("X-User-Email", ApiEndpoints.EMAIL)
             }
 
             install(Auth) {

@@ -8,5 +8,5 @@ object ApiEndpoints {
     const val LOGIN_ENDPOINT = BuildConfig.LOGIN_ENDPOINT
     const val REGISTER_ENDPOINT = BuildConfig.REGISTER_ENDPOINT
     const val REFRESH_TOKEN_ENDPOINT = BuildConfig.REFRESH_TOKEN_ENDPOINT
-    const val EMAIL = ""
+    const val EMAIL = BuildConfig.EMAIL
 }

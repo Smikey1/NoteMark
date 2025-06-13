@@ -14,7 +14,7 @@ val appModule = module {
     single<SharedPreferences> {
         EncryptedSharedPreferences(
             context = androidApplication(),
-            fileName = "runsphere_pref",
+            fileName = "notemark_pref",
             masterKey = MasterKey(androidApplication()),
             prefKeyEncryptionScheme = EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             prefValueEncryptionScheme = EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM

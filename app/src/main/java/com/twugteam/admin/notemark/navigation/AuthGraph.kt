@@ -24,6 +24,7 @@ import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterE
 import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterScreenRoot
 import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterViewModel
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 fun NavGraphBuilder.authGraph(
     modifier: Modifier = Modifier,
@@ -76,7 +77,9 @@ fun NavGraphBuilder.authGraph(
                         restoreState = true
                     }
 
-                    is LogInEvents.Error -> TODO()
+                    is LogInEvents.Error -> {
+                        Timber.tag("API").d("${events.error}")
+                    }
                     LogInEvents.LoginSuccess -> {
                         navController.navigate(Screens.NoteGraph)
                     }

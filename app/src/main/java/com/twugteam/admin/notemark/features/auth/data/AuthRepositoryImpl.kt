@@ -28,7 +28,7 @@ class AuthRepositoryImpl(
                 authInfo = AuthInfo(
                     accessToken = result.data.accessToken,
                     refreshToken = result.data.refreshToken,
-                    userId = result.data.userId
+                    userId = result.data.userId ?: "",
                 )
             )
         }
