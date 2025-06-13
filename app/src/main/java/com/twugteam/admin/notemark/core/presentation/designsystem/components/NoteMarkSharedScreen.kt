@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -74,7 +75,8 @@ fun NoteMarkSharedScreen(
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp),
+                    .padding(top = 8.dp)
+                    .imePadding(),
                 color = SurfaceLowest,
                 shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
             ) {
@@ -103,7 +105,7 @@ fun NoteMarkSharedScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(top = 32.dp, start = 60.dp, end = 40.dp, bottom = 46.dp)
+                            .padding(top = 32.dp, start = 60.dp, end = 40.dp)
                     ) {
                         Column(
                             modifier = Modifier.weight(1f),
