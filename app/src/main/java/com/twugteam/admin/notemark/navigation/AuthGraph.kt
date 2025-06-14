@@ -57,7 +57,7 @@ fun NavGraphBuilder.authGraph(
             }
 
             LandingScreen(
-                modifier = Modifier.fillMaxSize().navigationBarsPadding(),
+                modifier = Modifier.fillMaxSize(),
                 windowSize = windowSize,
                 onActions = landingViewModel::onActions
             )
