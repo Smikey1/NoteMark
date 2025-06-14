@@ -114,7 +114,7 @@ class LogInViewModel(
                 password = _logInUiState.value.password
             )
 
-            Timber.tag("ApiTag").d("$result sdfasfds")
+            Timber.tag("ApiResponse").d("result: $result")
             _logInUiState.update { newState ->
                 newState.copy(isEnabled = true, isLoading = false)
             }

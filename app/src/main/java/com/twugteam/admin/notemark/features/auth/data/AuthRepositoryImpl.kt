@@ -11,6 +11,7 @@ import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
 import com.twugteam.admin.notemark.features.auth.data.model.RegisterRequest
 import com.twugteam.admin.notemark.features.auth.domain.AuthRepository
 import io.ktor.client.HttpClient
+import timber.log.Timber
 
 class AuthRepositoryImpl(
     private val httpClient: HttpClient,
@@ -25,6 +26,8 @@ class AuthRepositoryImpl(
             body = LoginRequest(email = email, password = password)
         )
         if (result is Result.Success) {
+            val authInfoFirst = sessionStorage.getAuthInto()
+            Timber.tag("SessionStorage").d(authInfoFirst?.accessToken)
             sessionStorage.setAuthInfo(
                 authInfo = AuthInfo(
                     accessToken = result.data.accessToken,
@@ -32,6 +35,9 @@ class AuthRepositoryImpl(
                     userId = result.data.userId ?: "",
                 )
             )
+            val authInfoSecond = sessionStorage.getAuthInto()
+
+            Timber.tag("SessionStorage").d(authInfoSecond?.accessToken)
         }
         return result.asEmptyDataResult()
     }

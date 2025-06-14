@@ -27,6 +27,16 @@ import timber.log.Timber
 class HttpClientFactory(
     private val sessionStorage: SessionStorage
 ) {
+    private val refreshClient = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
+        defaultRequest {
+            contentType(ContentType.Application.Json)
+            header("X-User-Email", ApiEndpoints.EMAIL)
+        }
+    }
+
     fun build(): HttpClient {
         return HttpClient(CIO) {
             install(ContentNegotiation) {
@@ -64,7 +74,7 @@ class HttpClientFactory(
 
                     refreshTokens {
                         val authInfo = sessionStorage.getAuthInto()
-                        val response = client.post<AccessTokenRequest, AccessTokenResponse>(
+                        val response = refreshClient.post<AccessTokenRequest, AccessTokenResponse>(
                             route = ApiEndpoints.REFRESH_TOKEN_ENDPOINT,
                             body = AccessTokenRequest(
                                 refreshToken = authInfo?.refreshToken ?: "",
