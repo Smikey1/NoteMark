@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.R
@@ -25,8 +26,8 @@ onActions: (LogInActions) -> Unit,
         title = R.string.login,
         isPortrait = false,
         description = R.string.capture_your_thoughts_and_ideas,
-        showSnackBar = state.error,
-        snackBarError = state.errorText,
+        showSnackBar = state.showSnackBar,
+        snackBarText = state.snackBarText,
     ) { contentModifier->
         Column(
             modifier = contentModifier
@@ -36,7 +37,7 @@ onActions: (LogInActions) -> Unit,
                 modifier = Modifier,
                 inputLabel = R.string.email,
                 hint = R.string.example_email,
-                enabled = state.isEnabled,
+                enabled = state.isEnabled && !state.isLoading,
                 inputValue = state.email,
                 onValueChange = { emailValue ->
                     onActions(LogInActions.UpdateEmail(emailValue = emailValue))
@@ -51,7 +52,7 @@ onActions: (LogInActions) -> Unit,
                 modifier = Modifier,
                 inputLabel = R.string.password,
                 hint = R.string.password,
-                enabled = state.isEnabled,
+                enabled = state.isEnabled && !state.isLoading,
                 inputValue = state.password,
                 isLastField = true,
                 onValueChange = { passwordValue ->

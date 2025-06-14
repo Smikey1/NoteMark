@@ -32,6 +32,8 @@ fun RegisterScreenTablet(
             .padding(vertical = 100.dp),
         title = R.string.create_account,
         description = R.string.capture_your_thoughts_and_ideas,
+        showSnackBar = state.showSnackBar,
+        snackBarText = state.snackBarText
     ) {
         Column(
             modifier = Modifier

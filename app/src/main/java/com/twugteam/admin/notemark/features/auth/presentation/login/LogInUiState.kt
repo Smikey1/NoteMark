@@ -7,6 +7,6 @@ data class LogInUiState(
     val isEnabled: Boolean = true,
     val isLoading: Boolean = false,
     val isLogInEnabled: Boolean = false,
-    val error: Boolean = false,
-    val errorText: String = ""
+    val showSnackBar: Boolean = false,
+    val snackBarText: String = ""
 )

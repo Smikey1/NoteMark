@@ -42,14 +42,14 @@ fun NoteMarkSharedScreen(
     description: Int,
     isPortrait: Boolean = true,
     showSnackBar: Boolean = false,
-    snackBarError: String = "",
+    snackBarText: String = "",
     content: @Composable (Modifier) -> Unit
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(showSnackBar) {
         if(showSnackBar){
-            snackBarHostState.showSnackbar(message = snackBarError)
+            snackBarHostState.showSnackbar(message = snackBarText)
         }
     }
 

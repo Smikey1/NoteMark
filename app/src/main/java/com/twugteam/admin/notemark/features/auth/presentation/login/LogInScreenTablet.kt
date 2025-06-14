@@ -30,8 +30,8 @@ fun LogInScreenTablet(
             .padding(vertical = 100.dp),
         title = R.string.login,
         description = R.string.capture_your_thoughts_and_ideas,
-        snackBarError = state.errorText,
-        showSnackBar = state.error,
+        snackBarText = state.snackBarText,
+        showSnackBar = state.showSnackBar,
         ) { contentModifier ->
         Column(
             modifier = contentModifier
@@ -41,7 +41,7 @@ fun LogInScreenTablet(
                 modifier = Modifier,
                 inputLabel = R.string.email,
                 hint = R.string.example_email,
-                enabled = state.isEnabled,
+                enabled = state.isEnabled && !state.isLoading,
                 inputValue = state.email,
                 onValueChange = { emailValue ->
                     onActions(LogInActions.UpdateEmail(emailValue = emailValue))
@@ -56,7 +56,7 @@ fun LogInScreenTablet(
                 modifier = Modifier,
                 inputLabel = R.string.password,
                 hint = R.string.password,
-                enabled = state.isEnabled,
+                enabled = state.isEnabled && !state.isLoading,
                 inputValue = state.password,
                 isLastField = true,
                 onValueChange = { passwordValue ->

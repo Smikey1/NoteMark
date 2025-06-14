@@ -1,6 +1,5 @@
 package com.twugteam.admin.notemark.navigation
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.getValue
@@ -17,7 +16,6 @@ import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingEvents
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreen
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreenViewModel
-import com.twugteam.admin.notemark.features.auth.presentation.login.LogInActions
 import com.twugteam.admin.notemark.features.auth.presentation.login.LogInEvents
 import com.twugteam.admin.notemark.features.auth.presentation.login.LogInScreen
 import com.twugteam.admin.notemark.features.auth.presentation.login.LogInViewModel
@@ -80,11 +78,16 @@ fun NavGraphBuilder.authGraph(
 
                     is LogInEvents.Error -> {
                         Timber.tag("API").d("SERVER ERROR --> ${events.error.asString(context)}")
-                        logInViewModel.onActions(LogInActions.ShowError(events.error.asString(context)))
+                        logInViewModel.showSnackBar(errorMessage = events.error.asString(context))
                     }
 
                     LogInEvents.LoginSuccess -> {
-                        navController.navigate(Screens.NoteGraph)
+                        navController.navigate(Screens.NoteGraph){
+                            popUpTo(0){
+                                inclusive = true
+                                saveState = false
+                            }
+                        }
                     }
                 }
             }
@@ -107,20 +110,21 @@ fun NavGraphBuilder.authGraph(
 
             ObserveAsEvents(registerViewModel.events) { events ->
                 when (events) {
-                    is RegisterEvent.Error -> {
+                    is RegisterEvent.RegistrationError -> {
                         keyboardController?.hide()
-                        Toast.makeText(context, events.error.asString(context), Toast.LENGTH_SHORT)
-                            .show()
+                        registerViewModel.showSnackBar(errorMessage = events.error.asString(context))
                     }
 
                     RegisterEvent.RegistrationSuccess -> {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.registration_successful),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        registerViewModel.showSnackBar(errorMessage = context.getString(R.string.registration_successful))
+                        navController.navigate(Screens.LogIn){
+                            popUpTo<Screens.Register>{
+                                inclusive = true
+                                saveState = false
+                            }
+                            restoreState = false
+                        }
                     }
-
 
                     RegisterEvent.NavigateToLogin -> navController.navigate(Screens.LogIn) {
                         popUpTo<Screens.Register> {

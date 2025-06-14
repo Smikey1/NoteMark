@@ -24,7 +24,6 @@ sealed interface LogInActions {
     data class UpdatePassword(val passwordValue: String) : LogInActions
     data object OnLogInClick : LogInActions
     data object OnDontHaveAccountClick : LogInActions
-    data class ShowError(val errorMessage: String): LogInActions
 }
 
 sealed interface LogInEvents {
@@ -61,7 +60,6 @@ class LogInViewModel(
                 is LogInActions.UpdatePassword -> updatePassword(passwordValue = logInActions.passwordValue)
                 LogInActions.OnLogInClick -> logIn()
                 LogInActions.OnDontHaveAccountClick -> onDontHaveAccountClick()
-                is LogInActions.ShowError -> showError(errorMessage = logInActions.errorMessage)
             }
         }
     }
@@ -115,6 +113,8 @@ class LogInViewModel(
                 email = _logInUiState.value.email.trim(),
                 password = _logInUiState.value.password
             )
+
+            Timber.tag("ApiTag").d("$result sdfasfds")
             _logInUiState.update { newState ->
                 newState.copy(isEnabled = true, isLoading = false)
             }
@@ -143,17 +143,19 @@ class LogInViewModel(
         }
     }
 
-    private suspend fun showError(errorMessage: String){
-        _logInUiState.update{ newState->
-            newState.copy(
-                error = true,
-                errorText = errorMessage)
-        }
-        delay(2.seconds)
-        _logInUiState.update{ newState->
-            newState.copy(
-                error = false,
-                errorText = "")
-        }
+     fun showSnackBar(errorMessage: String){
+         viewModelScope.launch {
+             _logInUiState.update{ newState->
+                 newState.copy(
+                     showSnackBar = true,
+                     snackBarText = errorMessage)
+             }
+             delay(2.seconds)
+             _logInUiState.update{ newState->
+                 newState.copy(
+                     showSnackBar = false,
+                     snackBarText = "")
+             }
+         }
     }
 }

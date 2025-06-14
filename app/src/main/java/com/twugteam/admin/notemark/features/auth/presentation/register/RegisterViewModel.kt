@@ -2,7 +2,12 @@ package com.twugteam.admin.notemark.features.auth.presentation.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.twugteam.admin.notemark.R
+import com.twugteam.admin.notemark.core.domain.util.DataError
+import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.presentation.ui.UiText
+import com.twugteam.admin.notemark.core.presentation.ui.asUiText
+import com.twugteam.admin.notemark.features.auth.data.model.RegisterRequest
 import com.twugteam.admin.notemark.features.auth.domain.AuthRepository
 import com.twugteam.admin.notemark.features.auth.domain.UserDataValidator
 import kotlinx.coroutines.channels.Channel
@@ -25,7 +30,7 @@ sealed interface RegisterAction {
 }
 
 sealed interface RegisterEvent {
-    data class Error(val error: UiText) : RegisterEvent
+    data class RegistrationError(val error: UiText) : RegisterEvent
     data object RegistrationSuccess : RegisterEvent
     data object NavigateToLogin : RegisterEvent
 }
@@ -140,11 +145,33 @@ class RegisterViewModel(
 
     private suspend fun register() {
         _state.update { it.copy(isRegistering = true) }
-        delay(2.seconds)
 
-        // TODO: Replace with actual API call and error handling
-        _state.update { it.copy(isRegistering = false) }
-        _eventChannel.send(RegisterEvent.RegistrationSuccess)
+        val result = authRepository.register(registerRequest =
+            RegisterRequest(
+                username = _state.value.username.value,
+                email = _state.value.email.value,
+                password = _state.value.password.value
+            ))
+
+        when(result){
+            is Result.Error -> {
+                Timber.tag("ApiCall").d("result: ${result.error}")
+                if(result.error == DataError.Network.CONFLICT){
+                    _eventChannel.send(RegisterEvent.RegistrationError(error = UiText.StringResource(R.string.error_conflict)))
+                }else {
+                    _eventChannel.send(RegisterEvent.RegistrationError(error = result.error.asUiText()))
+                }
+                _state.update { it.copy(isRegistering = false) }
+            }
+            is Result.Success -> {
+                Timber.tag("ApiCall").d("result: success")
+                //clear state
+                resetState()
+                _eventChannel.send(RegisterEvent.RegistrationSuccess)
+            }
+        }
+
+
     }
 
 
@@ -155,5 +182,24 @@ class RegisterViewModel(
     private suspend fun navigateToLogin() {
         _eventChannel.send(RegisterEvent.NavigateToLogin)
     }
+    
+    fun showSnackBar(errorMessage: String){
+        viewModelScope.launch {
+            _state.update{ newState->
+                newState.copy(
+                    showSnackBar = true,
+                    snackBarText = errorMessage)
+            }
+            delay(2.seconds)
+            _state.update{ newState->
+                newState.copy(
+                    showSnackBar = false,
+                    snackBarText = "")
+            }
+        }
+    }
 
+    private fun resetState(){
+        _state.value = RegisterState()
+    }
 }

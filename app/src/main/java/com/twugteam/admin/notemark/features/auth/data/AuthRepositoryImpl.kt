@@ -8,12 +8,13 @@ import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.EmptyResult
 import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
+import com.twugteam.admin.notemark.features.auth.data.model.RegisterRequest
 import com.twugteam.admin.notemark.features.auth.domain.AuthRepository
 import io.ktor.client.HttpClient
 
 class AuthRepositoryImpl(
     private val httpClient: HttpClient,
-    private val sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage,
 ) : AuthRepository {
     override suspend fun login(
         email: String,
@@ -33,5 +34,14 @@ class AuthRepositoryImpl(
             )
         }
         return result.asEmptyDataResult()
+    }
+
+    override suspend fun register(registerRequest: RegisterRequest): EmptyResult<DataError.Network> {
+        val result = httpClient.post<RegisterRequest, Unit>(
+            route = ApiEndpoints.REGISTER_ENDPOINT,
+            body = registerRequest
+        )
+
+        return result
     }
 }

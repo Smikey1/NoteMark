@@ -123,6 +123,7 @@ fun NoteMarkInputTextField(
             trailingIcon = {
                 if (isTrailingShowing) {
                     IconButton(
+                        enabled = enabled,
                         onClick = {
                             isEyeOpened = !isEyeOpened
                         }

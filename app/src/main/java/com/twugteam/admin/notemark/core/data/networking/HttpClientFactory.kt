@@ -39,7 +39,7 @@ class HttpClientFactory(
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
-                        Timber.d(message)
+                        Timber.tag("ApiRequest").d(message)
                     }
 
                 }
@@ -65,7 +65,7 @@ class HttpClientFactory(
                     refreshTokens {
                         val authInfo = sessionStorage.getAuthInto()
                         val response = client.post<AccessTokenRequest, AccessTokenResponse>(
-                            route = "/accessToken",
+                            route = ApiEndpoints.REFRESH_TOKEN_ENDPOINT,
                             body = AccessTokenRequest(
                                 refreshToken = authInfo?.refreshToken ?: "",
                                 userId = authInfo?.userId ?: ""

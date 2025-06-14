@@ -29,6 +29,8 @@ data class RegisterState(
     ),
     val isRegistering: Boolean = false,
     val canRegister: Boolean = false,
+    val showSnackBar: Boolean = false,
+    val snackBarText: String = ""
 )
 
 data class InputFieldState(

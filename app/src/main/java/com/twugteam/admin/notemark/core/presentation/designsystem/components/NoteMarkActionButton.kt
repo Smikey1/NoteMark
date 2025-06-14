@@ -59,7 +59,7 @@ fun NoteMarkActionButton(
                     .size(24.dp)
                     .alpha(if (isLoading) 1f else 0f),
                 strokeWidth = 1.5.dp,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onPrimary
             )
             Text(
                 text = text,
