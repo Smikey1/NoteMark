@@ -68,14 +68,14 @@ class HttpClientFactory(
                             route = ApiEndpoints.REFRESH_TOKEN_ENDPOINT,
                             body = AccessTokenRequest(
                                 refreshToken = authInfo?.refreshToken ?: "",
-                                userId = authInfo?.userId ?: ""
+                                username = authInfo?.username ?: ""
                             )
                         )
                         if (response is Result.Success) {
                             val newAuthInfo = AuthInfo(
                                 accessToken = response.data.accessToken,
                                 refreshToken = authInfo?.refreshToken ?: "",
-                                userId = authInfo?.userId ?: ""
+                                username = authInfo?.username ?: ""
                             )
                             sessionStorage.setAuthInfo(newAuthInfo)
 

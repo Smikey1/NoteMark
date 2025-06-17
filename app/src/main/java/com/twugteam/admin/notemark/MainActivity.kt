@@ -16,9 +16,10 @@ import androidx.navigation.compose.rememberNavController
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 import com.twugteam.admin.notemark.core.presentation.ui.ProvideDeviceInfo
 import com.twugteam.admin.notemark.navigation.NavigationRoot
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
-    val mainViewModel: MainViewModel by lazy { MainViewModel() }
+    val mainViewModel by  viewModel<MainViewModel>()
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {

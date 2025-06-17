@@ -3,7 +3,6 @@ package com.twugteam.admin.notemark.features.auth.presentation.register
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import timber.log.Timber
 
 @Composable
 fun RegisterScreenRoot(
@@ -15,7 +14,6 @@ fun RegisterScreenRoot(
     when (windowSize) {
         //MOBILE PORTRAIT
         WindowWidthSizeClass.Compact -> {
-            Timber.tag("WindowSize").d("Compact")
             RegisterScreenPortrait(
                 modifier = modifier,
                 state = state,
@@ -25,7 +23,6 @@ fun RegisterScreenRoot(
 
         //TABLET
         WindowWidthSizeClass.Medium -> {
-            Timber.tag("WindowSize").d("Medium")
             RegisterScreenTablet(
                 modifier = modifier,
                 state = state,
@@ -35,7 +32,6 @@ fun RegisterScreenRoot(
 
         //LANDSCAPE
         WindowWidthSizeClass.Expanded -> {
-            Timber.tag("WindowSize").d("Expanded")
             RegisterScreenLandscape(
                 modifier = modifier,
                 state = state,
@@ -43,9 +39,7 @@ fun RegisterScreenRoot(
             )
         }
 
-        //else
         else -> {
-            Timber.tag("WindowSize").d("Else")
             RegisterScreenPortrait(
                 modifier = modifier,
                 state = state,

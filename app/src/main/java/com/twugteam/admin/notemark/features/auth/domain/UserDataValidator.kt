@@ -35,6 +35,7 @@ class UserDataValidator(
                 errorText = ""
             )
         } else {
+            //TODO: Is not a logic of domain model which text to show, rather its presentation job
             val errorText =
                 if (username.length < MIN_USERNAME_LENGTH) "Username must be at least 3 characters." else "Username canʼt be longer than 20 characters."
             ValidityState(

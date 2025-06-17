@@ -16,7 +16,7 @@ import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingEvents
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreen
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreenViewModel
-import com.twugteam.admin.notemark.features.auth.presentation.login.LogInEvents
+import com.twugteam.admin.notemark.features.auth.presentation.login.LogInEvent
 import com.twugteam.admin.notemark.features.auth.presentation.login.LogInScreen
 import com.twugteam.admin.notemark.features.auth.presentation.login.LogInViewModel
 import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterEvent
@@ -68,7 +68,7 @@ fun NavGraphBuilder.authGraph(
             val context = LocalContext.current
             ObserveAsEvents(logInViewModel.events) { events ->
                 when (events) {
-                    LogInEvents.NavigateToRegister -> navController.navigate(Screens.Register) {
+                    LogInEvent.NavigateToRegister -> navController.navigate(Screens.Register) {
                         popUpTo<Screens.LogIn> {
                             inclusive = true
                             saveState = true
@@ -76,12 +76,11 @@ fun NavGraphBuilder.authGraph(
                         restoreState = true
                     }
 
-                    is LogInEvents.Error -> {
-                        Timber.tag("API").d("SERVER ERROR --> ${events.error.asString(context)}")
+                    is LogInEvent.Error -> {
                         logInViewModel.showSnackBar(errorMessage = events.error.asString(context))
                     }
 
-                    LogInEvents.LoginSuccess -> {
+                    LogInEvent.LoginSuccess -> {
                         navController.navigate(Screens.NoteGraph){
                             popUpTo(0){
                                 inclusive = true

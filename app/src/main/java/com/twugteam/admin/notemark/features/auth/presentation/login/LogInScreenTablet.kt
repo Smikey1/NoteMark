@@ -20,7 +20,7 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.components.Not
 fun LogInScreenTablet(
     modifier: Modifier = Modifier,
     state: LogInUiState,
-    onActions: (LogInActions) -> Unit,
+    onActions: (LogInAction) -> Unit,
 ) {
     NoteMarkSharedScreen(
         modifier = modifier,
@@ -44,7 +44,7 @@ fun LogInScreenTablet(
                 enabled = state.isEnabled && !state.isLoading,
                 inputValue = state.email,
                 onValueChange = { emailValue ->
-                    onActions(LogInActions.UpdateEmail(emailValue = emailValue))
+                    onActions(LogInAction.UpdateEmail(emailValue = emailValue))
                 },
                 isTrailingShowing = false,
             )
@@ -60,7 +60,7 @@ fun LogInScreenTablet(
                 inputValue = state.password,
                 isLastField = true,
                 onValueChange = { passwordValue ->
-                    onActions(LogInActions.UpdatePassword(passwordValue = passwordValue))
+                    onActions(LogInAction.UpdatePassword(passwordValue = passwordValue))
                 },
                 isTrailingShowing = true,
             )
@@ -73,7 +73,7 @@ fun LogInScreenTablet(
                 enabled = state.isEnabled && state.isLogInEnabled,
                 isLoading = state.isLoading,
                 onClick = {
-                    onActions(LogInActions.OnLogInClick)
+                    onActions(LogInAction.LogInClick)
                 }
             )
 
@@ -85,7 +85,7 @@ fun LogInScreenTablet(
                 enabled = state.isEnabled,
                 isLoading = false,
                 onClick = {
-                    onActions(LogInActions.OnDontHaveAccountClick)
+                    onActions(LogInAction.DontHaveAccountClick)
                 }
             )
         }

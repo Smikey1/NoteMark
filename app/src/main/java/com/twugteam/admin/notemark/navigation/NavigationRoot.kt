@@ -16,7 +16,7 @@ fun NavigationRoot(
     NavHost(
         modifier = Modifier,
         navController = navController,
-        startDestination = if (isLoggedInPreviously) Screens.NoteGraph else Screens.AuthGraph
+        startDestination = if (isLoggedInPreviously) Screens.AuthGraph else Screens.AuthGraph
     ) {
         authGraph(modifier = modifier, navController = navController, windowSize = windowSize)
 

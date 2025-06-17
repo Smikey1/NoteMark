@@ -16,20 +16,19 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 
-sealed interface LogInActions {
-    data class UpdateEmail(val emailValue: String) : LogInActions
-    data class UpdatePassword(val passwordValue: String) : LogInActions
-    data object OnLogInClick : LogInActions
-    data object OnDontHaveAccountClick : LogInActions
+sealed interface LogInAction {
+    data class UpdateEmail(val emailValue: String) : LogInAction
+    data class UpdatePassword(val passwordValue: String) : LogInAction
+    data object LogInClick : LogInAction
+    data object DontHaveAccountClick : LogInAction
 }
 
-sealed interface LogInEvents {
-    data object NavigateToRegister : LogInEvents
-    data object LoginSuccess : LogInEvents
-    data class Error(val error: UiText): LogInEvents
+sealed interface LogInEvent {
+    data object NavigateToRegister : LogInEvent
+    data object LoginSuccess : LogInEvent
+    data class Error(val error: UiText) : LogInEvent
 
 }
 
@@ -40,26 +39,16 @@ class LogInViewModel(
     private val _logInUiState: MutableStateFlow<LogInUiState> = MutableStateFlow(LogInUiState())
     val logInUiState = _logInUiState.asStateFlow()
 
-    private val _events = Channel<LogInEvents>()
+    private val _events = Channel<LogInEvent>()
     val events = _events.receiveAsFlow()
 
-    init {
-        Timber.tag("viewModel").d("LogIn: initialized")
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Timber.tag("viewModel").d("LogIn: Cleared!")
-
-    }
-
-    fun onActions(logInActions: LogInActions) {
+    fun onActions(logInAction: LogInAction) {
         viewModelScope.launch {
-            when (logInActions) {
-                is LogInActions.UpdateEmail -> updateEmail(emailValue = logInActions.emailValue)
-                is LogInActions.UpdatePassword -> updatePassword(passwordValue = logInActions.passwordValue)
-                LogInActions.OnLogInClick -> logIn()
-                LogInActions.OnDontHaveAccountClick -> onDontHaveAccountClick()
+            when (logInAction) {
+                is LogInAction.UpdateEmail -> updateEmail(emailValue = logInAction.emailValue)
+                is LogInAction.UpdatePassword -> updatePassword(passwordValue = logInAction.passwordValue)
+                LogInAction.LogInClick -> logIn()
+                LogInAction.DontHaveAccountClick -> onDontHaveAccountClick()
             }
         }
     }
@@ -86,9 +75,7 @@ class LogInViewModel(
             _logInUiState.update { newState ->
                 newState.copy(password = passwordValue)
             }
-            Timber.tag("MyTag").d(passwordValue)
             if (passwordValue.isNotBlank()) {
-                Timber.tag("MyTag").d("here")
                 _logInUiState.update { newState ->
                     newState.copy(isLogInEnabled = true)
                 }
@@ -114,21 +101,23 @@ class LogInViewModel(
                 password = _logInUiState.value.password
             )
 
-            Timber.tag("ApiTag").d("$result sdfasfds")
             _logInUiState.update { newState ->
                 newState.copy(isEnabled = true, isLoading = false)
             }
             when (result) {
                 is Result.Error -> {
                     if (result.error == DataError.Network.UNAUTHORIZED) {
-                        _events.send(LogInEvents.Error(
-                            UiText.StringResource(R.string.error_email_password_incorrect)
-                        ))
+                        _events.send(
+                            LogInEvent.Error(
+                                UiText.StringResource(R.string.error_email_password_incorrect)
+                            )
+                        )
                     } else {
-                        _events.send(LogInEvents.Error(result.error.asUiText()))
+                        _events.send(LogInEvent.Error(result.error.asUiText()))
                     }
                 }
-                is Result.Success -> _events.send(LogInEvents.LoginSuccess)
+
+                is Result.Success -> _events.send(LogInEvent.LoginSuccess)
             }
         }
     }
@@ -137,25 +126,27 @@ class LogInViewModel(
         _logInUiState.update { newState ->
             newState.copy(isEnabled = false, isLoading = true)
         }
-        _events.send(element = LogInEvents.NavigateToRegister)
+        _events.send(element = LogInEvent.NavigateToRegister)
         _logInUiState.update { newState ->
             newState.copy(isEnabled = true, isLoading = false)
         }
     }
 
-     fun showSnackBar(errorMessage: String){
-         viewModelScope.launch {
-             _logInUiState.update{ newState->
-                 newState.copy(
-                     showSnackBar = true,
-                     snackBarText = errorMessage)
-             }
-             delay(2.seconds)
-             _logInUiState.update{ newState->
-                 newState.copy(
-                     showSnackBar = false,
-                     snackBarText = "")
-             }
-         }
+    fun showSnackBar(errorMessage: String) {
+        viewModelScope.launch {
+            _logInUiState.update { newState ->
+                newState.copy(
+                    showSnackBar = true,
+                    snackBarText = errorMessage
+                )
+            }
+            delay(2.seconds)
+            _logInUiState.update { newState ->
+                newState.copy(
+                    showSnackBar = false,
+                    snackBarText = ""
+                )
+            }
+        }
     }
 }

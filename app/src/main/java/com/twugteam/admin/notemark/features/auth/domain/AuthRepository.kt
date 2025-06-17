@@ -6,5 +6,5 @@ import com.twugteam.admin.notemark.features.auth.data.model.RegisterRequest
 
 interface AuthRepository {
     suspend fun login(email: String, password: String): EmptyResult<DataError.Network>
-    suspend fun register(registerRequest: RegisterRequest): EmptyResult<DataError.Network>
+    suspend fun register(username: String, email: String, password: String): EmptyResult<DataError.Network>
 }

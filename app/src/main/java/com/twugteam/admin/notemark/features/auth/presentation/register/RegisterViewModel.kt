@@ -7,7 +7,6 @@ import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.presentation.ui.UiText
 import com.twugteam.admin.notemark.core.presentation.ui.asUiText
-import com.twugteam.admin.notemark.features.auth.data.model.RegisterRequest
 import com.twugteam.admin.notemark.features.auth.domain.AuthRepository
 import com.twugteam.admin.notemark.features.auth.domain.UserDataValidator
 import kotlinx.coroutines.channels.Channel
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 
 sealed interface RegisterAction {
@@ -46,16 +44,6 @@ class RegisterViewModel(
     private val _eventChannel = Channel<RegisterEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    init {
-        Timber.tag("viewModel").d("Register: initialized")
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Timber.tag("viewModel").d("Register: Cleared!")
-
-    }
-
     fun onAction(action: RegisterAction) {
         viewModelScope.launch {
             when (action) {
@@ -71,19 +59,18 @@ class RegisterViewModel(
 
     private fun updateUsername(username: String) {
         val validityState = userDataValidator.isUsernameValid(username)
-        Timber.tag("MyTag").d("$validityState")
         _state.update {
             it.copy(
                 username = it.username.copy(
                     value = username,
                     isValid = validityState.isValid,
-                    isError = if(username.isNotBlank()) !validityState.isValid else false,
+                    isError = if (username.isNotBlank()) !validityState.isValid else false,
                     errorText = validityState.errorText
                 )
             )
         }
         val canRegister = canRegister()
-        _state.update { newState->
+        _state.update { newState ->
             newState.copy(canRegister = canRegister)
         }
     }
@@ -95,12 +82,12 @@ class RegisterViewModel(
                 email = it.email.copy(
                     value = email,
                     isValid = isValid,
-                    isError = if(email.isNotBlank())!isValid else false,
+                    isError = if (email.isNotBlank()) !isValid else false,
                 ),
             )
         }
         val canRegister = canRegister()
-        _state.update { newState->
+        _state.update { newState ->
             newState.copy(canRegister = canRegister)
         }
     }
@@ -117,7 +104,7 @@ class RegisterViewModel(
             )
         }
         val canRegister = canRegister()
-        _state.update { newState->
+        _state.update { newState ->
             newState.copy(canRegister = canRegister)
         }
     }
@@ -134,11 +121,11 @@ class RegisterViewModel(
                     isValid = isValid,
                     isError = !isValid
                 ),
-                )
+            )
         }
 
         val canRegister = canRegister()
-        _state.update { newState->
+        _state.update { newState ->
             newState.copy(canRegister = canRegister)
         }
     }
@@ -146,25 +133,29 @@ class RegisterViewModel(
     private suspend fun register() {
         _state.update { it.copy(isRegistering = true) }
 
-        val result = authRepository.register(registerRequest =
-            RegisterRequest(
-                username = _state.value.username.value,
-                email = _state.value.email.value,
-                password = _state.value.password.value
-            ))
+        val result = authRepository.register(
+            username = _state.value.username.value,
+            email = _state.value.email.value,
+            password = _state.value.password.value
+        )
 
-        when(result){
+        when (result) {
             is Result.Error -> {
-                Timber.tag("ApiCall").d("result: ${result.error}")
-                if(result.error == DataError.Network.CONFLICT){
-                    _eventChannel.send(RegisterEvent.RegistrationError(error = UiText.StringResource(R.string.error_conflict)))
-                }else {
+                if (result.error == DataError.Network.CONFLICT) {
+                    _eventChannel.send(
+                        RegisterEvent.RegistrationError(
+                            error = UiText.StringResource(
+                                R.string.error_conflict
+                            )
+                        )
+                    )
+                } else {
                     _eventChannel.send(RegisterEvent.RegistrationError(error = result.error.asUiText()))
                 }
                 _state.update { it.copy(isRegistering = false) }
             }
+
             is Result.Success -> {
-                Timber.tag("ApiCall").d("result: success")
                 //clear state
                 resetState()
                 _eventChannel.send(RegisterEvent.RegistrationSuccess)
@@ -175,31 +166,34 @@ class RegisterViewModel(
     }
 
 
-    private fun canRegister(): Boolean{
+    private fun canRegister(): Boolean {
         val state = _state.value
-        return state.username.isValid && state.email.isValid && state.password.isValid  && (state.password.value == state.confirmPassword.value)
+        return state.username.isValid && state.email.isValid && state.password.isValid && (state.password.value == state.confirmPassword.value)
     }
+
     private suspend fun navigateToLogin() {
         _eventChannel.send(RegisterEvent.NavigateToLogin)
     }
-    
-    fun showSnackBar(errorMessage: String){
+
+    fun showSnackBar(errorMessage: String) {
         viewModelScope.launch {
-            _state.update{ newState->
+            _state.update { newState ->
                 newState.copy(
                     showSnackBar = true,
-                    snackBarText = errorMessage)
+                    snackBarText = errorMessage
+                )
             }
             delay(2.seconds)
-            _state.update{ newState->
+            _state.update { newState ->
                 newState.copy(
                     showSnackBar = false,
-                    snackBarText = "")
+                    snackBarText = ""
+                )
             }
         }
     }
 
-    private fun resetState(){
+    private fun resetState() {
         _state.value = RegisterState()
     }
 }

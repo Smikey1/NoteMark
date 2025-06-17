@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.R
@@ -17,9 +16,9 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.components.Not
 
 @Composable
 fun LogInScreenLandscape(
-modifier: Modifier = Modifier,
-state: LogInUiState,
-onActions: (LogInActions) -> Unit,
+    modifier: Modifier = Modifier,
+    state: LogInUiState,
+    onActions: (LogInAction) -> Unit,
 ) {
     NoteMarkSharedScreen(
         modifier = modifier,
@@ -40,7 +39,7 @@ onActions: (LogInActions) -> Unit,
                 enabled = state.isEnabled && !state.isLoading,
                 inputValue = state.email,
                 onValueChange = { emailValue ->
-                    onActions(LogInActions.UpdateEmail(emailValue = emailValue))
+                    onActions(LogInAction.UpdateEmail(emailValue = emailValue))
                 },
                 isTrailingShowing = false,
             )
@@ -56,7 +55,7 @@ onActions: (LogInActions) -> Unit,
                 inputValue = state.password,
                 isLastField = true,
                 onValueChange = { passwordValue ->
-                    onActions(LogInActions.UpdatePassword(passwordValue = passwordValue))
+                    onActions(LogInAction.UpdatePassword(passwordValue = passwordValue))
                 },
                 isTrailingShowing = true,
             )
@@ -69,7 +68,7 @@ onActions: (LogInActions) -> Unit,
                 enabled = state.isEnabled && state.isLogInEnabled,
                 isLoading = state.isLoading,
                 onClick = {
-                    onActions(LogInActions.OnLogInClick)
+                    onActions(LogInAction.LogInClick)
                 }
             )
 
@@ -81,7 +80,7 @@ onActions: (LogInActions) -> Unit,
                 enabled = state.isEnabled,
                 isLoading = false,
                 onClick = {
-                    onActions(LogInActions.OnDontHaveAccountClick)
+                    onActions(LogInAction.DontHaveAccountClick)
                 }
             )
         }

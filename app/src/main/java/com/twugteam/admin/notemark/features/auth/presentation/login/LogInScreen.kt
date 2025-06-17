@@ -3,19 +3,17 @@ package com.twugteam.admin.notemark.features.auth.presentation.login
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import timber.log.Timber
 
 @Composable
 fun LogInScreen(
     modifier: Modifier = Modifier,
     windowSize: WindowWidthSizeClass,
     state: LogInUiState,
-    onActions: (LogInActions) -> Unit,
+    onActions: (LogInAction) -> Unit,
 ) {
     when (windowSize) {
         //MOBILE PORTRAIT
         WindowWidthSizeClass.Compact -> {
-            Timber.tag("WindowSize").d("Compact")
             LogInScreenMobilePortrait(
                 modifier = modifier,
                 state = state,
@@ -25,7 +23,6 @@ fun LogInScreen(
 
         //TABLET
         WindowWidthSizeClass.Medium -> {
-            Timber.tag("WindowSize").d("Medium")
             LogInScreenTablet(
                 modifier = modifier,
                 state = state,
@@ -35,7 +32,6 @@ fun LogInScreen(
 
         //LANDSCAPE
         WindowWidthSizeClass.Expanded -> {
-            Timber.tag("WindowSize").d("Expanded")
             LogInScreenLandscape(
                 modifier = modifier,
                 state = state,
@@ -45,7 +41,6 @@ fun LogInScreen(
 
         //else
         else -> {
-            Timber.tag("WindowSize").d("Else")
             LogInScreenMobilePortrait(
                 modifier = modifier,
                 state = state,
