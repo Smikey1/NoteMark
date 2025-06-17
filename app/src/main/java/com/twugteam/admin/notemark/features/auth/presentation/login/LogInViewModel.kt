@@ -100,7 +100,7 @@ class LogInViewModel(
                 email = _logInUiState.value.email.trim(),
                 password = _logInUiState.value.password
             )
-
+            
             _logInUiState.update { newState ->
                 newState.copy(isEnabled = true, isLoading = false)
             }

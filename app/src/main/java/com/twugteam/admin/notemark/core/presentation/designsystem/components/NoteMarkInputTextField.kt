@@ -3,9 +3,7 @@ package com.twugteam.admin.notemark.core.presentation.designsystem.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -63,14 +61,6 @@ fun NoteMarkInputTextField(
 
     //current focus manager if focused or not
     val focusManager = LocalFocusManager.current
-
-    //check if keyboard is open or closed
-    val isImeVisible = WindowInsets.isImeVisible
-
-    //when keyboard closed clear focus (show unfocusedContainerColor)
-    if (!isImeVisible) {
-        focusManager.clearFocus()
-    }
 
     var isEyeOpened by rememberSaveable {
         mutableStateOf(true)
@@ -136,7 +126,7 @@ fun NoteMarkInputTextField(
                 }
             },
             supportingText = {
-                if(isFocused && !isError && supportingText != null) {
+                if(isFocused && supportingText != null) {
                     Text(
                         modifier = Modifier.fillMaxWidth().padding(top = 7.dp, bottom = 16.dp),
                         text = supportingText,
@@ -161,8 +151,10 @@ fun NoteMarkInputTextField(
                     focusManager.moveFocus(FocusDirection.Down)
                 },
                 onDone = {
-                    //hide keyboard
+                    //close keyboard
                     keyboardController?.hide()
+                    //clear focus
+                    focusManager.clearFocus()
                 }),
             visualTransformation = if (isEyeOpened == true) {
                 VisualTransformation.None

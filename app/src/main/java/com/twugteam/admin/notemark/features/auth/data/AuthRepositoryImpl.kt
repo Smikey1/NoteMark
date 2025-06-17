@@ -26,6 +26,8 @@ class AuthRepositoryImpl(
             body = LoginRequest(email = email, password = password)
         )
         if (result is Result.Success) {
+            val authInfoFirst = sessionStorage.getAuthInto()
+            Timber.tag("SessionStorage").d(authInfoFirst?.accessToken)
             sessionStorage.setAuthInfo(
                 authInfo = AuthInfo(
                     accessToken = result.data.accessToken,
@@ -33,6 +35,9 @@ class AuthRepositoryImpl(
                     username = result.data.username,
                 )
             )
+            val authInfoSecond = sessionStorage.getAuthInto()
+
+            Timber.tag("SessionStorage").d(authInfoSecond?.accessToken)
         }
         return result.asEmptyDataResult()
     }

@@ -1,6 +1,7 @@
 package com.twugteam.admin.notemark.features.auth.presentation.landing
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,7 +19,7 @@ fun LandingScreen(
         WindowWidthSizeClass.Compact -> {
             Timber.tag("WindowSize").d("Compact")
             LandingScreenMobilePortrait(
-                modifier = modifier,
+                modifier = modifier.navigationBarsPadding(),
                 onActions = onActions
             )
         }
@@ -27,7 +28,7 @@ fun LandingScreen(
         WindowWidthSizeClass.Medium -> {
             Timber.tag("WindowSize").d("Medium")
             LandingScreenTablet(
-                modifier = modifier,
+                modifier = modifier.navigationBarsPadding(),
                 onActions = onActions
             )
         }
