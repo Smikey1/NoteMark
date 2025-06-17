@@ -9,7 +9,6 @@ sealed interface Screens {
     @Serializable
     data object AuthGraph : Screens
 
-    //auth screens
     @Serializable
     data object Landing : Screens
 
@@ -18,6 +17,8 @@ sealed interface Screens {
 
     @Serializable
     data object Register : Screens
+
+
 
     //noteMark navGraph
     @Serializable

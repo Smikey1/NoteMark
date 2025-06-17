@@ -36,9 +36,8 @@ android {
     buildTypes {
         debug {
             buildConfigField("String","NOTEMARK_API_BASE_URL","\"${localProperties.getProperty("NOTEMARK_API_BASE_URL")}\"")
-            buildConfigField("String","REGISTER_ENDPOINT","\"${localProperties.getProperty("REGISTER_ENDPOINT")}\"")
-            buildConfigField("String","LOGIN_ENDPOINT","\"${localProperties.getProperty("LOGIN_ENDPOINT")}\"")
-            buildConfigField("String","REFRESH_TOKEN_ENDPOINT","\"${localProperties.getProperty("REFRESH_TOKEN_ENDPOINT")}\"")
+            buildConfigField("String","AUTH_ENDPOINT","\"${localProperties.getProperty("AUTH_ENDPOINT")}\"")
+            buildConfigField("String","NOTES_ENDPOINT","\"${localProperties.getProperty("NOTES_ENDPOINT")}\"")
             buildConfigField("String","EMAIL","\"${localProperties.getProperty("EMAIL")}\"")
         }
 

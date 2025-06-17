@@ -1,7 +1,6 @@
-@file:OptIn(InternalSerializationApi::class)
-
 package com.twugteam.admin.notemark.core.data.networking
 
+import com.twugteam.admin.notemark.BuildConfig
 import com.twugteam.admin.notemark.core.constant.ApiEndpoints
 import com.twugteam.admin.notemark.core.domain.AuthInfo
 import com.twugteam.admin.notemark.core.domain.SessionStorage
@@ -20,7 +19,6 @@ import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
 import timber.log.Timber
 
@@ -46,14 +44,16 @@ class HttpClientFactory(
                     }
                 )
             }
-            install(Logging) {
-                logger = object : Logger {
-                    override fun log(message: String) {
-                        Timber.tag("ApiRequest").d(message)
-                    }
 
+            if (BuildConfig.DEBUG) {
+                install(Logging) {
+                    logger = object : Logger {
+                        override fun log(message: String) {
+                            Timber.tag("ApiRequest").d(message)
+                        }
+                    }
+                    level = LogLevel.ALL
                 }
-                level = LogLevel.ALL
             }
 
 
