@@ -3,7 +3,7 @@ package com.twugteam.admin.notemark.features.notes.mappers
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.twugteam.admin.notemark.core.domain.notes.Note
-import com.twugteam.admin.notemark.features.notes.data.CreateNoteRequestJson
+import com.twugteam.admin.notemark.features.notes.data.CreateNoteRequest
 import com.twugteam.admin.notemark.features.notes.data.NoteDto
 import java.time.Instant
 import java.time.ZoneId
@@ -20,8 +20,8 @@ fun NoteDto.toNote(): Note {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun Note.toCreateNoteRequestJson(): CreateNoteRequestJson {
-    return CreateNoteRequestJson(
+fun Note.toCreateNoteRequest(): CreateNoteRequest {
+    return CreateNoteRequest(
         id = id!!,
         title = title,
         content = content,
