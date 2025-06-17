@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.twugteam.admin.notemark.core.domain.SessionStorage
+import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
 import kotlinx.coroutines.launch
 
 class MainViewModel(

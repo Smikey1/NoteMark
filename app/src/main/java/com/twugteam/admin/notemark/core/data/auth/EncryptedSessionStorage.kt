@@ -1,8 +1,8 @@
 package com.twugteam.admin.notemark.core.data.auth
 
 import android.content.SharedPreferences
-import com.twugteam.admin.notemark.core.domain.AuthInfo
-import com.twugteam.admin.notemark.core.domain.SessionStorage
+import com.twugteam.admin.notemark.core.domain.auth.AuthInfo
+import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json

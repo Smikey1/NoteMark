@@ -1,6 +1,6 @@
 package com.twugteam.admin.notemark.core.data.auth
 
-import com.twugteam.admin.notemark.core.domain.AuthInfo
+import com.twugteam.admin.notemark.core.domain.auth.AuthInfo
 
 
 fun AuthInfo.toAuthInfoSerializable(): AuthInfoSerializable {

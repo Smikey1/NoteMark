@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.core.domain
+package com.twugteam.admin.notemark.core.domain.auth
 
 data class AuthInfo (
     val accessToken: String,

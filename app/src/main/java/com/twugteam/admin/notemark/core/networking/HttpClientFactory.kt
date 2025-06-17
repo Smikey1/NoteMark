@@ -1,9 +1,9 @@
-package com.twugteam.admin.notemark.core.data.networking
+package com.twugteam.admin.notemark.core.networking
 
 import com.twugteam.admin.notemark.BuildConfig
 import com.twugteam.admin.notemark.core.constant.ApiEndpoints
-import com.twugteam.admin.notemark.core.domain.AuthInfo
-import com.twugteam.admin.notemark.core.domain.SessionStorage
+import com.twugteam.admin.notemark.core.domain.auth.AuthInfo
+import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
 import com.twugteam.admin.notemark.core.domain.util.Result
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO

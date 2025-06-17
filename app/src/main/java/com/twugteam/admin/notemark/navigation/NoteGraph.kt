@@ -11,7 +11,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.twugteam.admin.notemark.core.domain.SessionStorage
+import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
 
 fun NavGraphBuilder.noteGraph(
     modifier: Modifier = Modifier,

@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.core.data.networking
+package com.twugteam.admin.notemark.core.networking
 
 import kotlinx.serialization.Serializable
 

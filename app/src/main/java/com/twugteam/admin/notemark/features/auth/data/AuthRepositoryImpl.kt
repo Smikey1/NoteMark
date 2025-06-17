@@ -1,9 +1,9 @@
 package com.twugteam.admin.notemark.features.auth.data
 
 import com.twugteam.admin.notemark.core.constant.ApiEndpoints
-import com.twugteam.admin.notemark.core.data.networking.post
-import com.twugteam.admin.notemark.core.domain.AuthInfo
-import com.twugteam.admin.notemark.core.domain.SessionStorage
+import com.twugteam.admin.notemark.core.networking.post
+import com.twugteam.admin.notemark.core.domain.auth.AuthInfo
+import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
 import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.EmptyResult
 import com.twugteam.admin.notemark.core.domain.util.Result
