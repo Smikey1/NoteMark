@@ -14,4 +14,5 @@ import androidx.room.RoomDatabase
 )
 abstract class NoteDatabase : RoomDatabase() {
     abstract val noteDao: NoteDao
+    abstract val notePendingSyncDao: NotePendingSyncDao
 }
