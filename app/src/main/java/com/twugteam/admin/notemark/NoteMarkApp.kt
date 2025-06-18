@@ -3,6 +3,7 @@ package com.twugteam.admin.notemark
 import android.app.Application
 import com.twugteam.admin.notemark.core.di.coreModule
 import com.twugteam.admin.notemark.features.auth.di.authModule
+import com.twugteam.admin.notemark.features.notes.di.noteModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidContext
@@ -24,8 +25,9 @@ class NoteMarkApp : Application() {
             androidContext(this@NoteMarkApp)
             modules(
                 appModule,
+                coreModule,
                 authModule,
-                coreModule
+                noteModule,
             )
         }
     }

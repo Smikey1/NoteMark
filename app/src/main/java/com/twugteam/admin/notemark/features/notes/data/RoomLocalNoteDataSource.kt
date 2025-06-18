@@ -1,8 +1,6 @@
 package com.twugteam.admin.notemark.features.notes.data
 
 import android.database.sqlite.SQLiteFullException
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.twugteam.admin.notemark.core.database.mappers.toNote
 import com.twugteam.admin.notemark.core.database.mappers.toNoteEntity
 import com.twugteam.admin.notemark.core.database.notes.NoteDao
@@ -17,14 +15,12 @@ import kotlinx.coroutines.flow.map
 class RoomLocalNoteDataSource(
     private val noteDao: NoteDao
 ) : LocalNoteDataSource {
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun getNotesById(id: String): Flow<Note> {
+    override fun getNotesById(id: NoteId): Flow<Note> {
         return noteDao.getNoteById(id).map {
             it.toNote()
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun getAllNotes(): Flow<List<Note>> {
         return noteDao.getAllNotes().map { entities ->
             entities.map {
@@ -33,7 +29,6 @@ class RoomLocalNoteDataSource(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun upsertNote(note: Note): Result<NoteId, DataError.Local> {
         return try {
             val noteEntity = note.toNoteEntity()
@@ -44,7 +39,6 @@ class RoomLocalNoteDataSource(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun upsertNotes(notes: List<Note>): Result<List<NoteId>, DataError.Local> {
         return try {
             val noteEntities = notes.map {
@@ -57,7 +51,7 @@ class RoomLocalNoteDataSource(
         }
     }
 
-    override suspend fun deleteNoteById(id: String) {
+    override suspend fun deleteNoteById(id: NoteId) {
         noteDao.deleteNoteById(id)
     }
 

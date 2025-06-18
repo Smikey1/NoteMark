@@ -6,8 +6,8 @@ import com.twugteam.admin.notemark.core.domain.util.EmptyResult
 import com.twugteam.admin.notemark.core.domain.util.Result
 
 interface RemoteNoteDataSource {
-    suspend fun fetchNotesById(id: String): Result<Note, DataError.Network>
+    suspend fun fetchNotesById(id: NoteId): Result<Note, DataError.Network>
     suspend fun fetchAllNotes(): Result<List<Note>, DataError.Network>
     suspend fun postNote(note: Note): Result<Note, DataError.Network>
-    suspend fun deleteNoteById(id: String): EmptyResult<DataError.Network>
+    suspend fun deleteNoteById(id: NoteId): EmptyResult<DataError.Network>
 }

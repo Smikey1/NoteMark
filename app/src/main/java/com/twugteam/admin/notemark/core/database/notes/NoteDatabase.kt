@@ -5,7 +5,11 @@ import androidx.room.RoomDatabase
 
 
 @Database(
-    entities = [NoteEntity::class],
+    entities = [
+        NoteEntity::class,
+        CreatedNotePendingSyncEntity::class,
+        DeletedNotePendingSyncEntity::class
+    ],
     version = 1
 )
 abstract class NoteDatabase : RoomDatabase() {

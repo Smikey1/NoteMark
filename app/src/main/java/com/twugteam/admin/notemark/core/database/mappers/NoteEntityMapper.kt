@@ -1,14 +1,10 @@
 package com.twugteam.admin.notemark.core.database.mappers
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.twugteam.admin.notemark.core.database.notes.NoteEntity
 import com.twugteam.admin.notemark.core.domain.notes.Note
 import java.time.Instant
 import java.time.ZoneId
 
-
-@RequiresApi(Build.VERSION_CODES.O)
 fun Note.toNoteEntity(): NoteEntity {
     return NoteEntity(
         // TODO UUID.new()
@@ -21,7 +17,6 @@ fun Note.toNoteEntity(): NoteEntity {
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun NoteEntity.toNote(): Note {
     return Note(
         id = id,
