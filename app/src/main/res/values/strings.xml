@@ -34,6 +34,7 @@
     <string name="error_serialization">Oops, couldn\'t parse data.</string>
     <string name="error_unknown">An unknown error occurred.</string>
     <string name="error_conflict">Username or Email already exists!</string>
+    <string name="noteMark">NoteMark</string>
 
 
 </resources>
