@@ -1,5 +1,6 @@
 package com.twugteam.admin.notemark.core.presentation.designsystem.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,10 +14,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -44,6 +50,7 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.Surface
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 import com.twugteam.admin.notemark.core.presentation.ui.getInitials
 import com.twugteam.admin.notemark.features.note.presentation.model.NoteUi
+import timber.log.Timber
 
 @Composable
 fun NoteGraphSharedScreen(
@@ -53,10 +60,12 @@ fun NoteGraphSharedScreen(
     noteMarkListPaddingValues: PaddingValues,
     verticalSpace: Dp,
     horizontalSpace: Dp,
-    gridCells: GridCells,
-    ) {
+    staggeredGridCells: StaggeredGridCells,
+    noteList: List<NoteUi>
+) {
     Scaffold(
         modifier = modifier,
+        containerColor = Surface,
         topBar = {
             NoteListTopBar(
                 modifier = topBarModifier,
@@ -65,18 +74,23 @@ fun NoteGraphSharedScreen(
         },
         floatingActionButton = {
             Box(
-                modifier = Modifier.padding().size(64.dp).clip(
-                    RoundedCornerShape(20.dp)
-                ).background(
-                    Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFF58A1F8),
-                            Color(0xFF5A4CF7),
+                modifier = Modifier
+                    .padding()
+                    .size(64.dp)
+                    .clip(
+                        RoundedCornerShape(20.dp)
+                    )
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(
+                                Color(0xFF58A1F8),
+                                Color(0xFF5A4CF7),
+                            )
                         )
                     )
-                ).clickable{
-                    //
-                },
+                    .clickable {
+                        //
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -87,65 +101,39 @@ fun NoteGraphSharedScreen(
             }
         }
     ) { innerPadding ->
-        NoteMarkList(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = Surface)
-                .padding(noteMarkListPaddingValues)
-                .padding(innerPadding),
-            verticalSpace = verticalSpace,
-            horizontalSpace = horizontalSpace,
-            noteMarkList = list,
-            gridCells = gridCells
-
-        )
+        if (!noteList.isEmpty()) {
+            Timber.tag("MyTag").d("list is not EMpty: ${noteList.size}")
+            NoteMarkList(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(noteMarkListPaddingValues)
+                    .padding(innerPadding),
+                verticalSpace = verticalSpace,
+                horizontalSpace = horizontalSpace,
+                noteMarkList = noteList,
+                staggeredGridCells = staggeredGridCells
+            )
+        } else {
+            Timber.tag("MyTag").d("list.isEmpty")
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(top = 80.dp)
+                        .align(Alignment.TopCenter),
+                    text = stringResource(R.string.empty_notes),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = OnSurfaceVar,
+                        textAlign = TextAlign.Center
+                    ),
+                )
+            }
+        }
     }
 }
-val list = listOf(
-    NoteUi(
-        id = "1",
-        title = "Title",
-        content = "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi sed leo purus gravida non id mi augue.",
-        createdAt = "19 APR",
-        lastEditedAt = "TODO()"
-    ),
-    NoteUi(
-        id = "2",
-        title = "Title of the note",
-        content = "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi sed leo purus gravida non id mi augue." +
-                "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi s",
-        createdAt = "19 APR",
-        lastEditedAt = "TODO()"
-    ),
-    NoteUi(
-        id = "3",
-        title = "Title",
-        content = "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi sed leo purus gravida non id mi augue.",
-        createdAt = "19 APR",
-        lastEditedAt = "TODO()"
-    ),
-    NoteUi(
-        id = "4",
-        title = "Title of the note",
-        content = "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi sed leo purus gravida non id mi augue.",
-        createdAt = "19 APR",
-        lastEditedAt = "TODO()"
-    ),
-    NoteUi(
-        id = "5",
-        title = "Title",
-        content = "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi sed leo purus gravida non id mi augue.",
-        createdAt = "19 APR",
-        lastEditedAt = "TODO()"
-    ),
-    NoteUi(
-        id = "6",
-        title = "Title of the note",
-        content = "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi sed leo purus gravida non id mi augue.",
-        createdAt = "19 APR",
-        lastEditedAt = "TODO()"
-    )
-)
 
 @Composable
 fun NoteListTopBar(
@@ -189,19 +177,19 @@ fun NoteMarkList(
     verticalSpace: Dp,
     horizontalSpace: Dp,
     noteMarkList: List<NoteUi>,
-    gridCells: GridCells
+    staggeredGridCells: StaggeredGridCells
 ) {
-    val state = rememberLazyGridState()
-    LazyVerticalGrid(
+    val state = rememberLazyStaggeredGridState()
+    LazyVerticalStaggeredGrid(
         modifier = modifier,
-        columns = gridCells,
-        verticalArrangement = Arrangement.spacedBy(verticalSpace),
+        columns = staggeredGridCells,
+        verticalItemSpacing = verticalSpace,
         horizontalArrangement = Arrangement.spacedBy(horizontalSpace),
         state = state
     ) {
         items(items = noteMarkList, key = {
             it.id
-        }) { noteMark->
+        }) { noteMark ->
             NoteListItem(
                 modifier = Modifier.fillMaxWidth(),
                 noteUi = noteMark

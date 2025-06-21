@@ -1,11 +1,12 @@
 package com.twugteam.admin.notemark.features.note.presentation.noteList
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteGraphSharedScreen
+import com.twugteam.admin.notemark.features.note.presentation.model.NoteUi
 
 @Composable
 fun NoteListScreenTablet(
@@ -15,7 +16,8 @@ fun NoteListScreenTablet(
     noteMarkListPaddingValues: PaddingValues,
     verticalSpace: Dp,
     horizontalSpace: Dp,
-    gridCells: GridCells,
+    staggeredGridCells: StaggeredGridCells,
+    noteList: List<NoteUi>
 ) {
     NoteGraphSharedScreen(
         modifier = modifier,
@@ -24,6 +26,7 @@ fun NoteListScreenTablet(
         noteMarkListPaddingValues = noteMarkListPaddingValues,
         verticalSpace = verticalSpace,
         horizontalSpace = horizontalSpace,
-        gridCells = gridCells
+        staggeredGridCells = staggeredGridCells,
+        noteList = noteList
     )
 }

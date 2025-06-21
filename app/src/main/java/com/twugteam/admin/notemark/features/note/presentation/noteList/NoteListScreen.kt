@@ -3,14 +3,60 @@ package com.twugteam.admin.notemark.features.note.presentation.noteList
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.twugteam.admin.notemark.features.note.presentation.model.NoteUi
 import timber.log.Timber
+
+val noteList = listOf(
+    NoteUi(
+        id = "1",
+        title = "Title",
+        content = "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi sed leo purus gravida non id mi augue.",
+        createdAt = "19 APR",
+        lastEditedAt = "TODO()"
+    ),
+    NoteUi(
+        id = "2",
+        title = "Title of the note",
+        content = "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi sed leo purus gravida non id mi augue." +
+                "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi s",
+        createdAt = "19 APR",
+        lastEditedAt = "TODO()"
+    ),
+    NoteUi(
+        id = "3",
+        title = "Title",
+        content = "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi sed leo purus gravida non id mi augue.",
+        createdAt = "19 APR",
+        lastEditedAt = "TODO()"
+    ),
+    NoteUi(
+        id = "4",
+        title = "Title of the note",
+        content = "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi sed leo purus gravida non id mi augue.",
+        createdAt = "19 APR",
+        lastEditedAt = "TODO()"
+    ),
+    NoteUi(
+        id = "5",
+        title = "Title",
+        content = "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi sed leo purus gravida non id mi augue.",
+        createdAt = "19 APR",
+        lastEditedAt = "TODO()"
+    ),
+    NoteUi(
+        id = "6",
+        title = "Title of the note",
+        content = "Augue non mauris ante viverra ut arcu sed ut lectus interdum morbi sed leo purus gravida non id mi augue.",
+        createdAt = "19 APR",
+        lastEditedAt = "TODO()"
+    )
+)
 
 @Composable
 fun NoteListScreen(
@@ -25,13 +71,13 @@ fun NoteListScreen(
                 modifier = modifier,
                 topBarModifier = Modifier
                     .background(color = MaterialTheme.colorScheme.onPrimary)
-                    .statusBarsPadding()
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 username = "PL",
                 noteMarkListPaddingValues = PaddingValues(16.dp),
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
-                gridCells = GridCells.Fixed(2)
+                staggeredGridCells = StaggeredGridCells.Fixed(2),
+                noteList = noteList
             )
         }
 
@@ -42,13 +88,13 @@ fun NoteListScreen(
                 modifier = modifier,
                 topBarModifier = Modifier
                     .background(color = MaterialTheme.colorScheme.onPrimary)
-                    .statusBarsPadding()
                     .padding(horizontal = 24.dp, vertical = 12.dp),
                 username = "PL",
                 noteMarkListPaddingValues = PaddingValues(horizontal = 24.dp, vertical = 16.dp),
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
-                gridCells = GridCells.Fixed(2)
+                staggeredGridCells = StaggeredGridCells.Fixed(2),
+                noteList = noteList
             )
 
         }
@@ -65,7 +111,8 @@ fun NoteListScreen(
                 noteMarkListPaddingValues = PaddingValues(start = 60.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
-                gridCells = GridCells.Fixed(3)
+                staggeredGridCells = StaggeredGridCells.Fixed(3),
+                noteList = noteList
             )
         }
 
@@ -76,13 +123,13 @@ fun NoteListScreen(
                 modifier = modifier,
                 topBarModifier = Modifier
                     .background(color = MaterialTheme.colorScheme.onPrimary)
-                    .statusBarsPadding()
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 username = "PL",
                 noteMarkListPaddingValues = PaddingValues(16.dp),
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
-                gridCells = GridCells.Fixed(2)
+                staggeredGridCells = StaggeredGridCells.Fixed(2),
+                noteList = noteList
             )
         }
     }

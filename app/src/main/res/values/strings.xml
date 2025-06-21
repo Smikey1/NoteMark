@@ -23,6 +23,7 @@
     <string name="login">Log In</string>
     <string name="landing_screen">Landing Screen</string>
     <string name="dont_have_account">Don’t have an account?</string>
+    <string name="empty_notes">You’ve got an empty board,\nlet’s place your first note on it!</string>
 
     <string name="error_email_password_incorrect">Either email or password is incorrect.</string>
     <string name="error_disk_full">Failed to save the item because your disk is full.</string>

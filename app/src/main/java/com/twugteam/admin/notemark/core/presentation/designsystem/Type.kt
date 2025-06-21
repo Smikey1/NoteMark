@@ -61,7 +61,7 @@ val Typography = Typography(
         fontWeight = FontWeight.Medium,
         fontSize = 17.sp,
         lineHeight = 24.sp,
-        color = OnSurface
+        color = OnSurface,
     ),
     bodyLarge = TextStyle(
         fontFamily = interFontFamily,
