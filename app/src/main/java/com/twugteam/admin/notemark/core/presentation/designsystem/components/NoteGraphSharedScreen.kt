@@ -1,6 +1,5 @@
 package com.twugteam.admin.notemark.core.presentation.designsystem.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,18 +13,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -44,14 +36,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.twugteam.admin.notemark.R
+import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 import com.twugteam.admin.notemark.core.presentation.designsystem.OnSurfaceVar
 import com.twugteam.admin.notemark.core.presentation.designsystem.Surface
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
-import com.twugteam.admin.notemark.core.presentation.ui.getInitials
-import com.twugteam.admin.notemark.features.note.presentation.model.NoteUi
+import com.twugteam.admin.notemark.core.presentation.ui.getInitial
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 import timber.log.Timber
 
+
+//TODO: It's bad way for trying to control child compose by passing child modifier rather it should have own Default Modifier
 @Composable
 fun NoteGraphSharedScreen(
     modifier: Modifier = Modifier,
@@ -94,7 +89,7 @@ fun NoteGraphSharedScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.Add,
+                    imageVector = NoteMarkIcons.Add,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
@@ -161,7 +156,7 @@ fun NoteListTopBar(
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
-                text = username.getInitials(),
+                text = username.getInitial(),
                 style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.onPrimary
                 ),

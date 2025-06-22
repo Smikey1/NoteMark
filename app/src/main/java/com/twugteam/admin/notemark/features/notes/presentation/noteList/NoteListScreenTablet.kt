@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.note.presentation.noteList
+package com.twugteam.admin.notemark.features.notes.presentation.noteList
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -6,10 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteGraphSharedScreen
-import com.twugteam.admin.notemark.features.note.presentation.model.NoteUi
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 
+//TODO: This is all forwarding values
 @Composable
-fun NoteListScreenLandscape(
+fun NoteListScreenTablet(
     modifier: Modifier = Modifier,
     topBarModifier: Modifier = Modifier,
     username: String,
