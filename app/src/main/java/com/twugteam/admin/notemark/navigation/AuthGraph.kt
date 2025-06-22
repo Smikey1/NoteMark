@@ -28,7 +28,8 @@ import timber.log.Timber
 
 fun NavGraphBuilder.authGraph(
     modifier: Modifier = Modifier,
-    navController: NavHostController, windowSize: WindowWidthSizeClass
+    navController: NavHostController,
+    windowSize: WindowWidthSizeClass
 ) {
     navigation<Screens.AuthGraph>(
         startDestination = Screens.Landing,

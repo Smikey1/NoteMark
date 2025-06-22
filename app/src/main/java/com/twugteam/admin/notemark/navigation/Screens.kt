@@ -26,6 +26,6 @@ sealed interface Screens {
 
     //noteMark screens
     @Serializable
-    data object Home: Screens
+    data object NoteList: Screens
 
 }

@@ -25,6 +25,7 @@ import timber.log.Timber
 class HttpClientFactory(
     private val sessionStorage: SessionStorage
 ) {
+    //refreshClient to avoid loop inside refreshToken
     private val refreshClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
@@ -87,6 +88,7 @@ class HttpClientFactory(
                                 refreshToken = authInfo?.refreshToken ?: "",
                                 username = authInfo?.username ?: ""
                             )
+
                             sessionStorage.setAuthInfo(newAuthInfo)
 
                             BearerTokens(
