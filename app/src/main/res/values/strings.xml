@@ -36,6 +36,9 @@
     <string name="error_unknown">An unknown error occurred.</string>
     <string name="error_conflict">Username or Email already exists!</string>
     <string name="noteMark">NoteMark</string>
+    <string name="save_note">Save Note</string>
+    <string name="note_title">Note Title</string>
+    <string name="note_content">Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. </string>
 
 
 </resources>

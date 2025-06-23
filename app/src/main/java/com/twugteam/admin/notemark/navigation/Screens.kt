@@ -1,5 +1,6 @@
 package com.twugteam.admin.notemark.navigation
 
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -27,5 +28,8 @@ sealed interface Screens {
     //noteMark screens
     @Serializable
     data object NoteList: Screens
+
+    @Serializable
+    data class UpsertNote(val noteId: String?, val isEdit: Boolean): Screens
 
 }

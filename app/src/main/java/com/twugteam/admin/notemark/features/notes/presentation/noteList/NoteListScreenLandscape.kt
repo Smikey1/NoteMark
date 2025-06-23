@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteGraphSharedScreen
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 
 @Composable
@@ -17,7 +16,8 @@ fun NoteListScreenLandscape(
     verticalSpace: Dp,
     horizontalSpace: Dp,
     staggeredGridCells: StaggeredGridCells,
-    noteList: List<NoteUi>
+    noteList: List<NoteUi>,
+    onActions: (NoteListAction) -> Unit,
 ) {
     NoteGraphSharedScreen(
         modifier = modifier,
@@ -27,6 +27,7 @@ fun NoteListScreenLandscape(
         verticalSpace = verticalSpace,
         horizontalSpace = horizontalSpace,
         staggeredGridCells = staggeredGridCells,
-        noteList = noteList
+        noteList = noteList,
+        onActions = onActions
     )
 }

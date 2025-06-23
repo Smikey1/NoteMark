@@ -10,6 +10,7 @@ import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListViewModel
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteViewModel
 import org.koin.androidx.workmanager.dsl.workerOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -19,6 +20,7 @@ import org.koin.dsl.module
 val noteModule = module {
 
     viewModelOf(::NoteListViewModel)
+    viewModelOf(::UpsertNoteViewModel)
 
     singleOf(::OfflineFirstNoteRepositoryImpl).bind<NoteRepository>()
     singleOf(::KtorRemoteNoteDataSource).bind<RemoteNoteDataSource>()

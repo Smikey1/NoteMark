@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.core.presentation.designsystem.components
+package com.twugteam.admin.notemark.features.notes.presentation.noteList
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -56,7 +56,8 @@ fun NoteGraphSharedScreen(
     verticalSpace: Dp,
     horizontalSpace: Dp,
     staggeredGridCells: StaggeredGridCells,
-    noteList: List<NoteUi>
+    noteList: List<NoteUi>,
+    onActions: (NoteListAction) -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -84,7 +85,7 @@ fun NoteGraphSharedScreen(
                         )
                     )
                     .clickable {
-                        //
+                        onActions(NoteListAction.NavigateToUpsertNote(noteId = null))
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -106,7 +107,10 @@ fun NoteGraphSharedScreen(
                 verticalSpace = verticalSpace,
                 horizontalSpace = horizontalSpace,
                 noteMarkList = noteList,
-                staggeredGridCells = staggeredGridCells
+                staggeredGridCells = staggeredGridCells,
+                onNoteClick = { noteUi ->
+                    onActions(NoteListAction.NavigateToUpsertNote(noteId = noteUi.id))
+                },
             )
         } else {
             Timber.tag("MyTag").d("list.isEmpty")
@@ -172,8 +176,10 @@ fun NoteMarkList(
     verticalSpace: Dp,
     horizontalSpace: Dp,
     noteMarkList: List<NoteUi>,
-    staggeredGridCells: StaggeredGridCells
-) {
+    staggeredGridCells: StaggeredGridCells,
+    onNoteClick: (NoteUi) -> Unit,
+
+    ) {
     val state = rememberLazyStaggeredGridState()
     LazyVerticalStaggeredGrid(
         modifier = modifier,
@@ -187,7 +193,8 @@ fun NoteMarkList(
         }) { noteMark ->
             NoteListItem(
                 modifier = Modifier.fillMaxWidth(),
-                noteUi = noteMark
+                noteUi = noteMark,
+                onNoteClick = onNoteClick,
             )
         }
     }
@@ -197,10 +204,13 @@ fun NoteMarkList(
 fun NoteListItem(
     modifier: Modifier = Modifier,
     noteUi: NoteUi,
+    onNoteClick: (NoteUi) -> Unit,
 ) {
     NoteMarkTheme {
         Surface(
-            modifier = modifier,
+            modifier = modifier.clickable {
+                onNoteClick(noteUi)
+            },
             color = SurfaceLowest,
             shape = MaterialTheme.shapes.small
         ) {

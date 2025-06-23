@@ -8,8 +8,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListEvents
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListScreenRoot
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListViewModel
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteEvents
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteScreenRoot
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteViewModel
 import org.koin.androidx.compose.koinViewModel
 
 fun NavGraphBuilder.noteGraph(
@@ -23,13 +28,40 @@ fun NavGraphBuilder.noteGraph(
         composable<Screens.NoteList> {
             val noteListViewModel = koinViewModel<NoteListViewModel>()
             val noteListState by noteListViewModel.state.collectAsStateWithLifecycle()
+
+            ObserveAsEvents(noteListViewModel.events) { event ->
+                when (event) {
+                    is NoteListEvents.NavigateToUpsertNote -> navController.navigate(
+                        Screens.UpsertNote(
+                            noteId = event.noteId,
+                            isEdit = false
+                        )
+                    )
+                }
+            }
             NoteListScreenRoot(
                 modifier = modifier,
                 windowSize = windowSize,
                 state = noteListState,
-                onActions = {
+                onActions = noteListViewModel::onActions
+            )
+        }
 
+        composable<Screens.UpsertNote> { entry ->
+            val upsertNoteViewModel = koinViewModel<UpsertNoteViewModel>()
+            val state by upsertNoteViewModel.state.collectAsStateWithLifecycle()
+
+            ObserveAsEvents(upsertNoteViewModel.events) { event ->
+                when (event) {
+                    UpsertNoteEvents.Close -> navController.navigateUp()
                 }
+            }
+
+            UpsertNoteScreenRoot(
+                modifier = modifier,
+                windowSize = windowSize,
+                state = state,
+                onActions = upsertNoteViewModel::onActions,
             )
         }
     }

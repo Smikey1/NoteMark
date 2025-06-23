@@ -31,7 +31,8 @@ fun NoteListScreenRoot(
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
                 staggeredGridCells = StaggeredGridCells.Fixed(2),
-                noteList = state.notes
+                noteList = state.notes,
+                onActions = onActions,
             )
         }
 
@@ -47,7 +48,8 @@ fun NoteListScreenRoot(
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
                 staggeredGridCells = StaggeredGridCells.Fixed(2),
-                noteList = state.notes
+                noteList = state.notes,
+                onActions = onActions
             )
 
         }
@@ -69,7 +71,8 @@ fun NoteListScreenRoot(
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
                 staggeredGridCells = StaggeredGridCells.Fixed(3),
-                noteList = state.notes
+                noteList = state.notes,
+                onActions = onActions
             )
         }
 
@@ -84,7 +87,8 @@ fun NoteListScreenRoot(
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
                 staggeredGridCells = StaggeredGridCells.Fixed(2),
-                noteList = state.notes
+                noteList = state.notes,
+                onActions = onActions,
             )
         }
     }
