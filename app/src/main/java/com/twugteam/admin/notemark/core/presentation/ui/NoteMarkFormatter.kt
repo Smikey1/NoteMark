@@ -34,6 +34,5 @@ fun ZonedDateTime.formatAsNoteDate(): String {
     } else {
         DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH)
     }
-
-    return formatter.format(localDate)
+    return formatter.format(localDate).toUpperCase(Locale.ENGLISH)
 }

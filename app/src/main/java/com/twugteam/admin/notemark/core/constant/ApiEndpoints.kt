@@ -12,7 +12,11 @@ object ApiEndpoints {
     const val REGISTER_ENDPOINT = BuildConfig.AUTH_ENDPOINT + "/register"
     const val REFRESH_TOKEN_ENDPOINT = BuildConfig.AUTH_ENDPOINT + "/refresh"
 
+
     // Note Endpoints
     const val NOTES_ENDPOINT = BuildConfig.NOTES_ENDPOINT
+
+    // Delete Endpoints
+    const val DELETE_ENDPOINT = BuildConfig.DELETE_ENDPOINT
 
 }

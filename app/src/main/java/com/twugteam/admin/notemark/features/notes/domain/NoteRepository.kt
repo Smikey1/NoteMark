@@ -6,7 +6,7 @@ import com.twugteam.admin.notemark.core.domain.util.EmptyResult
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
-    fun getNoteById(id: NoteId): Flow<Note>
+    suspend fun getNoteById(id: NoteId): Note
     fun getNotes(): Flow<List<Note>>
     suspend fun fetchNoteById(id: NoteId): EmptyResult<DataError>
     suspend fun fetchAllNotes(): EmptyResult<DataError>

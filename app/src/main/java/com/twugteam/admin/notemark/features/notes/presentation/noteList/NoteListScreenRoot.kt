@@ -17,7 +17,6 @@ fun NoteListScreenRoot(
     state: NoteListState,
     onActions: (NoteListAction) -> Unit,
 ) {
-
     when (windowSize) {
         //MOBILE PORTRAIT
         WindowWidthSizeClass.Compact -> {
@@ -26,13 +25,13 @@ fun NoteListScreenRoot(
                 topBarModifier = Modifier
                     .background(color = MaterialTheme.colorScheme.onPrimary)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
-                username = "PL",
                 noteMarkListPaddingValues = PaddingValues(16.dp),
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
                 staggeredGridCells = StaggeredGridCells.Fixed(2),
-                noteList = state.notes,
+                state = state,
                 onActions = onActions,
+                windowSize = windowSize
             )
         }
 
@@ -43,13 +42,13 @@ fun NoteListScreenRoot(
                 topBarModifier = Modifier
                     .background(color = MaterialTheme.colorScheme.onPrimary)
                     .padding(horizontal = 24.dp, vertical = 12.dp),
-                username = "PL",
                 noteMarkListPaddingValues = PaddingValues(horizontal = 24.dp, vertical = 16.dp),
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
                 staggeredGridCells = StaggeredGridCells.Fixed(2),
-                noteList = state.notes,
-                onActions = onActions
+                state = state,
+                onActions = onActions,
+                windowSize = windowSize
             )
 
         }
@@ -61,7 +60,6 @@ fun NoteListScreenRoot(
                 topBarModifier = Modifier
                     .background(color = MaterialTheme.colorScheme.onPrimary)
                     .padding(start = 60.dp, end = 16.dp, top = 12.dp, bottom = 12.dp),
-                username = "PL",
                 noteMarkListPaddingValues = PaddingValues(
                     start = 60.dp,
                     top = 16.dp,
@@ -71,8 +69,9 @@ fun NoteListScreenRoot(
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
                 staggeredGridCells = StaggeredGridCells.Fixed(3),
-                noteList = state.notes,
-                onActions = onActions
+                state = state,
+                onActions = onActions,
+                windowSize = windowSize
             )
         }
 
@@ -82,13 +81,13 @@ fun NoteListScreenRoot(
                 topBarModifier = Modifier
                     .background(color = MaterialTheme.colorScheme.onPrimary)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
-                username = "PL",
                 noteMarkListPaddingValues = PaddingValues(16.dp),
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
                 staggeredGridCells = StaggeredGridCells.Fixed(2),
-                noteList = state.notes,
+                state = state,
                 onActions = onActions,
+                windowSize = windowSize
             )
         }
     }

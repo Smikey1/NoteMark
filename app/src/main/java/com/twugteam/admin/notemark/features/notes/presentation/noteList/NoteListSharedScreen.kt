@@ -2,6 +2,7 @@ package com.twugteam.admin.notemark.features.notes.presentation.noteList
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,9 +43,11 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 import com.twugteam.admin.notemark.core.presentation.designsystem.OnSurfaceVar
 import com.twugteam.admin.notemark.core.presentation.designsystem.Surface
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
+import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
+import com.twugteam.admin.notemark.core.presentation.ui.formatAsNoteDate
 import com.twugteam.admin.notemark.core.presentation.ui.getInitial
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
-import timber.log.Timber
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.ui.Util
 
 
 //TODO: It's bad way for trying to control child compose by passing child modifier rather it should have own Default Modifier
@@ -51,13 +55,13 @@ import timber.log.Timber
 fun NoteGraphSharedScreen(
     modifier: Modifier = Modifier,
     topBarModifier: Modifier = Modifier,
-    username: String,
     noteMarkListPaddingValues: PaddingValues,
     verticalSpace: Dp,
     horizontalSpace: Dp,
     staggeredGridCells: StaggeredGridCells,
-    noteList: List<NoteUi>,
+    state: NoteListState,
     onActions: (NoteListAction) -> Unit,
+    windowSize: WindowWidthSizeClass
 ) {
     Scaffold(
         modifier = modifier,
@@ -65,7 +69,7 @@ fun NoteGraphSharedScreen(
         topBar = {
             NoteListTopBar(
                 modifier = topBarModifier,
-                username = username
+                username = state.username
             )
         },
         floatingActionButton = {
@@ -97,23 +101,45 @@ fun NoteGraphSharedScreen(
             }
         }
     ) { innerPadding ->
-        if (!noteList.isEmpty()) {
-            Timber.tag("MyTag").d("list is not EMpty: ${noteList.size}")
-            NoteMarkList(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(noteMarkListPaddingValues)
-                    .padding(innerPadding),
-                verticalSpace = verticalSpace,
-                horizontalSpace = horizontalSpace,
-                noteMarkList = noteList,
-                staggeredGridCells = staggeredGridCells,
-                onNoteClick = { noteUi ->
-                    onActions(NoteListAction.NavigateToUpsertNote(noteId = noteUi.id))
-                },
-            )
+        if (!state.notes.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+            ){
+                NoteMarkList(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(noteMarkListPaddingValues)
+                        .padding(innerPadding),
+                    verticalSpace = verticalSpace,
+                    horizontalSpace = horizontalSpace,
+                    noteMarkList = state.notes,
+                    staggeredGridCells = staggeredGridCells,
+                    onNoteClick = { noteUi ->
+                        onActions(NoteListAction.NavigateToUpsertNote(noteId = noteUi.id))
+                    },
+                    onNoteDelete = { noteUi->
+                        onActions(NoteListAction.OnNoteDelete(noteId = noteUi.id!!))
+                    },
+                    windowSize = windowSize
+                )
+                NoteMarkDialog(
+                    modifier = Modifier.fillMaxWidth()
+                        .align(Alignment.Center),
+                    showDialog = state.showDialog,
+                    titleResId = R.string.dialog_delete_title,
+                    isLoading = state.isLoading,
+                    bodyResId = R.string.dialog_delete_body_text,
+                    confirmButtonId = R.string.delete,
+                    dismissButtonId = R.string.cancel,
+                    onConfirmClick = {
+                        onActions(NoteListAction.OnDialogConfirm)
+                    },
+                    onDismissClick = {
+                        onActions(NoteListAction.OnDialogDismiss)
+                    },
+                )
+            }
         } else {
-            Timber.tag("MyTag").d("list.isEmpty")
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -178,7 +204,8 @@ fun NoteMarkList(
     noteMarkList: List<NoteUi>,
     staggeredGridCells: StaggeredGridCells,
     onNoteClick: (NoteUi) -> Unit,
-
+    onNoteDelete: (NoteUi) -> Unit,
+    windowSize: WindowWidthSizeClass
     ) {
     val state = rememberLazyStaggeredGridState()
     LazyVerticalStaggeredGrid(
@@ -189,12 +216,14 @@ fun NoteMarkList(
         state = state
     ) {
         items(items = noteMarkList, key = {
-            it.id
+            it.id!!
         }) { noteMark ->
             NoteListItem(
                 modifier = Modifier.fillMaxWidth(),
                 noteUi = noteMark,
                 onNoteClick = onNoteClick,
+                onNoteDelete = onNoteDelete,
+                windowSize = windowSize
             )
         }
     }
@@ -205,12 +234,19 @@ fun NoteListItem(
     modifier: Modifier = Modifier,
     noteUi: NoteUi,
     onNoteClick: (NoteUi) -> Unit,
+    onNoteDelete: (NoteUi) -> Unit,
+    windowSize: WindowWidthSizeClass
 ) {
     NoteMarkTheme {
         Surface(
-            modifier = modifier.clickable {
-                onNoteClick(noteUi)
-            },
+            modifier = modifier.combinedClickable(
+                onClick = {
+                    onNoteClick(noteUi)
+                },
+                onLongClick = {
+                    onNoteDelete(noteUi)
+                }
+            ),
             color = SurfaceLowest,
             shape = MaterialTheme.shapes.small
         ) {
@@ -219,7 +255,7 @@ fun NoteListItem(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = noteUi.createdAt,
+                    text = noteUi.createdAt.formatAsNoteDate(),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -233,7 +269,10 @@ fun NoteListItem(
                     )
                 )
                 Text(
-                    text = noteUi.content,
+                    text = Util.textLimit(
+                        text = noteUi.content,
+                        windowSize = windowSize
+                    ),
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = OnSurfaceVar
                     )

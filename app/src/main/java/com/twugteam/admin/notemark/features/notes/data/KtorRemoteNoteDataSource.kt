@@ -50,10 +50,7 @@ class KtorRemoteNoteDataSource(
 
     override suspend fun deleteNoteById(id: NoteId): EmptyResult<DataError.Network> {
         return httpClient.delete(
-            route = ApiEndpoints.NOTES_ENDPOINT,
-            queryParams = mapOf(
-                "id" to id
-            )
+            route = ApiEndpoints.DELETE_ENDPOINT.replace("{id}",id),
         )
     }
 

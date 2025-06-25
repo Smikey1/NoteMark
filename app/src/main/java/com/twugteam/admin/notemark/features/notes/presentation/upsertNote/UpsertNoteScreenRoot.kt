@@ -24,7 +24,7 @@ fun UpsertNoteScreenRoot(
 
         //TABLET
         WindowWidthSizeClass.Medium -> {
-            UpsertNoteMobilePortraitScreen(
+            UpsertNoteTabletScreen(
                 modifier = modifier,
                 state = state,
                 onActions = onActions,
@@ -33,7 +33,7 @@ fun UpsertNoteScreenRoot(
 
         //LANDSCAPE
         WindowWidthSizeClass.Expanded -> {
-            UpsertNoteMobilePortraitScreen(
+            UpsertNoteLandscapeScreen(
                 modifier = modifier,
                 state = state,
                 onActions = onActions,

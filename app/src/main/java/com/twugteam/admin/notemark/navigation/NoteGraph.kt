@@ -16,6 +16,7 @@ import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.Upsert
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteScreenRoot
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteViewModel
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 fun NavGraphBuilder.noteGraph(
     modifier: Modifier = Modifier,
@@ -52,6 +53,7 @@ fun NavGraphBuilder.noteGraph(
             val state by upsertNoteViewModel.state.collectAsStateWithLifecycle()
 
             ObserveAsEvents(upsertNoteViewModel.events) { event ->
+                Timber.tag("MyTag").d("event: $event")
                 when (event) {
                     UpsertNoteEvents.Close -> navController.navigateUp()
                 }

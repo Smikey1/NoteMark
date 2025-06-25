@@ -10,7 +10,7 @@ fun Note.toNoteEntity(): NoteEntity {
     return NoteEntity(
         id = id ?: UUID.new().toString(),
         title = title,
-        content = title,
+        content = content,
         createdAt = createdAt.toInstant().toString(),
         lastEditedAt = lastEditedAt.toInstant().toString(),
     )

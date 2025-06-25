@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 typealias NoteId = String
 
 interface LocalNoteDataSource {
-    fun getNotesById(id: NoteId): Flow<Note>
+    suspend fun getNotesById(id: NoteId): Note
     fun getAllNotes(): Flow<List<Note>>
     suspend fun upsertNote(note: Note): Result<NoteId, DataError.Local>
     suspend fun upsertNotes(notes: List<Note>): Result<List<NoteId>, DataError.Local>

@@ -39,6 +39,7 @@ android {
             buildConfigField("String","AUTH_ENDPOINT","\"${localProperties.getProperty("AUTH_ENDPOINT")}\"")
             buildConfigField("String","NOTES_ENDPOINT","\"${localProperties.getProperty("NOTES_ENDPOINT")}\"")
             buildConfigField("String","EMAIL","\"${localProperties.getProperty("EMAIL")}\"")
+            buildConfigField("String","DELETE_ENDPOINT","\"${localProperties.getProperty("DELETE_ENDPOINT")}\"")
         }
 
         release {

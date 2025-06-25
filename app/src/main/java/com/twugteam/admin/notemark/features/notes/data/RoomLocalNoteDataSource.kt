@@ -15,11 +15,9 @@ import kotlinx.coroutines.flow.map
 class RoomLocalNoteDataSource(
     private val noteDao: NoteDao
 ) : LocalNoteDataSource {
-    override fun getNotesById(id: NoteId): Flow<Note> {
-        return noteDao.getNoteById(id).map {
-            it.toNote()
+    override suspend fun getNotesById(id: NoteId): Note {
+        return noteDao.getNoteById(id).toNote()
         }
-    }
 
     override fun getAllNotes(): Flow<List<Note>> {
         return noteDao.getAllNotes().map { entities ->

@@ -1,7 +1,6 @@
 package com.twugteam.admin.notemark.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -24,7 +23,6 @@ import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterE
 import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterScreenRoot
 import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterViewModel
 import org.koin.androidx.compose.koinViewModel
-import timber.log.Timber
 
 fun NavGraphBuilder.authGraph(
     modifier: Modifier = Modifier,

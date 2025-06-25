@@ -18,6 +18,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class OfflineFirstNoteRepositoryImpl(
     private val localNoteDataSource: LocalNoteDataSource,
@@ -26,7 +27,7 @@ class OfflineFirstNoteRepositoryImpl(
     private val applicationScope: CoroutineScope,
     private val sessionStorage: SessionStorage
 ) : NoteRepository {
-    override fun getNoteById(id: NoteId): Flow<Note> {
+    override suspend fun getNoteById(id: NoteId): Note {
         return localNoteDataSource.getNotesById(id)
     }
 
@@ -35,7 +36,8 @@ class OfflineFirstNoteRepositoryImpl(
     }
 
     override suspend fun fetchNoteById(id: NoteId): EmptyResult<DataError> {
-        return when (val result = remoteNoteDataSource.fetchNotesById(id)) {
+        val result = remoteNoteDataSource.fetchNotesById(id)
+        return when (result) {
             is Result.Error -> result.asEmptyDataResult()
             is Result.Success -> {
                 applicationScope.async {
@@ -90,6 +92,7 @@ class OfflineFirstNoteRepositoryImpl(
         val remoteResult = applicationScope.async {
             remoteNoteDataSource.deleteNoteById(id)
         }.await()
+        Timber.tag("MyTag").d("delete note: ${remoteResult.asEmptyDataResult()}")
     }
 
     override suspend fun syncPendingNotes() {

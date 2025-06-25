@@ -80,7 +80,6 @@ fun NoteMarkOutlineActionButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = false,
     onClick: () -> Unit,
-
     ) {
     OutlinedButton(
         onClick = onClick,
