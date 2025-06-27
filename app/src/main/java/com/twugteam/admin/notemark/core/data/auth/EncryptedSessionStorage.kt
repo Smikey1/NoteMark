@@ -6,6 +6,7 @@ import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import androidx.core.content.edit
 
 class EncryptedSessionStorage(
     private val sharedPreferences: SharedPreferences
@@ -26,11 +27,11 @@ class EncryptedSessionStorage(
     override suspend fun setAuthInfo(authInfo: AuthInfo?) {
         withContext(Dispatchers.IO) {
             if (authInfo == null) {
-                sharedPreferences.edit().remove(KEY_AUTH_INFO).apply()
+                sharedPreferences.edit { remove(KEY_AUTH_INFO) }
                 return@withContext
             }
             val json = Json.encodeToString(authInfo.toAuthInfoSerializable())
-            sharedPreferences.edit().putString(KEY_AUTH_INFO, json).apply()
+            sharedPreferences.edit { putString(KEY_AUTH_INFO, json) }
         }
     }
 }

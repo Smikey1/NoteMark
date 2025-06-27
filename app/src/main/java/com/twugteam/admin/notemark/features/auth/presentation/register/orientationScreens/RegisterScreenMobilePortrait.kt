@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.auth.presentation.register
+package com.twugteam.admin.notemark.features.auth.presentation.register.orientationScreens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +17,8 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.components.Not
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkInputTextField
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkNoOutlineActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkSharedScreen
+import com.twugteam.admin.notemark.features.auth.presentation.register.viewmodel.RegisterAction
+import com.twugteam.admin.notemark.features.auth.presentation.register.state.RegisterState
 
 
 @Composable

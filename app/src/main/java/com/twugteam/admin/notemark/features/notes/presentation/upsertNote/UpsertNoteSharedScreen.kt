@@ -1,6 +1,5 @@
 package com.twugteam.admin.notemark.features.notes.presentation.upsertNote
 
-import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
@@ -19,7 +18,6 @@ import androidx.compose.ui.text.TextStyle
 import com.twugteam.admin.notemark.core.presentation.designsystem.Surface
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun UpsertNoteSharedScreen(
     modifier: Modifier,

@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.auth.presentation.login
+package com.twugteam.admin.notemark.features.auth.presentation.login.state
 
 data class LogInUiState(
     val email: String = "",

@@ -13,15 +13,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
-import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingEvents
+import com.twugteam.admin.notemark.features.auth.presentation.landing.viewmodel.LandingEvents
 import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreen
-import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreenViewModel
-import com.twugteam.admin.notemark.features.auth.presentation.login.LogInEvent
+import com.twugteam.admin.notemark.features.auth.presentation.landing.viewmodel.LandingScreenViewModel
+import com.twugteam.admin.notemark.features.auth.presentation.login.viewmodel.LogInEvent
 import com.twugteam.admin.notemark.features.auth.presentation.login.LogInScreen
-import com.twugteam.admin.notemark.features.auth.presentation.login.LogInViewModel
-import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterEvent
+import com.twugteam.admin.notemark.features.auth.presentation.login.viewmodel.LogInViewModel
+import com.twugteam.admin.notemark.features.auth.presentation.register.viewmodel.RegisterEvent
 import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterScreenRoot
-import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterViewModel
+import com.twugteam.admin.notemark.features.auth.presentation.register.viewmodel.RegisterViewModel
 import org.koin.androidx.compose.koinViewModel
 
 fun NavGraphBuilder.authGraph(

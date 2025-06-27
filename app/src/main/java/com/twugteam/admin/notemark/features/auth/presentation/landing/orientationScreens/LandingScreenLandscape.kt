@@ -1,14 +1,11 @@
-package com.twugteam.admin.notemark.features.auth.presentation.landing
+package com.twugteam.admin.notemark.features.auth.presentation.landing.orientationScreens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -20,23 +17,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.R
-import com.twugteam.admin.notemark.core.presentation.designsystem.LandingBackground
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkOutlineActionButton
+import com.twugteam.admin.notemark.features.auth.presentation.landing.viewmodel.LandingActions
 
 @Composable
-fun LandingScreenTablet(
+fun LandingScreenLandscape(
     modifier: Modifier = Modifier,
-    onActions: (LandingActions) -> Unit = {}
+    onActions: (LandingActions) -> Unit
 ) {
-    LandingScreenTabletComponent(
-        modifier = modifier
-            .navigationBarsPadding()
-            .background(LandingBackground),
+    LandingScreenLandscapeComponent(
+        modifier = modifier,
         onClickGetStarted = {
             onActions(LandingActions.OnClickGetStarted)
         },
@@ -47,25 +41,25 @@ fun LandingScreenTablet(
 }
 
 @Composable
-fun LandingScreenTabletComponent(
+fun LandingScreenLandscapeComponent(
     modifier: Modifier = Modifier,
     onClickGetStarted: () -> Unit,
     onClickLogIn: () -> Unit,
 ) {
-    Box(
-        modifier = modifier,
+    Row(
+        modifier = modifier
     ) {
         Image(
-            modifier = Modifier.fillMaxSize().padding(bottom = 60.dp),
+            modifier = Modifier.weight(1f).padding(start = 19.dp, end = 15.dp),
             painter = painterResource(R.drawable.landing_screen),
             contentDescription = stringResource(R.string.landing_screen),
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.FillWidth
         )
-        LandingTabletBottomComponent(
+
+        LandingLandscapeBottomComponent(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 60.dp)
-                .align(Alignment.BottomCenter),
+                .padding(top = 41.dp, bottom = 17.dp)
+                .weight(1.2f),
             onClickGetStarted = onClickGetStarted,
             onClickLogIn = onClickLogIn
         )
@@ -73,7 +67,7 @@ fun LandingScreenTabletComponent(
 }
 
 @Composable
-fun LandingTabletBottomComponent(
+fun LandingLandscapeBottomComponent(
     modifier: Modifier = Modifier,
     onClickGetStarted: () -> Unit,
     onClickLogIn: () -> Unit,
@@ -82,24 +76,23 @@ fun LandingTabletBottomComponent(
         modifier = modifier,
         shape = RoundedCornerShape(
             topStart = 20.dp,
-            topEnd = 20.dp
+            bottomStart = 20.dp
         ),
         color = SurfaceLowest
     ) {
         Column(
             modifier = Modifier.padding(
-                top = 48.dp,
-                start = 48.dp,
-                end = 48.dp,
-                bottom = 16.dp
+                start = 60.dp,
+                top = 40.dp,
+                end = 40.dp,
+                bottom = 40.dp
             ),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.Start,
         ) {
             Text(
                 modifier = Modifier,
                 text = stringResource(R.string.your_own_collection_of_notes),
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center
+                style = MaterialTheme.typography.titleMedium
             )
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -107,17 +100,16 @@ fun LandingTabletBottomComponent(
             Text(
                 modifier = Modifier,
                 text = stringResource(R.string.capture_your_thoughts_and_ideas),
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
+                style = MaterialTheme.typography.bodyLarge
             )
 
             Spacer(modifier = Modifier.height(40.dp))
 
             NoteMarkActionButton(
                 text = stringResource(R.string.get_started),
-                
                 modifier = Modifier.fillMaxWidth(),
                 enabled = true,
+                isLoading = false,
                 onClick = onClickGetStarted
             )
 
@@ -126,14 +118,10 @@ fun LandingTabletBottomComponent(
 
             NoteMarkOutlineActionButton(
                 text = stringResource(R.string.login),
-                
                 modifier = Modifier.fillMaxWidth(),
                 enabled = true,
+                isLoading = false,
                 onClick = onClickLogIn
-            )
-
-            Spacer(
-                modifier = Modifier.height(24.dp)
             )
         }
     }

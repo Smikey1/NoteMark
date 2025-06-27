@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.noteList
+package com.twugteam.admin.notemark.features.notes.presentation.noteList.state
 
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 

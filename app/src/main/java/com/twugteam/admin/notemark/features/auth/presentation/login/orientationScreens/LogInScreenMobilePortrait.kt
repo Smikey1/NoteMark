@@ -1,9 +1,11 @@
-package com.twugteam.admin.notemark.features.auth.presentation.login
+package com.twugteam.admin.notemark.features.auth.presentation.login.orientationScreens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -13,23 +15,28 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.components.Not
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkInputTextField
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkNoOutlineActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkSharedScreen
+import com.twugteam.admin.notemark.features.auth.presentation.login.viewmodel.LogInAction
+import com.twugteam.admin.notemark.features.auth.presentation.login.state.LogInUiState
 
 @Composable
-fun LogInScreenLandscape(
+fun LogInScreenMobilePortrait(
     modifier: Modifier = Modifier,
     state: LogInUiState,
     onActions: (LogInAction) -> Unit,
 ) {
     NoteMarkSharedScreen(
         modifier = modifier,
+        portraitModifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+            .padding(vertical = 32.dp),
         title = R.string.login,
-        isPortrait = false,
         description = R.string.capture_your_thoughts_and_ideas,
-        showSnackBar = state.showSnackBar,
         snackBarText = state.snackBarText,
-    ) { contentModifier->
+        showSnackBar = state.showSnackBar,
+        ) {
         Column(
-            modifier = contentModifier
+            modifier = Modifier
         ) {
             //Email
             NoteMarkInputTextField(

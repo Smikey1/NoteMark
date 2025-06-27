@@ -32,7 +32,7 @@ class RoomLocalNoteDataSource(
             val noteEntity = note.toNoteEntity()
             noteDao.upsertNote(noteEntity)
             Result.Success(noteEntity.id)
-        } catch (e: SQLiteFullException) {
+        } catch (_: SQLiteFullException) {
             Result.Error(DataError.Local.DISK_FULL)
         }
     }
@@ -44,7 +44,7 @@ class RoomLocalNoteDataSource(
             }
             noteDao.upsertNotes(noteEntities)
             Result.Success(noteEntities.map { it.id })
-        } catch (e: SQLiteFullException) {
+        } catch (_: SQLiteFullException) {
             Result.Error(DataError.Local.DISK_FULL)
         }
     }

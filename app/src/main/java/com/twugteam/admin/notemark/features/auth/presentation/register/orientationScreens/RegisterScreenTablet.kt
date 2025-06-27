@@ -1,9 +1,11 @@
-package com.twugteam.admin.notemark.features.auth.presentation.register
+package com.twugteam.admin.notemark.features.auth.presentation.register.orientationScreens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -15,23 +17,28 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.components.Not
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkInputTextField
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkNoOutlineActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkSharedScreen
+import com.twugteam.admin.notemark.features.auth.presentation.register.viewmodel.RegisterAction
+import com.twugteam.admin.notemark.features.auth.presentation.register.state.RegisterState
 
 @Composable
-fun RegisterScreenLandscape(
+fun RegisterScreenTablet(
     modifier: Modifier = Modifier,
     state: RegisterState,
     onAction: (RegisterAction) -> Unit
 ) {
     NoteMarkSharedScreen(
         modifier = modifier,
+        portraitModifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 120.dp)
+            .padding(vertical = 100.dp),
         title = R.string.create_account,
         description = R.string.capture_your_thoughts_and_ideas,
-        isPortrait = false,
         showSnackBar = state.showSnackBar,
         snackBarText = state.snackBarText
-    ) { contentModifier ->
+    ) {
         Column(
-            modifier = contentModifier
+            modifier = Modifier
         ) {
             //USERNAME
             NoteMarkInputTextField(
@@ -114,7 +121,6 @@ fun RegisterScreenLandscape(
             Spacer(modifier = Modifier.height(12.dp))
             NoteMarkNoOutlineActionButton(
                 text = stringResource(R.string.already_have_an_account),
-
                 enabled = true,
                 onClick = {
                     onAction(RegisterAction.OnAlreadyHaveAnAccountClick)
@@ -124,11 +130,11 @@ fun RegisterScreenLandscape(
     }
 }
 
-@Preview(device = "spec:parent=pixel_5,orientation=landscape")
+@Preview(device = "spec:width=800dp,height=1228dp,dpi=240")
 @Composable
-private fun RegisterScreenLandscapePreview() {
+private fun RegisterScreenTabletPreview() {
     NoteMarkTheme {
-        RegisterScreenLandscape(
+        RegisterScreenTablet(
             state = RegisterState(),
             onAction = {}
         )

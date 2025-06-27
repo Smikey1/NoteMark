@@ -65,41 +65,60 @@ class HttpClientFactory(
 
             install(Auth) {
                 bearer {
+                    Timber.tag("MyTag").d("bearer")
                     loadTokens {
+                        Timber.tag("MyTag").d("loadTokens")
                         val authInfo = sessionStorage.getAuthInto()
-                        BearerTokens(
+                        val bearerTokens = BearerTokens(
                             accessToken = authInfo?.accessToken ?: "",
                             refreshToken = authInfo?.refreshToken ?: ""
                         )
+                        Timber.tag("MyTag").d("loadTokens: accessToken: ${bearerTokens.accessToken}")
+                        Timber.tag("MyTag").d("loadTokens: refreshToken: ${bearerTokens.refreshToken}")
+                        bearerTokens
                     }
 
                     refreshTokens {
+                        Timber.tag("MyTag").d("refreshTokens")
                         val authInfo = sessionStorage.getAuthInto()
+                        Timber.tag("MyTag").d("refreshTokens sessionStorage refreshToken: ${authInfo?.refreshToken}")
+
                         val response = refreshClient.post<AccessTokenRequest, AccessTokenResponse>(
                             route = ApiEndpoints.REFRESH_TOKEN_ENDPOINT,
                             body = AccessTokenRequest(
                                 refreshToken = authInfo?.refreshToken ?: "",
-                                username = authInfo?.username ?: ""
-                            )
+                            ),
                         )
-                        if (response is Result.Success) {
-                            val newAuthInfo = AuthInfo(
-                                accessToken = response.data.accessToken,
-                                refreshToken = authInfo?.refreshToken ?: "",
-                                username = authInfo?.username ?: ""
-                            )
 
-                            sessionStorage.setAuthInfo(newAuthInfo)
+                        when (response) {
+                            is Result.Error -> {
+                                Timber.tag("MyTag").d("response error: ${response.error}")
+                                val bearerTokens = BearerTokens(
+                                    accessToken = "",
+                                    refreshToken = ""
+                                )
+                                Timber.tag("MyTag").d("else: ${bearerTokens.accessToken}")
+                                bearerTokens
+                            }
 
-                            BearerTokens(
-                                accessToken = newAuthInfo.accessToken,
-                                refreshToken = newAuthInfo.refreshToken
-                            )
-                        } else {
-                            BearerTokens(
-                                accessToken = "",
-                                refreshToken = ""
-                            )
+                            is Result.Success -> {
+                                val newAuthInfo = AuthInfo(
+                                    accessToken = response.data.accessToken,
+                                    refreshToken = response.data.refreshToken,
+                                    username = authInfo?.username ?: ""
+                                )
+
+                                sessionStorage.setAuthInfo(newAuthInfo)
+
+
+                                val bearerTokens = BearerTokens(
+                                    accessToken = newAuthInfo.accessToken,
+                                    refreshToken = newAuthInfo.refreshToken
+                                )
+                                Timber.tag("MyTag").d("refreshTokens: accessToken: ${bearerTokens.accessToken}")
+                                Timber.tag("MyTag").d("refreshTokens: refreshToken: ${bearerTokens.refreshToken}")
+                                bearerTokens
+                            }
                         }
                     }
                 }

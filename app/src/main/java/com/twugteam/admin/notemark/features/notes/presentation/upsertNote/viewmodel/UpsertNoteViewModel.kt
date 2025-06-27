@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote
+package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.viewmodel
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.domain.util.Result
-import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.mapper.toNote
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.mapper.toNoteUi
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.state.UpsertNoteState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.ZoneId
 import java.time.ZonedDateTime
 
 sealed interface UpsertNoteActions {
@@ -29,7 +30,6 @@ sealed interface UpsertNoteActions {
     data object OnSaveNoteClick : UpsertNoteActions
     data object OnCloseIconClick : UpsertNoteActions
     data object Close : UpsertNoteActions
-
 }
 
 sealed interface UpsertNoteEvents {
@@ -49,7 +49,6 @@ class UpsertNoteViewModel(
 
     init {
         val noteId: String? = savedStateHandle.get<String>("noteId")
-        Timber.tag("MyTag").d("noteId: $noteId")
         viewModelScope.launch {
             getNoteById(noteId = noteId)
         }
@@ -57,14 +56,15 @@ class UpsertNoteViewModel(
 
     private suspend fun getNoteById(noteId: String?) {
         if (noteId.isNullOrEmpty()) {
+            val now: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC"))
             _state.update { newState ->
                 newState.copy(
                     noteUi = NoteUi(
                         id = null,
                         title = "",
                         content = "",
-                        createdAt = ZonedDateTime.now(),
-                        lastEditedAt = ZonedDateTime.now()
+                        createdAt = now,
+                        lastEditedAt = now
                     ),
                     isEdit = false
                 )
@@ -78,8 +78,6 @@ class UpsertNoteViewModel(
                 isEdit = true,
             )
         }
-        val noteUi = _state.value.noteUi
-        Timber.tag("MyTag").d("noteUi: $noteUi")
     }
 
 
@@ -160,9 +158,8 @@ class UpsertNoteViewModel(
 
     private suspend fun saveNote() {
         showLoader(showLoader = true)
-        val now: ZonedDateTime = ZonedDateTime.now()
+        val now: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC"))
         val isEdit = _state.value.isEdit
-        Timber.tag("MyTag").d("noteBefore: ${_state.value.noteUi?.toNote()}")
         _state.update { newState ->
             newState.copy(
                 noteUi = if (isEdit) newState.noteUi!!.copy(
@@ -176,19 +173,19 @@ class UpsertNoteViewModel(
             )
         }
         val note = _state.value.noteUi!!.toNote()
-        Timber.tag("MyTag").d("note: $note")
-        Timber.tag("MyTag").d("content length: ${note.content.length}")
-        val saveNoteResult = noteRepository.upsertNote(note = note)
-        Timber.tag("MyTag").d("saveNoteResult ${saveNoteResult.asEmptyDataResult()}")
+        Timber.tag("MyTag").d("newNote : $note")
+        val saveNoteResult = noteRepository.upsertNote(note = note, isEditing = isEdit)
         showLoader(showLoader = false)
         showDialog(showDialog = false)
         delay(100)
         onDialogCancel()
         when (saveNoteResult) {
             is Result.Error -> Timber.tag("MyTag")
-                .e("upsertNoteViewModel: saveNote: ${saveNoteResult.error}")
+                .e("upsertNoteViewModel: saveNote: error: ${saveNoteResult.error}")
 
             is Result.Success -> {
+                Timber.tag("MyTag")
+                    .d("upsertNoteViewModel: saveNote: success: ${saveNoteResult.data}")
                 _events.send(UpsertNoteEvents.Close)
             }
         }

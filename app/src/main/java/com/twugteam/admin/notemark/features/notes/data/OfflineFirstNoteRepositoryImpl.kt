@@ -58,24 +58,19 @@ class OfflineFirstNoteRepositoryImpl(
         }
     }
 
-    override suspend fun upsertNote(note: Note): EmptyResult<DataError> {
+    override suspend fun upsertNote(note: Note, isEditing: Boolean): EmptyResult<DataError> {
         val localResult = localNoteDataSource.upsertNote(note)
         if (localResult !is Result.Success) {
             return localResult.asEmptyDataResult()
         }
         val noteWithId = note.copy(id = localResult.data)
-        val remoteResult = remoteNoteDataSource.postNote(noteWithId)
-        return when (remoteResult) {
-            is Result.Success -> {
-                applicationScope.async {
-                    localNoteDataSource.upsertNote(remoteResult.data).asEmptyDataResult()
-                }.await()
-            }
-
-            is Result.Error -> {
-                Result.Success(Unit)
-            }
+        val remoteResult = if (!isEditing) {
+            remoteNoteDataSource.postNote(noteWithId)
+        } else {
+            remoteNoteDataSource.putNote(noteWithId)
         }
+
+        return localResult.asEmptyDataResult()
     }
 
     override suspend fun deleteNoteById(id: NoteId) {

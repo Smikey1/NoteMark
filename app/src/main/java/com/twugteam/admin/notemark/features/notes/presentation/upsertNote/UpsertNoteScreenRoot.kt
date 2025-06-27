@@ -3,6 +3,11 @@ package com.twugteam.admin.notemark.features.notes.presentation.upsertNote
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.orientationScreens.UpsertNoteLandscapeScreen
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.orientationScreens.UpsertNoteMobilePortraitScreen
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.orientationScreens.UpsertNoteTabletScreen
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.state.UpsertNoteState
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.viewmodel.UpsertNoteActions
 
 @Composable
 fun UpsertNoteScreenRoot(

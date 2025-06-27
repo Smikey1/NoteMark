@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.auth.presentation.register
+package com.twugteam.admin.notemark.features.auth.presentation.register.state
 
 data class RegisterState(
     val username: InputFieldState = InputFieldState(

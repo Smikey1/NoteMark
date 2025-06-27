@@ -9,11 +9,14 @@ import com.twugteam.admin.notemark.core.domain.util.mapToResult
 import com.twugteam.admin.notemark.core.networking.delete
 import com.twugteam.admin.notemark.core.networking.get
 import com.twugteam.admin.notemark.core.networking.post
+import com.twugteam.admin.notemark.core.networking.put
 import com.twugteam.admin.notemark.features.notes.domain.NoteId
 import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
 import com.twugteam.admin.notemark.features.notes.mappers.toCreateNoteRequest
 import com.twugteam.admin.notemark.features.notes.mappers.toNote
 import io.ktor.client.HttpClient
+import io.ktor.utils.io.InternalAPI
+import timber.log.Timber
 
 class KtorRemoteNoteDataSource(
     private val httpClient: HttpClient
@@ -39,13 +42,33 @@ class KtorRemoteNoteDataSource(
         }
     }
 
+    @OptIn(InternalAPI::class)
     override suspend fun postNote(note: Note): Result<Note, DataError.Network> {
-        return httpClient.post<CreateNoteRequest, NoteDto>(
+        val postNote =  httpClient.post<CreateNoteRequest, NoteDto>(
             route = ApiEndpoints.NOTES_ENDPOINT,
             body = note.toCreateNoteRequest()
         ).mapToResult {
             it.toNote()
         }
+        when(postNote){
+            is Result.Error -> Timber.tag("MyTag").e("postNote: error")
+            is Result.Success -> Timber.tag("MyTag").d("postNote: success ${postNote.data}")
+        }
+        return postNote
+    }
+
+    override suspend fun putNote(note: Note): Result<Note, DataError.Network> {
+        val putNote =  httpClient.put<CreateNoteRequest, NoteDto>(
+            route = ApiEndpoints.NOTES_ENDPOINT,
+            body = note.toCreateNoteRequest()
+        ).mapToResult {
+            it.toNote()
+        }
+        when(putNote){
+            is Result.Error -> Timber.tag("MyTag").e("putNote: error")
+            is Result.Success -> Timber.tag("MyTag").d("putNote: success $note")
+        }
+        return putNote
     }
 
     override suspend fun deleteNoteById(id: NoteId): EmptyResult<DataError.Network> {

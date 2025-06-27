@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.auth.presentation.landing
+package com.twugteam.admin.notemark.features.auth.presentation.landing.orientationScreens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -22,6 +22,7 @@ import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkOutlineActionButton
+import com.twugteam.admin.notemark.features.auth.presentation.landing.viewmodel.LandingActions
 
 @Composable
 fun LandingScreenMobilePortrait(

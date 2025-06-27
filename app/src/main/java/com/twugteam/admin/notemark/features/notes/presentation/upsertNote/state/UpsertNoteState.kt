@@ -1,8 +1,8 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote
+package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.state
 
 import androidx.annotation.StringRes
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 import com.twugteam.admin.notemark.R
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 
 data class UpsertNoteState(
     val noteUi: NoteUi? = null,

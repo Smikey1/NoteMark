@@ -6,20 +6,39 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val sessionStorage: SessionStorage
 ) : ViewModel() {
-
-    var state by mutableStateOf(MainState())
-        private set
+    private val _mainState: MutableStateFlow<MainState> = MutableStateFlow(MainState())
+    val mainState = _mainState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            state = state.copy(isCheckingAuth = true)
-            state = state.copy(isLoggedInPreviously = sessionStorage.getAuthInto() != null)
-            state = state.copy(isCheckingAuth = false)
+            getAuthInfo()
+        }
+    }
+
+    private suspend fun getAuthInfo() {
+        isCheckingAuth(isCheckingAuth = true)
+        val authInfo = sessionStorage.getAuthInto()
+        _mainState.update { newState ->
+            newState.copy(
+                isLoggedInPreviously = authInfo != null
+            )
+        }
+        isCheckingAuth(isCheckingAuth = false)
+    }
+
+    private fun isCheckingAuth(isCheckingAuth: Boolean) {
+        _mainState.update { newState ->
+            newState.copy(
+                isCheckingAuth = isCheckingAuth
+            )
         }
     }
 

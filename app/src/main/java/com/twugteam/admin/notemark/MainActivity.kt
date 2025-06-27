@@ -10,8 +10,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 import com.twugteam.admin.notemark.navigation.NavigationRoot
@@ -25,12 +27,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         installSplashScreen().apply {
+            //keeps visible until isCheckingAuth is false
             setKeepOnScreenCondition {
-                mainViewModel.state.isCheckingAuth
+                mainViewModel.mainState.value.isCheckingAuth
             }
         }
         setContent {
             NoteMarkTheme {
+                val mainState by mainViewModel.mainState.collectAsStateWithLifecycle()
                     val navController = rememberNavController()
                     Scaffold(
                         modifier = Modifier
@@ -38,13 +42,13 @@ class MainActivity : ComponentActivity() {
                         containerColor = MaterialTheme.colorScheme.primary
                     ) { innerPadding ->
                         val windowSize = calculateWindowSizeClass(this)
-                        if (!mainViewModel.state.isCheckingAuth) {
+                        if (!mainState.isCheckingAuth) {
                             NavigationRoot(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(top = innerPadding.calculateTopPadding()),
                                 windowSize = windowSize.widthSizeClass,
-                                isLoggedInPreviously = mainViewModel.state.isLoggedInPreviously,
+                                isLoggedInPreviously = mainState.isLoggedInPreviously,
                                 navController = navController
                             )
                         }

@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.noteList
+package com.twugteam.admin.notemark.features.notes.presentation.noteList.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,6 +6,7 @@ import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
 import com.twugteam.admin.notemark.core.presentation.ui.getInitial
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.mapper.toNoteUi
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.state.NoteListState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

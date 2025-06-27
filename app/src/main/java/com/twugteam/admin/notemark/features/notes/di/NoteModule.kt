@@ -9,8 +9,8 @@ import com.twugteam.admin.notemark.features.notes.data.worker.FetchNoteWorker
 import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListViewModel
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteViewModel
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.viewmodel.NoteListViewModel
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.viewmodel.UpsertNoteViewModel
 import org.koin.androidx.workmanager.dsl.workerOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
