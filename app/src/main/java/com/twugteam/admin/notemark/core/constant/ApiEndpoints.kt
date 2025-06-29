@@ -19,4 +19,9 @@ object ApiEndpoints {
     // Delete Endpoints
     const val DELETE_ENDPOINT = BuildConfig.DELETE_ENDPOINT
 
+    //TODO: You can construct delete route here, because the base endpoint of delete is already in line 17.
+    // for example you can do
+
+//    const val DELETE_ENDPOINT = BuildConfig.NOTES_ENDPOINT + "/{id}"
+
 }

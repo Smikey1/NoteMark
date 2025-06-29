@@ -6,6 +6,7 @@ import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.EmptyResult
 import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.domain.util.mapToResult
+import com.twugteam.admin.notemark.core.networking.constructRoute
 import com.twugteam.admin.notemark.core.networking.delete
 import com.twugteam.admin.notemark.core.networking.get
 import com.twugteam.admin.notemark.core.networking.post
@@ -15,7 +16,6 @@ import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
 import com.twugteam.admin.notemark.features.notes.mappers.toCreateNoteRequest
 import com.twugteam.admin.notemark.features.notes.mappers.toNote
 import io.ktor.client.HttpClient
-import io.ktor.utils.io.InternalAPI
 import timber.log.Timber
 
 class KtorRemoteNoteDataSource(
@@ -42,7 +42,7 @@ class KtorRemoteNoteDataSource(
         }
     }
 
-    @OptIn(InternalAPI::class)
+
     override suspend fun postNote(note: Note): Result<Note, DataError.Network> {
         val postNote =  httpClient.post<CreateNoteRequest, NoteDto>(
             route = ApiEndpoints.NOTES_ENDPOINT,
@@ -73,8 +73,13 @@ class KtorRemoteNoteDataSource(
 
     override suspend fun deleteNoteById(id: NoteId): EmptyResult<DataError.Network> {
         return httpClient.delete(
+            //TODO: because in this case, you need to remember "{id}" this format strictly,
+            // and sometime it may result confusion like, where id or noteId or something else
             route = ApiEndpoints.DELETE_ENDPOINT.replace("{id}",id),
+            // TODO, or you can do this only to fixed the path related api, because you can simply append the id to url
+//            route = ApiEndpoints.NOTES_ENDPOINT + "/$id"
         )
+
     }
 
 }

@@ -25,6 +25,8 @@ import java.time.ZonedDateTime
 sealed interface UpsertNoteActions {
     data class UpdateNoteUiTitle(val noteTitle: String) : UpsertNoteActions
     data class UpdateNoteUiContent(val noteContent: String) : UpsertNoteActions
+
+    // TODO: This model `NoteUi` and  `mapper` .toNoteUi `both imports` comes from noteList package,rather you can add it to core presentation
     data class SaveNote(val noteUi: NoteUi) : UpsertNoteActions
     data object OnDialogDismiss : UpsertNoteActions
     data object OnSaveNoteClick : UpsertNoteActions

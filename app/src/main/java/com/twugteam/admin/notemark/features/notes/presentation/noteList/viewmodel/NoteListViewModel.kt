@@ -27,6 +27,7 @@ sealed interface NoteListEvents {
     data class NavigateToUpsertNote(val noteId: String?) : NoteListEvents
 }
 
+//TODO: In this architecture pattern, no need to put viewmodel inside the package
 class NoteListViewModel(
     private val noteRepository: NoteRepository,
     private val sessionStorage: SessionStorage,

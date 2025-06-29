@@ -4,6 +4,8 @@ import androidx.annotation.StringRes
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 
+//TODO: Do not bind @StringRes directly into data class state, rather you can define in composable
+
 data class UpsertNoteState(
     val noteUi: NoteUi? = null,
     val isEdit: Boolean = false,
