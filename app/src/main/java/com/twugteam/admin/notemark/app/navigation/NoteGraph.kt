@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.navigation
+package com.twugteam.admin.notemark.app.navigation
 
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.getValue
@@ -9,12 +9,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.viewmodel.NoteListEvents
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListEvents
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListScreenRoot
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.viewmodel.NoteListViewModel
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.viewmodel.UpsertNoteEvents
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListViewModel
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteEvents
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteScreenRoot
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.viewmodel.UpsertNoteViewModel
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteViewModel
 import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 

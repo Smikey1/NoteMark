@@ -31,8 +31,5 @@ val coreModule = module {
         get<NoteDatabase>().noteDao
     }
 
-    single {
-        get<NoteDatabase>().notePendingSyncDao
-    }
 
 }

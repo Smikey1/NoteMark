@@ -7,12 +7,9 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         NoteEntity::class,
-        CreatedNotePendingSyncEntity::class,
-        DeletedNotePendingSyncEntity::class
     ],
     version = 1
 )
 abstract class NoteDatabase : RoomDatabase() {
     abstract val noteDao: NoteDao
-    abstract val notePendingSyncDao: NotePendingSyncDao
 }

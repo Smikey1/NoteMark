@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.noteList.viewmodel
+package com.twugteam.admin.notemark.features.notes.presentation.noteList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,7 +6,6 @@ import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
 import com.twugteam.admin.notemark.core.presentation.ui.getInitial
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.mapper.toNoteUi
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.state.NoteListState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,7 +26,6 @@ sealed interface NoteListEvents {
     data class NavigateToUpsertNote(val noteId: String?) : NoteListEvents
 }
 
-//TODO: In this architecture pattern, no need to put viewmodel inside the package
 class NoteListViewModel(
     private val noteRepository: NoteRepository,
     private val sessionStorage: SessionStorage,

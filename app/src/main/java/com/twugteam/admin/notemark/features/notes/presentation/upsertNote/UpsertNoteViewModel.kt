@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.viewmodel
+package com.twugteam.admin.notemark.features.notes.presentation.upsertNote
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
@@ -10,7 +10,6 @@ import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.mapper.toNote
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.mapper.toNoteUi
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.state.UpsertNoteState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -32,9 +32,9 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.OnSurfaceVar
 import com.twugteam.admin.notemark.core.presentation.designsystem.Primary
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.viewmodel.UpsertNoteActions
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteActions
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteSharedScreen
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.state.UpsertNoteState
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteState
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteTextField
 
 @Composable

@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.navigation
+package com.twugteam.admin.notemark.app.navigation
 
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 import kotlinx.serialization.Serializable

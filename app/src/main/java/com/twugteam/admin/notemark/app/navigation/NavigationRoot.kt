@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.navigation
+package com.twugteam.admin.notemark.app.navigation
 
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable

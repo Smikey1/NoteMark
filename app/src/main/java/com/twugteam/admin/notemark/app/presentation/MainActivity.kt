@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark
+package com.twugteam.admin.notemark.app.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,7 +16,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
-import com.twugteam.admin.notemark.navigation.NavigationRoot
+import com.twugteam.admin.notemark.app.navigation.NavigationRoot
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {

@@ -1,6 +1,8 @@
-package com.twugteam.admin.notemark
+package com.twugteam.admin.notemark.app.presentation
 
 import android.app.Application
+import com.twugteam.admin.notemark.BuildConfig
+import com.twugteam.admin.notemark.app.di.appModule
 import com.twugteam.admin.notemark.core.di.coreModule
 import com.twugteam.admin.notemark.features.auth.di.authModule
 import com.twugteam.admin.notemark.features.notes.di.noteModule

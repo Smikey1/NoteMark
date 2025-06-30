@@ -1,8 +1,5 @@
-package com.twugteam.admin.notemark
+package com.twugteam.admin.notemark.app.presentation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage

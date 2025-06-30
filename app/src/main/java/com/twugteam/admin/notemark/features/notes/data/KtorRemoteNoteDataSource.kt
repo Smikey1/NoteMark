@@ -6,7 +6,6 @@ import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.EmptyResult
 import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.domain.util.mapToResult
-import com.twugteam.admin.notemark.core.networking.constructRoute
 import com.twugteam.admin.notemark.core.networking.delete
 import com.twugteam.admin.notemark.core.networking.get
 import com.twugteam.admin.notemark.core.networking.post
@@ -73,11 +72,7 @@ class KtorRemoteNoteDataSource(
 
     override suspend fun deleteNoteById(id: NoteId): EmptyResult<DataError.Network> {
         return httpClient.delete(
-            //TODO: because in this case, you need to remember "{id}" this format strictly,
-            // and sometime it may result confusion like, where id or noteId or something else
-            route = ApiEndpoints.DELETE_ENDPOINT.replace("{id}",id),
-            // TODO, or you can do this only to fixed the path related api, because you can simply append the id to url
-//            route = ApiEndpoints.NOTES_ENDPOINT + "/$id"
+            route = ApiEndpoints.NOTES_ENDPOINT + "/$id"
         )
 
     }

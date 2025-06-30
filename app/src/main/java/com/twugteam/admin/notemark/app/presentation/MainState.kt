@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark
+package com.twugteam.admin.notemark.app.presentation
 
 data class MainState(
     val isCheckingAuth: Boolean = false,

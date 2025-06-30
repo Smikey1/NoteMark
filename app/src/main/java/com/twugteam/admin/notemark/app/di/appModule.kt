@@ -1,8 +1,10 @@
-package com.twugteam.admin.notemark
+package com.twugteam.admin.notemark.app.di
 
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.twugteam.admin.notemark.app.presentation.MainViewModel
+import com.twugteam.admin.notemark.app.presentation.NoteMarkApp
 import kotlinx.coroutines.CoroutineScope
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.viewModelOf

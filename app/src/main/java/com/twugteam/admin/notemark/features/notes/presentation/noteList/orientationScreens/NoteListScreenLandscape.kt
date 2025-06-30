@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteGraphSharedScreen
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.viewmodel.NoteListAction
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.state.NoteListState
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListAction
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListState
 
 @Composable
 fun NoteListScreenLandscape(
