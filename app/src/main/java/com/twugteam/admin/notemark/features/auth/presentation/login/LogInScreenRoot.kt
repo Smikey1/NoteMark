@@ -6,11 +6,10 @@ import androidx.compose.ui.Modifier
 import com.twugteam.admin.notemark.features.auth.presentation.login.orientationScreens.LogInScreenLandscape
 import com.twugteam.admin.notemark.features.auth.presentation.login.orientationScreens.LogInScreenMobilePortrait
 import com.twugteam.admin.notemark.features.auth.presentation.login.orientationScreens.LogInScreenTablet
-import com.twugteam.admin.notemark.features.auth.presentation.login.state.LogInUiState
-import com.twugteam.admin.notemark.features.auth.presentation.login.viewmodel.LogInAction
+import timber.log.Timber
 
 @Composable
-fun LogInScreen(
+fun LogInScreenRoot(
     modifier: Modifier = Modifier,
     windowSize: WindowWidthSizeClass,
     state: LogInUiState,
@@ -19,6 +18,7 @@ fun LogInScreen(
     when (windowSize) {
         //MOBILE PORTRAIT
         WindowWidthSizeClass.Compact -> {
+            Timber.tag("WindowSize").d("Compact")
             LogInScreenMobilePortrait(
                 modifier = modifier,
                 state = state,
@@ -28,6 +28,7 @@ fun LogInScreen(
 
         //TABLET
         WindowWidthSizeClass.Medium -> {
+            Timber.tag("WindowSize").d("Medium>")
             LogInScreenTablet(
                 modifier = modifier,
                 state = state,
@@ -37,6 +38,7 @@ fun LogInScreen(
 
         //LANDSCAPE
         WindowWidthSizeClass.Expanded -> {
+            Timber.tag("WindowSize").d("Expanded")
             LogInScreenLandscape(
                 modifier = modifier,
                 state = state,
@@ -46,6 +48,7 @@ fun LogInScreen(
 
         //else
         else -> {
+            Timber.tag("WindowSize").d("Else")
             LogInScreenMobilePortrait(
                 modifier = modifier,
                 state = state,

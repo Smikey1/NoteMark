@@ -2,6 +2,7 @@ package com.twugteam.admin.notemark.features.notes.presentation.upsertNote
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -15,7 +16,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import com.twugteam.admin.notemark.core.presentation.designsystem.Surface
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 
 @Composable
@@ -70,7 +70,7 @@ fun UpsertNoteTextField(
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
-            focusedIndicatorColor = if (showIndicator) Surface else Color.Transparent,
+            focusedIndicatorColor = if (showIndicator) MaterialTheme.colorScheme.surface else Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         )
     )

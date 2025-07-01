@@ -15,8 +15,8 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.components.Not
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkInputTextField
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkNoOutlineActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkSharedScreen
-import com.twugteam.admin.notemark.features.auth.presentation.login.viewmodel.LogInAction
-import com.twugteam.admin.notemark.features.auth.presentation.login.state.LogInUiState
+import com.twugteam.admin.notemark.features.auth.presentation.login.LogInAction
+import com.twugteam.admin.notemark.features.auth.presentation.login.LogInUiState
 
 @Composable
 fun LogInScreenTablet(

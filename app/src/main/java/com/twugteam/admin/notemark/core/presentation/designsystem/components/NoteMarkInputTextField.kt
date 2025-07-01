@@ -33,9 +33,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
-import com.twugteam.admin.notemark.core.presentation.designsystem.OnSurfaceVar
-import com.twugteam.admin.notemark.core.presentation.designsystem.Primary
-import com.twugteam.admin.notemark.core.presentation.designsystem.Surface
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -98,16 +95,16 @@ fun NoteMarkInputTextField(
             isError = isError && !isFocused,
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                unfocusedContainerColor = Surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 focusedContainerColor = SurfaceLowest,
-                unfocusedPlaceholderColor = OnSurfaceVar,
-                focusedPlaceholderColor = OnSurfaceVar,
+                unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 unfocusedBorderColor = Color.Transparent,
-                focusedBorderColor = Primary,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 cursorColor = Color.Blue,
                 errorBorderColor = MaterialTheme.colorScheme.error,
                 errorSupportingTextColor = MaterialTheme.colorScheme.error,
-                focusedSupportingTextColor = OnSurfaceVar,
+                focusedSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 errorCursorColor = MaterialTheme.colorScheme.error
             ),
             trailingIcon = {

@@ -40,8 +40,6 @@ import androidx.compose.ui.unit.sp
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
-import com.twugteam.admin.notemark.core.presentation.designsystem.OnSurfaceVar
-import com.twugteam.admin.notemark.core.presentation.designsystem.Surface
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
 import com.twugteam.admin.notemark.core.presentation.ui.formatAsNoteDate
@@ -63,7 +61,7 @@ fun NoteGraphSharedScreen(
 ) {
     Scaffold(
         modifier = modifier,
-        containerColor = Surface,
+        containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
             NoteListTopBar(
                 modifier = topBarModifier,
@@ -149,7 +147,7 @@ fun NoteGraphSharedScreen(
                         .align(Alignment.TopCenter),
                     text = stringResource(R.string.empty_notes),
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = OnSurfaceVar,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
                     ),
                 )
@@ -272,7 +270,7 @@ fun NoteListItem(
                         windowSize = windowSize
                     ),
                     style = MaterialTheme.typography.bodySmall.copy(
-                        color = OnSurfaceVar
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
             }

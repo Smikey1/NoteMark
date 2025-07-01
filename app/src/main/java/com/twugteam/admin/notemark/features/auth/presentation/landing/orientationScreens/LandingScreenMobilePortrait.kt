@@ -22,7 +22,7 @@ import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkOutlineActionButton
-import com.twugteam.admin.notemark.features.auth.presentation.landing.viewmodel.LandingActions
+import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingActions
 
 @Composable
 fun LandingScreenMobilePortrait(

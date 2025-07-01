@@ -6,8 +6,6 @@ import androidx.compose.ui.Modifier
 import com.twugteam.admin.notemark.features.auth.presentation.register.orientationScreens.RegisterScreenLandscape
 import com.twugteam.admin.notemark.features.auth.presentation.register.orientationScreens.RegisterScreenPortrait
 import com.twugteam.admin.notemark.features.auth.presentation.register.orientationScreens.RegisterScreenTablet
-import com.twugteam.admin.notemark.features.auth.presentation.register.state.RegisterState
-import com.twugteam.admin.notemark.features.auth.presentation.register.viewmodel.RegisterAction
 
 @Composable
 fun RegisterScreenRoot(

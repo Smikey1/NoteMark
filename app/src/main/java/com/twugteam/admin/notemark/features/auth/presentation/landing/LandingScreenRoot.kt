@@ -9,11 +9,10 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.LandingBackgro
 import com.twugteam.admin.notemark.features.auth.presentation.landing.orientationScreens.LandingScreenLandscape
 import com.twugteam.admin.notemark.features.auth.presentation.landing.orientationScreens.LandingScreenMobilePortrait
 import com.twugteam.admin.notemark.features.auth.presentation.landing.orientationScreens.LandingScreenTablet
-import com.twugteam.admin.notemark.features.auth.presentation.landing.viewmodel.LandingActions
 import timber.log.Timber
 
 @Composable
-fun LandingScreen(
+fun LandingScreenRoot(
     modifier: Modifier = Modifier,
     windowSize: WindowWidthSizeClass,
     onActions: (LandingActions) -> Unit,

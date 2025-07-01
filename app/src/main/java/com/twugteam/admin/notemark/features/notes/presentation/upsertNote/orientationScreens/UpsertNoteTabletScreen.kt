@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import com.twugteam.admin.notemark.R
-import com.twugteam.admin.notemark.core.presentation.designsystem.OnSurfaceVar
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteActions
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteSharedScreen
@@ -85,11 +84,11 @@ fun UpsertNoteTabletScreen(
                         showIndicator = false,
                         textFieldStyle = MaterialTheme.typography.bodyLarge.copy(
                             letterSpacing = 0.01f.em,
-                            color = OnSurfaceVar
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                         placeHolderStyle = MaterialTheme.typography.titleSmall.copy(
                             letterSpacing = 0.01.em,
-                            color = OnSurfaceVar
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     )
                 }

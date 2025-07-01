@@ -8,15 +8,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,8 +27,6 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
-import com.twugteam.admin.notemark.core.presentation.designsystem.OnSurfaceVar
-import com.twugteam.admin.notemark.core.presentation.designsystem.Primary
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteActions
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteSharedScreen
@@ -94,17 +95,18 @@ fun UpsertNoteMobilePortraitScreen(
                         showIndicator = false,
                         textFieldStyle = MaterialTheme.typography.bodyLarge.copy(
                             letterSpacing = 0.01f.em,
-                            color = OnSurfaceVar
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                         placeHolderStyle = MaterialTheme.typography.titleSmall.copy(
                             letterSpacing = 0.01.em,
-                            color = OnSurfaceVar
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                     )
                 }
 
                 NoteMarkDialog(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .align(Alignment.Center),
                     showDialog = state.showDialog,
                     titleResId = state.titleResId,
@@ -157,13 +159,19 @@ fun UpsertNoteMobilePortraitTopBar(
                 modifier = Modifier,
                 imageVector = NoteMarkIcons.Close,
                 contentDescription = "Close",
-                tint = OnSurfaceVar,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
         TextButton(
             onClick = onSaveNote,
-            enabled = saveNoteEnabled && !isLoading
+            enabled = saveNoteEnabled && !isLoading,
+            colors = ButtonDefaults.buttonColors(
+                contentColor = MaterialTheme.colorScheme.primary,
+                containerColor = Color.Transparent,
+                disabledContentColor = MaterialTheme.colorScheme.surface,
+                disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+            )
         ) {
             Text(
                 text = stringResource(R.string.save_note).uppercase(),
@@ -172,7 +180,7 @@ fun UpsertNoteMobilePortraitTopBar(
                     fontWeight = FontWeight.Bold,
                     lineHeight = 24.sp,
                     letterSpacing = 0.01.em,
-                    color = Primary,
+                    color = LocalContentColor.current,
                 ),
             )
         }

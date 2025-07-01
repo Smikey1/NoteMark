@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.auth.presentation.landing.viewmodel
+package com.twugteam.admin.notemark.features.auth.presentation.landing
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

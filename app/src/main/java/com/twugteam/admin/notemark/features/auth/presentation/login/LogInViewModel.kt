@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.auth.presentation.login.viewmodel
+package com.twugteam.admin.notemark.features.auth.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +9,6 @@ import com.twugteam.admin.notemark.core.presentation.ui.UiText
 import com.twugteam.admin.notemark.core.presentation.ui.asUiText
 import com.twugteam.admin.notemark.features.auth.domain.AuthRepository
 import com.twugteam.admin.notemark.features.auth.domain.UserDataValidator
-import com.twugteam.admin.notemark.features.auth.presentation.login.state.LogInUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

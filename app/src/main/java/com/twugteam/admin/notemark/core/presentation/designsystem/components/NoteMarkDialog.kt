@@ -3,7 +3,6 @@ package com.twugteam.admin.notemark.core.presentation.designsystem.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
@@ -15,9 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.twugteam.admin.notemark.R
-import com.twugteam.admin.notemark.core.presentation.designsystem.OnSurfaceVar
-import com.twugteam.admin.notemark.core.presentation.designsystem.Primary
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +36,7 @@ fun NoteMarkDialog(
                     modifier = Modifier,
                     text = stringResource(titleResId),
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = Primary,
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 )
             },
@@ -50,7 +46,7 @@ fun NoteMarkDialog(
                         modifier = Modifier,
                         text = stringResource(bodyResId),
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            color = OnSurfaceVar
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     )
                 } else {
