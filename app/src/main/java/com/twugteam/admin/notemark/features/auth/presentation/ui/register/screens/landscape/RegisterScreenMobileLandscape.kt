@@ -1,0 +1,44 @@
+package com.twugteam.admin.notemark.features.auth.presentation.ui.register.screens.landscape
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.twugteam.admin.notemark.R
+import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
+import com.twugteam.admin.notemark.features.auth.presentation.designSystem.components.NoteMarkSharedScreen
+import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterAction
+import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterState
+import com.twugteam.admin.notemark.features.auth.presentation.ui.register.designSystem.components.RegisterContent
+
+@Composable
+fun RegisterScreenMobileLandscape(
+    modifier: Modifier = Modifier,
+    state: RegisterState,
+    onAction: (RegisterAction) -> Unit
+) {
+    NoteMarkSharedScreen(
+        modifier = modifier,
+        title = R.string.create_account,
+        description = R.string.capture_your_thoughts_and_ideas,
+        isPortrait = false,
+        showSnackBar = state.showSnackBar,
+        snackBarText = state.snackBarText
+    ) { contentModifier ->
+        RegisterContent(
+            modifier = contentModifier,
+            state = state,
+            onAction = onAction
+        )
+    }
+}
+
+@Preview(device = "spec:parent=pixel_5,orientation=landscape")
+@Composable
+private fun RegisterScreenLandscapePreview() {
+    NoteMarkTheme {
+        RegisterScreenMobileLandscape(
+            state = RegisterState(),
+            onAction = {}
+        )
+    }
+}

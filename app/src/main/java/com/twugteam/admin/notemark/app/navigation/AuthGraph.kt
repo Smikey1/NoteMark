@@ -2,7 +2,6 @@ package com.twugteam.admin.notemark.app.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -14,21 +13,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
-import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingEvents
-import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreenRoot
-import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingScreenViewModel
-import com.twugteam.admin.notemark.features.auth.presentation.login.LogInEvent
-import com.twugteam.admin.notemark.features.auth.presentation.login.LogInScreenRoot
-import com.twugteam.admin.notemark.features.auth.presentation.login.LogInViewModel
-import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterEvent
-import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterScreenRoot
-import com.twugteam.admin.notemark.features.auth.presentation.register.RegisterViewModel
+import com.twugteam.admin.notemark.features.auth.presentation.ui.landing.LandingEvents
+import com.twugteam.admin.notemark.features.auth.presentation.ui.landing.LandingScreenRoot
+import com.twugteam.admin.notemark.features.auth.presentation.ui.landing.LandingScreenViewModel
+import com.twugteam.admin.notemark.features.auth.presentation.ui.login.LogInEvent
+import com.twugteam.admin.notemark.features.auth.presentation.ui.login.LogInScreenRoot
+import com.twugteam.admin.notemark.features.auth.presentation.ui.login.LogInViewModel
+import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterEvent
+import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterScreenRoot
+import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterViewModel
 import org.koin.androidx.compose.koinViewModel
 
 fun NavGraphBuilder.authGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    windowSize: WindowWidthSizeClass,
     windowSizeClass: WindowSizeClass,
 ) {
     navigation<Screens.AuthGraph>(
@@ -95,7 +93,7 @@ fun NavGraphBuilder.authGraph(
 
             LogInScreenRoot(
                 modifier = modifier.fillMaxSize(),
-                windowSize = windowSize,
+                windowSizeClass = windowSizeClass,
                 state = logInUiState,
                 onActions = logInViewModel::onActions
             )
@@ -139,7 +137,7 @@ fun NavGraphBuilder.authGraph(
 
             RegisterScreenRoot(
                 modifier = modifier.fillMaxSize(),
-                windowSize = windowSize,
+                windowSizeClass = windowSizeClass,
                 state = registerState,
                 onActions = registerViewModel::onAction
             )

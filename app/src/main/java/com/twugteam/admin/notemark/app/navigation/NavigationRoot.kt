@@ -24,7 +24,6 @@ fun NavigationRoot(
         authGraph(
             modifier = modifier,
             navController = navController,
-            windowSize = windowSize,
             windowSizeClass = windowSizeClass
         )
 
