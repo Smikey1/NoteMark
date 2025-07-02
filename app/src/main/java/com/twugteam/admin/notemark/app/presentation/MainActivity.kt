@@ -48,6 +48,7 @@ class MainActivity : ComponentActivity() {
                                     .fillMaxSize()
                                     .padding(top = innerPadding.calculateTopPadding()),
                                 windowSize = windowSize.widthSizeClass,
+                                windowSizeClass = windowSize,
                                 isLoggedInPreviously = mainState.isLoggedInPreviously,
                                 navController = navController
                             )

@@ -1,5 +1,6 @@
 package com.twugteam.admin.notemark.app.navigation
 
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,8 +11,10 @@ import androidx.navigation.compose.NavHost
 fun NavigationRoot(
     modifier: Modifier = Modifier,
     windowSize: WindowWidthSizeClass,
+    windowSizeClass: WindowSizeClass,
     isLoggedInPreviously: Boolean,
-    navController: NavHostController
+    navController: NavHostController,
+
 ) {
     NavHost(
         modifier = Modifier,
@@ -21,7 +24,8 @@ fun NavigationRoot(
         authGraph(
             modifier = modifier,
             navController = navController,
-            windowSize = windowSize
+            windowSize = windowSize,
+            windowSizeClass = windowSizeClass
         )
 
         noteGraph(

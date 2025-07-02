@@ -1,8 +1,6 @@
-package com.twugteam.admin.notemark.features.auth.presentation.landing.orientationScreens
+package com.twugteam.admin.notemark.features.auth.presentation.landing.components.landscape
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,57 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkOutlineActionButton
-import com.twugteam.admin.notemark.features.auth.presentation.landing.LandingActions
-
-@Composable
-fun LandingScreenLandscape(
-    modifier: Modifier = Modifier,
-    onActions: (LandingActions) -> Unit
-) {
-    LandingScreenLandscapeComponent(
-        modifier = modifier,
-        onClickGetStarted = {
-            onActions(LandingActions.OnClickGetStarted)
-        },
-        onClickLogIn = {
-            onActions(LandingActions.OnClickLogIn)
-        }
-    )
-}
-
-@Composable
-fun LandingScreenLandscapeComponent(
-    modifier: Modifier = Modifier,
-    onClickGetStarted: () -> Unit,
-    onClickLogIn: () -> Unit,
-) {
-    Row(
-        modifier = modifier
-    ) {
-        Image(
-            modifier = Modifier.weight(1f).padding(start = 19.dp, end = 15.dp),
-            painter = painterResource(R.drawable.landing_screen),
-            contentDescription = stringResource(R.string.landing_screen),
-            contentScale = ContentScale.FillWidth
-        )
-
-        LandingLandscapeBottomComponent(
-            modifier = Modifier
-                .padding(top = 41.dp, bottom = 17.dp)
-                .weight(1.2f),
-            onClickGetStarted = onClickGetStarted,
-            onClickLogIn = onClickLogIn
-        )
-    }
-}
 
 @Composable
 fun LandingLandscapeBottomComponent(

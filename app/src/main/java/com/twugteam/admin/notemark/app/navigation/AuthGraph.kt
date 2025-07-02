@@ -1,6 +1,7 @@
 package com.twugteam.admin.notemark.app.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -27,7 +28,8 @@ import org.koin.androidx.compose.koinViewModel
 fun NavGraphBuilder.authGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    windowSize: WindowWidthSizeClass
+    windowSize: WindowWidthSizeClass,
+    windowSizeClass: WindowSizeClass,
 ) {
     navigation<Screens.AuthGraph>(
         startDestination = Screens.Landing,
@@ -57,7 +59,7 @@ fun NavGraphBuilder.authGraph(
 
             LandingScreenRoot(
                 modifier = Modifier.fillMaxSize(),
-                windowSize = windowSize,
+                windowSizeClass = windowSizeClass,
                 onActions = landingViewModel::onActions
             )
         }
