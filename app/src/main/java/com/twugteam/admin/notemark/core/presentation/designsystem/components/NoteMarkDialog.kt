@@ -57,6 +57,7 @@ fun NoteMarkDialog(
                     }
                 }
             },
+            //user not allowed to dismiss dialog when clicking outside of dialog only if clicking on cancel
             onDismissRequest = { },
             modifier = modifier,
             confirmButton = {

@@ -11,15 +11,15 @@ import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkInputTextField
-import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkNoOutlineActionButton
-import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterAction
+import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkTransparentButton
+import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterActions
 import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterState
 
 @Composable
 fun RegisterContent(
     modifier: Modifier = Modifier,
     state: RegisterState,
-    onAction: (RegisterAction) -> Unit
+    onAction: (RegisterActions) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -33,11 +33,11 @@ fun RegisterContent(
             showLabel = true,
             isTrailingShowing = false,
             enabled = true,
-            supportingText = state.username.supportingText,
+            supportingText = state.username.supportingText?.asString(),
             isError = state.username.isError,
-            errorText = state.username.errorText,
+            errorText = state.username.errorText.asString(),
             onValueChange = { username ->
-                onAction(RegisterAction.UpdateUsername(username = username))
+                onAction(RegisterActions.UpdateUsername(username = username))
             },
         )
 
@@ -50,11 +50,11 @@ fun RegisterContent(
             showLabel = true,
             isTrailingShowing = false,
             enabled = true,
-            supportingText = state.email.supportingText,
+            supportingText = state.email.supportingText?.asString(),
             isError = state.email.isError,
-            errorText = state.email.errorText,
+            errorText = state.email.errorText.asString(),
             onValueChange = { email ->
-                onAction(RegisterAction.UpdateEmail(email = email))
+                onAction(RegisterActions.UpdateEmail(email = email))
             },
         )
 
@@ -67,11 +67,11 @@ fun RegisterContent(
             showLabel = true,
             isTrailingShowing = true,
             enabled = true,
-            supportingText = state.password.supportingText,
+            supportingText = state.password.supportingText?.asString(),
             isError = state.password.isError,
-            errorText = state.password.errorText,
+            errorText = state.password.errorText.asString(),
             onValueChange = { password ->
-                onAction(RegisterAction.UpdatePassword(password = password))
+                onAction(RegisterActions.UpdatePassword(password = password))
             },
         )
 
@@ -85,11 +85,11 @@ fun RegisterContent(
             isTrailingShowing = true,
             enabled = true,
             isLastField = true,
-            supportingText = state.confirmPassword.supportingText,
+            supportingText = state.confirmPassword.supportingText?.asString(),
             isError = state.confirmPassword.isError,
-            errorText = state.confirmPassword.errorText,
+            errorText = state.confirmPassword.errorText.asString(),
             onValueChange = { confirmPassword ->
-                onAction(RegisterAction.UpdateConfirmPassword(confirmPassword = confirmPassword))
+                onAction(RegisterActions.UpdateConfirmPassword(confirmPassword = confirmPassword))
             },
         )
         Spacer(modifier = Modifier.height(24.dp))
@@ -99,15 +99,15 @@ fun RegisterContent(
             isLoading = state.isRegistering,
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                onAction(RegisterAction.OnRegisterClick)
+                onAction(RegisterActions.OnRegisterClick)
             }
         )
         Spacer(modifier = Modifier.height(12.dp))
-        NoteMarkNoOutlineActionButton(
+        NoteMarkTransparentButton(
             text = stringResource(R.string.already_have_an_account),
             enabled = true,
             onClick = {
-                onAction(RegisterAction.OnAlreadyHaveAnAccountClick)
+                onAction(RegisterActions.OnAlreadyHaveAnAccountClick)
             }
         )
     }

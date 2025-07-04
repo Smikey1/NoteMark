@@ -3,7 +3,6 @@ package com.twugteam.admin.notemark.core.presentation.designsystem.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -45,7 +44,7 @@ fun NoteMarkActionButton(
 
         ),
         shape = MaterialTheme.shapes.small,
-        modifier = modifier.height(IntrinsicSize.Min)
+        modifier = modifier
     ) {
         Box(
             modifier = Modifier
@@ -92,7 +91,7 @@ fun NoteMarkOutlineActionButton(
             color = MaterialTheme.colorScheme.primary
         ),
         shape = MaterialTheme.shapes.small,
-        modifier = modifier.height(IntrinsicSize.Min)
+        modifier = modifier
     ) {
         Box(
             modifier = Modifier
@@ -120,7 +119,7 @@ fun NoteMarkOutlineActionButton(
 }
 
 @Composable
-fun NoteMarkNoOutlineActionButton(
+fun NoteMarkTransparentButton(
     modifier: Modifier = Modifier,
     text: String,
     isLoading: Boolean = false,
@@ -132,11 +131,10 @@ fun NoteMarkNoOutlineActionButton(
         enabled = enabled,
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = MaterialTheme.colorScheme.onPrimary,
-
         ),
         border = BorderStroke(width = 0.dp, color = Color.Transparent),
         shape = MaterialTheme.shapes.small,
-        modifier = modifier.height(IntrinsicSize.Min)
+        modifier = modifier
     ) {
         Box(
             modifier = Modifier
@@ -188,7 +186,7 @@ private fun NoteMarkActionButtonPreview() {
                 }
             )
             Spacer(Modifier.height(10.dp))
-            NoteMarkNoOutlineActionButton(
+            NoteMarkTransparentButton(
                 text = "Click Me",
                 isLoading = false,
                 modifier = Modifier.fillMaxWidth(),

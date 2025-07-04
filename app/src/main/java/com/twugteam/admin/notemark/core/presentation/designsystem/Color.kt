@@ -2,6 +2,8 @@ package com.twugteam.admin.notemark.core.presentation.designsystem
 
 import androidx.compose.ui.graphics.Color
 
+val ScaffoldLinearGradientFirst = Color(0xFF58A1F8)
+val ScaffoldLinearGradientSecond = Color(0xFF5A4CF7)
 val LandingBackground = Color(0xFFE0EAFF)
 val Primary = Color(0xFF5977F7)
 val PrimaryOpacity10 = Color(0xFF5977F7).copy(alpha = 0.1f)

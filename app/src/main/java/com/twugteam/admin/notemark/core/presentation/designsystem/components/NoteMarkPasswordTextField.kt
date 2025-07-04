@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicSecureTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.TextObfuscationMode
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -32,11 +32,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
@@ -44,19 +42,24 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 
 @Composable
 fun NoteMarkPasswordTextField(
+    modifier: Modifier = Modifier,
     state: String,
     isPasswordVisible: Boolean,
     hint: String,
     title: String,
     startIcon: ImageVector? = null,
     onTogglePasswordVisibilityClick: () -> Unit,
-    modifier: Modifier = Modifier,
     error: String? = null,
     additionalInfo: String? = null
 ) {
     var isFocused by remember {
         mutableStateOf(false)
     }
+
+    //state is string so it will recreate TextFieldState(initialText = state) on every recomposition
+    //to avoid that we use rememberTextFieldState
+    val textFieldState = rememberTextFieldState(initialText = state)
+
     Column(
         modifier = modifier
     ) {
@@ -68,7 +71,7 @@ fun NoteMarkPasswordTextField(
         )
         Spacer(modifier = Modifier.height(7.dp))
         BasicSecureTextField(
-            state = TextFieldState(initialText = state),
+            state = textFieldState,
             textObfuscationMode = if (isPasswordVisible) {
                 TextObfuscationMode.Visible
             } else TextObfuscationMode.Hidden,

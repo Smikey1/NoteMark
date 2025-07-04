@@ -18,21 +18,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
-sealed interface RegisterAction {
-    data class UpdateUsername(val username: String) : RegisterAction
-    data class UpdateEmail(val email: String) : RegisterAction
-    data class UpdatePassword(val password: String) : RegisterAction
-    data class UpdateConfirmPassword(val confirmPassword: String) : RegisterAction
-    data object OnRegisterClick : RegisterAction
-    data object OnAlreadyHaveAnAccountClick : RegisterAction
-}
-
-sealed interface RegisterEvent {
-    data class RegistrationError(val error: UiText) : RegisterEvent
-    data object RegistrationSuccess : RegisterEvent
-    data object NavigateToLogin : RegisterEvent
-}
-
 class RegisterViewModel(
     private val userDataValidator: UserDataValidator,
     private val authRepository: AuthRepository,
@@ -41,19 +26,17 @@ class RegisterViewModel(
     private val _state = MutableStateFlow(RegisterState())
     val state = _state.asStateFlow()
 
-    private val _eventChannel = Channel<RegisterEvent>()
+    private val _eventChannel = Channel<RegisterEvents>()
     val events = _eventChannel.receiveAsFlow()
 
-    fun onAction(action: RegisterAction) {
-        viewModelScope.launch {
+    fun onAction(action: RegisterActions) {
             when (action) {
-                is RegisterAction.UpdateUsername -> updateUsername(action.username)
-                is RegisterAction.UpdateEmail -> updateEmail(action.email)
-                is RegisterAction.UpdatePassword -> updatePassword(action.password)
-                is RegisterAction.UpdateConfirmPassword -> updateConfirmPassword(action.confirmPassword)
-                RegisterAction.OnRegisterClick -> register()
-                RegisterAction.OnAlreadyHaveAnAccountClick -> navigateToLogin()
-            }
+                is RegisterActions.UpdateUsername -> updateUsername(action.username)
+                is RegisterActions.UpdateEmail -> updateEmail(action.email)
+                is RegisterActions.UpdatePassword -> updatePassword(action.password)
+                is RegisterActions.UpdateConfirmPassword -> updateConfirmPassword(action.confirmPassword)
+                RegisterActions.OnRegisterClick -> register()
+                RegisterActions.OnAlreadyHaveAnAccountClick -> navigateToLogin()
         }
     }
 
@@ -130,39 +113,39 @@ class RegisterViewModel(
         }
     }
 
-    private suspend fun register() {
-        _state.update { it.copy(isRegistering = true) }
+    private fun register() {
+        viewModelScope.launch {
+            _state.update { it.copy(isRegistering = true) }
 
-        val result = authRepository.register(
-            username = _state.value.username.value,
-            email = _state.value.email.value,
-            password = _state.value.password.value
-        )
+            val result = authRepository.register(
+                username = _state.value.username.value,
+                email = _state.value.email.value,
+                password = _state.value.password.value
+            )
 
-        when (result) {
-            is Result.Error -> {
-                if (result.error == DataError.Network.CONFLICT) {
-                    _eventChannel.send(
-                        RegisterEvent.RegistrationError(
-                            error = UiText.StringResource(
-                                R.string.error_conflict
+            when (result) {
+                is Result.Error -> {
+                    if (result.error == DataError.Network.CONFLICT) {
+                        _eventChannel.send(
+                            RegisterEvents.RegistrationError(
+                                error = UiText.StringResource(
+                                    R.string.error_conflict
+                                )
                             )
                         )
-                    )
-                } else {
-                    _eventChannel.send(RegisterEvent.RegistrationError(error = result.error.asUiText()))
+                    } else {
+                        _eventChannel.send(RegisterEvents.RegistrationError(error = result.error.asUiText()))
+                    }
+                    _state.update { it.copy(isRegistering = false) }
                 }
-                _state.update { it.copy(isRegistering = false) }
-            }
 
-            is Result.Success -> {
-                //clear state
-                resetState()
-                _eventChannel.send(RegisterEvent.RegistrationSuccess)
+                is Result.Success -> {
+                    //clear state
+                    resetState()
+                    _eventChannel.send(RegisterEvents.RegistrationSuccess)
+                }
             }
         }
-
-
     }
 
 
@@ -171,8 +154,10 @@ class RegisterViewModel(
         return state.username.isValid && state.email.isValid && state.password.isValid && (state.password.value == state.confirmPassword.value)
     }
 
-    private suspend fun navigateToLogin() {
-        _eventChannel.send(RegisterEvent.NavigateToLogin)
+    private  fun navigateToLogin() {
+        viewModelScope.launch {
+            _eventChannel.send(RegisterEvents.NavigateToLogin)
+        }
     }
 
     fun showSnackBar(errorMessage: String) {

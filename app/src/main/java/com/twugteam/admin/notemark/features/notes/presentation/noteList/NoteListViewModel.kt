@@ -3,9 +3,9 @@ package com.twugteam.admin.notemark.features.notes.presentation.noteList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
-import com.twugteam.admin.notemark.core.presentation.ui.getInitial
+import com.twugteam.admin.notemark.core.presentation.ui.toNoteUi
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.mapper.toNoteUi
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.util.getInitial
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,27 +15,17 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-sealed interface NoteListAction {
-    data class NavigateToUpsertNote(val noteId: String?) : NoteListAction
-    data class OnNoteDelete(val noteId: String) : NoteListAction
-    data object OnDialogConfirm : NoteListAction
-    data object OnDialogDismiss : NoteListAction
-}
-
-sealed interface NoteListEvents {
-    data class NavigateToUpsertNote(val noteId: String?) : NoteListEvents
-}
-
 class NoteListViewModel(
     private val noteRepository: NoteRepository,
     private val sessionStorage: SessionStorage,
 ) : ViewModel() {
     private val _state: MutableStateFlow<NoteListState> = MutableStateFlow(NoteListState())
     val state = _state.onStart {
-        viewModelScope.launch {
-            getUsername()
-            getNotes()
-        }
+        //getUsername() and getNotes() run in parallel
+        //because getNotes() launch in a viewmodelScope.launch{}
+        getNotes()
+        getUsername()
+
     }.stateIn(
         scope = viewModelScope,
         initialValue = NoteListState(),
@@ -56,29 +46,29 @@ class NoteListViewModel(
     private val _events = Channel<NoteListEvents>()
     val events = _events.receiveAsFlow()
 
-    fun onActions(noteListAction: NoteListAction) {
-        viewModelScope.launch {
-            when (noteListAction) {
-                is NoteListAction.NavigateToUpsertNote -> navigateToUpsertNote(noteId = noteListAction.noteId)
-                is NoteListAction.OnNoteDelete -> noteToDelete(noteId = noteListAction.noteId)
-                NoteListAction.OnDialogConfirm -> deleteNote()
-                NoteListAction.OnDialogDismiss -> onDialogCancel()
-            }
+    fun onActions(noteListActions: NoteListActions) {
+        when (noteListActions) {
+            is NoteListActions.NavigateToUpsertNote -> navigateToUpsertNote(noteId = noteListActions.noteId)
+            is NoteListActions.OnNoteDelete -> noteToDelete(noteId = noteListActions.noteId)
+            NoteListActions.OnDialogConfirm -> deleteNote()
+            NoteListActions.OnDialogDismiss -> onDialogCancel()
         }
     }
 
-    private suspend fun deleteNote() {
-        val noteToDeleteId = _state.value.noteToDeleteId
-        showLoader(showLoader = true)
-        noteRepository.deleteNoteById(id = noteToDeleteId!!)
-        showLoader(showLoader = false)
-        showDialog(showDialog = false)
+    private fun deleteNote() {
+        viewModelScope.launch {
+            val noteToDeleteId = _state.value.noteToDeleteId
+            showLoader(showLoader = true)
+            noteRepository.deleteNoteById(id = noteToDeleteId!!)
+            showLoader(showLoader = false)
+            showDialog(showDialog = false)
+        }
     }
 
     private fun showLoader(showLoader: Boolean) {
-        _state.update { newState->
+        _state.update { newState ->
             newState.copy(
-                isLoading =  showLoader
+                isLoading = showLoader
             )
         }
     }
@@ -101,7 +91,7 @@ class NoteListViewModel(
         showDialog(showDialog = true)
     }
 
-    private fun showDialog(showDialog: Boolean){
+    private fun showDialog(showDialog: Boolean) {
         _state.update { newState ->
             newState.copy(
                 showDialog = showDialog
@@ -125,8 +115,10 @@ class NoteListViewModel(
         }
     }
 
-    private suspend fun navigateToUpsertNote(noteId: String?) {
-        _events.send(NoteListEvents.NavigateToUpsertNote(noteId))
+    private fun navigateToUpsertNote(noteId: String?) {
+        viewModelScope.launch {
+            _events.send(NoteListEvents.NavigateToUpsertNote(noteId))
+        }
     }
 
 }

@@ -15,7 +15,7 @@ fun LogInScreenRoot(
     modifier: Modifier = Modifier,
     windowSizeClass: WindowSizeClass,
     state: LogInUiState,
-    onActions: (LogInAction) -> Unit,
+    onActions: (LogInActions) -> Unit,
 ) {
     val deviceConfiguration = DeviceConfiguration.fromWindowSizeClass(windowSizeClass = windowSizeClass)
     when(deviceConfiguration){

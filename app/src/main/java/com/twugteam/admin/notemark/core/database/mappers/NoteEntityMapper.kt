@@ -2,13 +2,13 @@ package com.twugteam.admin.notemark.core.database.mappers
 
 import com.twugteam.admin.notemark.core.database.notes.NoteEntity
 import com.twugteam.admin.notemark.core.domain.notes.Note
-import com.twugteam.admin.notemark.core.domain.util.UUID
 import java.time.Instant
 import java.time.ZoneId
+import java.util.UUID
 
 fun Note.toNoteEntity(): NoteEntity {
     return NoteEntity(
-        id = id ?: UUID.new().toString(),
+        id = id ?: UUID.randomUUID().toString(),
         title = title,
         content = content,
         createdAt = createdAt.toInstant().toString(),
@@ -23,6 +23,6 @@ fun NoteEntity.toNote(): Note {
         title = title,
         content = content,
         createdAt = Instant.parse(createdAt).atZone(ZoneId.of("UTC")),
-        lastEditedAt = Instant.parse(createdAt).atZone(ZoneId.of("UTC")),
+        lastEditedAt = Instant.parse(lastEditedAt).atZone(ZoneId.of("UTC")),
     )
 }

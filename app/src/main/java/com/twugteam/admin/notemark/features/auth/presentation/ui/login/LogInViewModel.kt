@@ -2,7 +2,6 @@ package com.twugteam.admin.notemark.features.auth.presentation.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.presentation.ui.UiText
@@ -17,20 +16,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
-
-sealed interface LogInAction {
-    data class UpdateEmail(val emailValue: String) : LogInAction
-    data class UpdatePassword(val passwordValue: String) : LogInAction
-    data object LogInClick : LogInAction
-    data object DontHaveAccountClick : LogInAction
-}
-
-sealed interface LogInEvent {
-    data object NavigateToRegister : LogInEvent
-    data object LoginSuccess : LogInEvent
-    data class Error(val error: UiText) : LogInEvent
-
-}
+import com.twugteam.admin.notemark.R
 
 class LogInViewModel(
     private val userDataValidator: UserDataValidator,
@@ -39,21 +25,20 @@ class LogInViewModel(
     private val _logInUiState: MutableStateFlow<LogInUiState> = MutableStateFlow(LogInUiState())
     val logInUiState = _logInUiState.asStateFlow()
 
-    private val _events = Channel<LogInEvent>()
+    private val _events = Channel<LogInEvents>()
     val events = _events.receiveAsFlow()
 
-    fun onActions(logInAction: LogInAction) {
-        viewModelScope.launch {
-            when (logInAction) {
-                is LogInAction.UpdateEmail -> updateEmail(emailValue = logInAction.emailValue)
-                is LogInAction.UpdatePassword -> updatePassword(passwordValue = logInAction.passwordValue)
-                LogInAction.LogInClick -> logIn()
-                LogInAction.DontHaveAccountClick -> onDontHaveAccountClick()
-            }
+    fun onActions(logInActions: LogInActions) {
+        when (logInActions) {
+            is LogInActions.UpdateEmail -> updateEmail(emailValue = logInActions.emailValue)
+            is LogInActions.UpdatePassword -> updatePassword(passwordValue = logInActions.passwordValue)
+            LogInActions.LogInClick -> logIn()
+            LogInActions.DontHaveAccountClick -> onDontHaveAccountClick()
         }
     }
 
     private fun updateEmail(emailValue: String) {
+        //we check if email valid to check state of logIn button enabled or not
         if (userDataValidator.isValidEmail(emailValue)) {
             _logInUiState.update { newState ->
                 newState.copy(email = emailValue)
@@ -64,6 +49,7 @@ class LogInViewModel(
                 }
             }
         } else {
+            //if email not valid just update the email without updating logIn button state
             _logInUiState.update { newState ->
                 newState.copy(email = emailValue, isLogInEnabled = false)
             }
@@ -71,6 +57,7 @@ class LogInViewModel(
     }
 
     private fun updatePassword(passwordValue: String) {
+        //we check if email valid to check state of logIn button enabled or not
         if (userDataValidator.isValidEmail(_logInUiState.value.email)) {
             _logInUiState.update { newState ->
                 newState.copy(password = passwordValue)
@@ -85,6 +72,7 @@ class LogInViewModel(
                 }
             }
         } else {
+            //if email not valid just update the password without updating logIn button state
             _logInUiState.update { newState ->
                 newState.copy(password = passwordValue, isLogInEnabled = false)
             }
@@ -100,39 +88,37 @@ class LogInViewModel(
                 email = _logInUiState.value.email.trim(),
                 password = _logInUiState.value.password
             )
-            
+
             _logInUiState.update { newState ->
                 newState.copy(isEnabled = true, isLoading = false)
             }
             when (result) {
                 is Result.Error -> {
                     if (result.error == DataError.Network.UNAUTHORIZED) {
-                        _events.send(
-                            LogInEvent.Error(
-                                UiText.StringResource(R.string.error_email_password_incorrect)
-                            )
-                        )
+                        showSnackBar(errorMessage = UiText.StringResource(R.string.error_email_password_incorrect))
                     } else {
-                        _events.send(LogInEvent.Error(result.error.asUiText()))
+                        showSnackBar(errorMessage = result.error.asUiText())
                     }
                 }
 
-                is Result.Success -> _events.send(LogInEvent.LoginSuccess)
+                is Result.Success -> _events.send(LogInEvents.LoginSuccess)
             }
         }
     }
 
-    private suspend fun onDontHaveAccountClick() {
-        _logInUiState.update { newState ->
-            newState.copy(isEnabled = false, isLoading = true)
-        }
-        _events.send(element = LogInEvent.NavigateToRegister)
-        _logInUiState.update { newState ->
-            newState.copy(isEnabled = true, isLoading = false)
+    private fun onDontHaveAccountClick() {
+        viewModelScope.launch {
+            _logInUiState.update { newState ->
+                newState.copy(isEnabled = false, isLoading = true)
+            }
+            _events.send(element = LogInEvents.NavigateToRegister)
+            _logInUiState.update { newState ->
+                newState.copy(isEnabled = true, isLoading = false)
+            }
         }
     }
 
-    fun showSnackBar(errorMessage: String) {
+    private fun showSnackBar(errorMessage: UiText) {
         viewModelScope.launch {
             _logInUiState.update { newState ->
                 newState.copy(
@@ -144,7 +130,7 @@ class LogInViewModel(
             _logInUiState.update { newState ->
                 newState.copy(
                     showSnackBar = false,
-                    snackBarText = ""
+                    snackBarText = UiText.DynamicString("")
                 )
             }
         }

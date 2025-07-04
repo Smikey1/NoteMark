@@ -19,7 +19,7 @@ fun LandingLandscapeComponent(
     onClickLogIn: () -> Unit,
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier.padding(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -31,7 +31,6 @@ fun LandingLandscapeComponent(
 
         LandingLandscapeBottomComponent(
             modifier = Modifier
-                .padding(top = 41.dp, bottom = 17.dp)
                 .weight(1.2f),
             onClickGetStarted = onClickGetStarted,
             onClickLogIn = onClickLogIn

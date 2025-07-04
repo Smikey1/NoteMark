@@ -1,12 +1,11 @@
 package com.twugteam.admin.notemark.app.presentation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -15,10 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 import com.twugteam.admin.notemark.app.navigation.NavigationRoot
+import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 class MainActivity : ComponentActivity() {
     val mainViewModel by  viewModel<MainViewModel>()
 
@@ -39,14 +39,13 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         modifier = Modifier
                             .fillMaxSize(),
-                        containerColor = MaterialTheme.colorScheme.primary
-                    ) { innerPadding ->
+                    ) { _ ->
+                        //scaffold padding handled internally since some screens are filling size
                         val windowSize = calculateWindowSizeClass(this)
                         if (!mainState.isCheckingAuth) {
                             NavigationRoot(
                                 modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(top = innerPadding.calculateTopPadding()),
+                                    .fillMaxSize(),
                                 windowSize = windowSize.widthSizeClass,
                                 windowSizeClass = windowSize,
                                 isLoggedInPreviously = mainState.isLoggedInPreviously,

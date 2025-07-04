@@ -1,7 +1,7 @@
 package com.twugteam.admin.notemark.features.auth.di
 
 import com.twugteam.admin.notemark.features.auth.data.AuthRepositoryImpl
-import com.twugteam.admin.notemark.features.auth.data.EmailPatternValidator
+import com.twugteam.admin.notemark.features.auth.domain.EmailPatternValidator
 import com.twugteam.admin.notemark.features.auth.domain.AuthRepository
 import com.twugteam.admin.notemark.features.auth.domain.PatternValidator
 import com.twugteam.admin.notemark.features.auth.domain.UserDataValidator

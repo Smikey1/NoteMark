@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,9 +35,9 @@ import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteActions
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteSharedScreen
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components.UpsertNoteSharedScreen
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteState
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteTextField
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components.UpsertNoteTextField
 
 @Composable
 fun UpsertNoteLandscapeScreen(
@@ -144,7 +145,7 @@ fun UpsertNoteLandscapeContent(
 
         UpsertNoteTextField(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth().heightIn(min = 60.dp),
             value = contentValue,
             onValueChange = onContentValueChange,
             placeHolderResId = R.string.note_content,

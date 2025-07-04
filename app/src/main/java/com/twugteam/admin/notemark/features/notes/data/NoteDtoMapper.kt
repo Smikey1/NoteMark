@@ -1,8 +1,6 @@
-package com.twugteam.admin.notemark.features.notes.mappers
+package com.twugteam.admin.notemark.features.notes.data
 
 import com.twugteam.admin.notemark.core.domain.notes.Note
-import com.twugteam.admin.notemark.features.notes.data.CreateNoteRequest
-import com.twugteam.admin.notemark.features.notes.data.NoteDto
 import java.time.Instant
 import java.time.ZoneId
 
@@ -12,7 +10,7 @@ fun NoteDto.toNote(): Note {
         title = title,
         content = content,
         createdAt = Instant.parse(createdAt).atZone(ZoneId.of("UTC")),
-        lastEditedAt = Instant.parse(createdAt).atZone(ZoneId.of("UTC")),
+        lastEditedAt = Instant.parse(lastEditedAt).atZone(ZoneId.of("UTC")),
     )
 }
 

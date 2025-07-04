@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.noteList
+package com.twugteam.admin.notemark.features.notes.presentation.noteList.designSystem.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,7 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,28 +43,32 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
 import com.twugteam.admin.notemark.core.presentation.ui.formatAsNoteDate
-import com.twugteam.admin.notemark.core.presentation.ui.getInitial
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListActions
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListState
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.ui.Util
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.util.TextUtil
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.util.getInitial
 
 @Composable
 fun NoteGraphSharedScreen(
     modifier: Modifier = Modifier,
-    topBarModifier: Modifier = Modifier,
+    topBarPaddingValues: PaddingValues,
     noteMarkListPaddingValues: PaddingValues,
     verticalSpace: Dp,
     horizontalSpace: Dp,
     staggeredGridCells: StaggeredGridCells,
     state: NoteListState,
-    onActions: (NoteListAction) -> Unit,
-    windowSize: WindowWidthSizeClass
+    onActions: (NoteListActions) -> Unit,
+    windowSizeClass: WindowSizeClass
 ) {
     Scaffold(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
             NoteListTopBar(
-                modifier = topBarModifier,
+                modifier = Modifier
+                    .background(color = MaterialTheme.colorScheme.onPrimary)
+                    .padding(topBarPaddingValues),
                 username = state.username
             )
         },
@@ -85,7 +89,7 @@ fun NoteGraphSharedScreen(
                         )
                     )
                     .clickable {
-                        onActions(NoteListAction.NavigateToUpsertNote(noteId = null))
+                        onActions(NoteListActions.NavigateToUpsertNote(noteId = null))
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -100,7 +104,7 @@ fun NoteGraphSharedScreen(
         if (!state.notes.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize(),
-            ){
+            ) {
                 NoteMarkList(
                     modifier = Modifier
                         .fillMaxSize()
@@ -111,15 +115,16 @@ fun NoteGraphSharedScreen(
                     noteMarkList = state.notes,
                     staggeredGridCells = staggeredGridCells,
                     onNoteClick = { noteUi ->
-                        onActions(NoteListAction.NavigateToUpsertNote(noteId = noteUi.id))
+                        onActions(NoteListActions.NavigateToUpsertNote(noteId = noteUi.id))
                     },
-                    onNoteDelete = { noteUi->
-                        onActions(NoteListAction.OnNoteDelete(noteId = noteUi.id!!))
+                    onNoteDelete = { noteUi ->
+                        onActions(NoteListActions.OnNoteDelete(noteId = noteUi.id!!))
                     },
-                    windowSize = windowSize
+                    windowSizeClass = windowSizeClass
                 )
                 NoteMarkDialog(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .align(Alignment.Center),
                     showDialog = state.showDialog,
                     titleResId = R.string.dialog_delete_title,
@@ -128,10 +133,10 @@ fun NoteGraphSharedScreen(
                     confirmButtonId = R.string.delete,
                     dismissButtonId = R.string.cancel,
                     onConfirmClick = {
-                        onActions(NoteListAction.OnDialogConfirm)
+                        onActions(NoteListActions.OnDialogConfirm)
                     },
                     onDismissClick = {
-                        onActions(NoteListAction.OnDialogDismiss)
+                        onActions(NoteListActions.OnDialogDismiss)
                     },
                 )
             }
@@ -201,8 +206,8 @@ fun NoteMarkList(
     staggeredGridCells: StaggeredGridCells,
     onNoteClick: (NoteUi) -> Unit,
     onNoteDelete: (NoteUi) -> Unit,
-    windowSize: WindowWidthSizeClass
-    ) {
+    windowSizeClass: WindowSizeClass
+) {
     val state = rememberLazyStaggeredGridState()
     LazyVerticalStaggeredGrid(
         modifier = modifier,
@@ -219,7 +224,7 @@ fun NoteMarkList(
                 noteUi = noteMark,
                 onNoteClick = onNoteClick,
                 onNoteDelete = onNoteDelete,
-                windowSize = windowSize
+                windowSizeClass = windowSizeClass
             )
         }
     }
@@ -231,7 +236,7 @@ fun NoteListItem(
     noteUi: NoteUi,
     onNoteClick: (NoteUi) -> Unit,
     onNoteDelete: (NoteUi) -> Unit,
-    windowSize: WindowWidthSizeClass
+    windowSizeClass: WindowSizeClass
 ) {
     NoteMarkTheme {
         Surface(
@@ -265,9 +270,9 @@ fun NoteListItem(
                     )
                 )
                 Text(
-                    text = Util.textLimit(
+                    text = TextUtil.textLimit(
                         text = noteUi.content,
-                        windowSize = windowSize
+                        windowSizeClass = windowSizeClass
                     ),
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant

@@ -1,10 +1,8 @@
 package com.twugteam.admin.notemark.features.notes.presentation.noteList
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,25 +14,24 @@ import com.twugteam.admin.notemark.features.notes.presentation.noteList.orientat
 @Composable
 fun NoteListScreenRoot(
     modifier: Modifier = Modifier,
+    windowSizeClass: WindowSizeClass,
     windowSize: WindowWidthSizeClass,
     state: NoteListState,
-    onActions: (NoteListAction) -> Unit,
+    onActions: (NoteListActions) -> Unit,
 ) {
     when (windowSize) {
         //MOBILE PORTRAIT
         WindowWidthSizeClass.Compact -> {
             NoteListScreenMobilePortrait(
                 modifier = modifier,
-                topBarModifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.onPrimary)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                topBarPaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                 noteMarkListPaddingValues = PaddingValues(16.dp),
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
                 staggeredGridCells = StaggeredGridCells.Fixed(2),
                 state = state,
                 onActions = onActions,
-                windowSize = windowSize
+                windowSizeClass = windowSizeClass
             )
         }
 
@@ -42,16 +39,14 @@ fun NoteListScreenRoot(
         WindowWidthSizeClass.Medium -> {
             NoteListScreenTablet(
                 modifier = modifier,
-                topBarModifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.onPrimary)
-                    .padding(horizontal = 24.dp, vertical = 12.dp),
+                topBarPaddingValues = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
                 noteMarkListPaddingValues = PaddingValues(horizontal = 24.dp, vertical = 16.dp),
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
                 staggeredGridCells = StaggeredGridCells.Fixed(2),
                 state = state,
                 onActions = onActions,
-                windowSize = windowSize
+                windowSizeClass = windowSizeClass
             )
 
         }
@@ -60,9 +55,7 @@ fun NoteListScreenRoot(
         WindowWidthSizeClass.Expanded -> {
             NoteListScreenLandscape(
                 modifier = modifier,
-                topBarModifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.onPrimary)
-                    .padding(start = 60.dp, end = 16.dp, top = 12.dp, bottom = 12.dp),
+                topBarPaddingValues = PaddingValues(start = 60.dp, end = 16.dp, top = 12.dp, bottom = 12.dp),
                 noteMarkListPaddingValues = PaddingValues(
                     start = 60.dp,
                     top = 16.dp,
@@ -74,23 +67,21 @@ fun NoteListScreenRoot(
                 staggeredGridCells = StaggeredGridCells.Fixed(3),
                 state = state,
                 onActions = onActions,
-                windowSize = windowSize
+                windowSizeClass = windowSizeClass
             )
         }
 
         else -> {
             NoteListScreenMobilePortrait(
                 modifier = modifier,
-                topBarModifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.onPrimary)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                topBarPaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                 noteMarkListPaddingValues = PaddingValues(16.dp),
                 verticalSpace = 16.dp,
                 horizontalSpace = 16.dp,
                 staggeredGridCells = StaggeredGridCells.Fixed(2),
                 state = state,
                 onActions = onActions,
-                windowSize = windowSize
+                windowSizeClass = windowSizeClass
             )
         }
     }

@@ -6,6 +6,7 @@ import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.Result
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -50,12 +51,16 @@ suspend inline fun <reified Response : Any> HttpClient.delete(
 
 suspend inline fun <reified Request, reified Response : Any> HttpClient.post(
     route: String,
-    body:Request
+    body:Request,
+    //to add  markAsRefreshTokenRequest() in refreshTokens{}
+    crossinline builder: HttpRequestBuilder.() -> Unit = {}
+
 ): Result<Response, DataError.Network> {
     return safeCall {
         post {
             url(constructRoute(route))
             setBody(body)
+            builder()
         }
     }
 }

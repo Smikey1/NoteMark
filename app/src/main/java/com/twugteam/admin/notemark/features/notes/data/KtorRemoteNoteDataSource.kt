@@ -12,8 +12,6 @@ import com.twugteam.admin.notemark.core.networking.post
 import com.twugteam.admin.notemark.core.networking.put
 import com.twugteam.admin.notemark.features.notes.domain.NoteId
 import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
-import com.twugteam.admin.notemark.features.notes.mappers.toCreateNoteRequest
-import com.twugteam.admin.notemark.features.notes.mappers.toNote
 import io.ktor.client.HttpClient
 import timber.log.Timber
 

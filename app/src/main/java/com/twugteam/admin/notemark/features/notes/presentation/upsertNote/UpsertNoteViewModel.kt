@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.domain.util.Result
+import com.twugteam.admin.notemark.core.presentation.ui.toNote
+import com.twugteam.admin.notemark.core.presentation.ui.toNoteUi
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.mapper.toNote
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.mapper.toNoteUi
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -20,22 +20,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.ZoneId
 import java.time.ZonedDateTime
-
-sealed interface UpsertNoteActions {
-    data class UpdateNoteUiTitle(val noteTitle: String) : UpsertNoteActions
-    data class UpdateNoteUiContent(val noteContent: String) : UpsertNoteActions
-
-    // TODO: This model `NoteUi` and  `mapper` .toNoteUi `both imports` comes from noteList package,rather you can add it to core presentation
-    data class SaveNote(val noteUi: NoteUi) : UpsertNoteActions
-    data object OnDialogDismiss : UpsertNoteActions
-    data object OnSaveNoteClick : UpsertNoteActions
-    data object OnCloseIconClick : UpsertNoteActions
-    data object Close : UpsertNoteActions
-}
-
-sealed interface UpsertNoteEvents {
-    data object Close : UpsertNoteEvents
-}
 
 class UpsertNoteViewModel(
     private val noteRepository: NoteRepository,
@@ -83,39 +67,41 @@ class UpsertNoteViewModel(
 
 
     fun onActions(upsertNoteActions: UpsertNoteActions) {
-        viewModelScope.launch {
-            when (upsertNoteActions) {
-                UpsertNoteActions.Close -> close()
-                is UpsertNoteActions.SaveNote -> saveNote()
-                is UpsertNoteActions.UpdateNoteUiContent -> updateNoteUiContent(noteContent = upsertNoteActions.noteContent)
-                is UpsertNoteActions.UpdateNoteUiTitle -> updateNoteUiTitle(noteTitle = upsertNoteActions.noteTitle)
-                UpsertNoteActions.OnDialogDismiss -> onDialogCancel()
-                UpsertNoteActions.OnSaveNoteClick -> onDialogShow(
-                    titleResId = R.string.dialog_save_title,
-                    bodyResId = R.string.dialog_save_body_text,
-                    confirmButtonId = R.string.save,
-                    dismissButtonId = R.string.cancel,
-                    isSaveNote = true,
-                )
-                UpsertNoteActions.OnCloseIconClick -> onDialogShow(
-                    titleResId = R.string.dialog_discard_title,
-                    bodyResId = R.string.dialog_discard_body_text,
-                    confirmButtonId = R.string.discard,
-                    dismissButtonId = R.string.keep_editing,
-                    isSaveNote = false,
-                )
-            }
+        when (upsertNoteActions) {
+            UpsertNoteActions.Close -> close()
+            is UpsertNoteActions.SaveNote -> saveNote()
+            is UpsertNoteActions.UpdateNoteUiContent -> updateNoteUiContent(noteContent = upsertNoteActions.noteContent)
+            is UpsertNoteActions.UpdateNoteUiTitle -> updateNoteUiTitle(noteTitle = upsertNoteActions.noteTitle)
+            UpsertNoteActions.OnDialogDismiss -> onDialogCancel()
+            UpsertNoteActions.OnSaveNoteClick -> onDialogShow(
+                titleResId = R.string.dialog_save_title,
+                bodyResId = R.string.dialog_save_body_text,
+                confirmButtonId = R.string.save,
+                dismissButtonId = R.string.cancel,
+                isSaveNote = true,
+            )
+
+            UpsertNoteActions.OnCloseIconClick -> onDialogShow(
+                titleResId = R.string.dialog_discard_title,
+                bodyResId = R.string.dialog_discard_body_text,
+                confirmButtonId = R.string.discard,
+                dismissButtonId = R.string.keep_editing,
+                isSaveNote = false,
+            )
         }
     }
 
 
-    private suspend fun close() {
-        showLoader(showLoader = true)
-        onDialogCancel()
-        delay(100)
-        showLoader(showLoader = false)
+    private fun close() {
+        viewModelScope.launch {
+            showLoader(showLoader = true)
+            onDialogCancel()
+            //show loader little before closing
+            delay(100)
+            showLoader(showLoader = false)
 
-        _events.send(UpsertNoteEvents.Close)
+            _events.send(UpsertNoteEvents.Close)
+        }
     }
 
     private fun showLoader(showLoader: Boolean) {
@@ -157,37 +143,37 @@ class UpsertNoteViewModel(
         }
     }
 
-    private suspend fun saveNote() {
-        showLoader(showLoader = true)
-        val now: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC"))
-        val isEdit = _state.value.isEdit
-        _state.update { newState ->
-            newState.copy(
-                noteUi = if (isEdit) newState.noteUi!!.copy(
-                    lastEditedAt = now,
-                ) else {
-                    newState.noteUi!!.copy(
-                        createdAt = now,
-                        lastEditedAt = now
-                    )
-                }
-            )
-        }
-        val note = _state.value.noteUi!!.toNote()
-        Timber.tag("MyTag").d("newNote : $note")
-        val saveNoteResult = noteRepository.upsertNote(note = note, isEditing = isEdit)
-        showLoader(showLoader = false)
-        showDialog(showDialog = false)
-        delay(100)
-        onDialogCancel()
-        when (saveNoteResult) {
-            is Result.Error -> Timber.tag("MyTag")
-                .e("upsertNoteViewModel: saveNote: error: ${saveNoteResult.error}")
+    private fun saveNote() {
+        viewModelScope.launch {
+            showLoader(showLoader = true)
+            val now: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC"))
+            val isEdit = _state.value.isEdit
+            _state.update { newState ->
+                newState.copy(
+                    noteUi = if (isEdit) newState.noteUi!!.copy(
+                        lastEditedAt = now,
+                    ) else {
+                        newState.noteUi!!.copy(
+                            createdAt = now,
+                            lastEditedAt = now
+                        )
+                    }
+                )
+            }
+            val note = _state.value.noteUi!!.toNote()
+            Timber.tag("MyTag").d("newNote : $note")
+            val saveNoteResult = noteRepository.upsertNote(note = note, isEditing = isEdit)
+            showLoader(showLoader = false)
+            onDialogCancel()
+            when (saveNoteResult) {
+                is Result.Error -> Timber.tag("MyTag")
+                    .e("upsertNoteViewModel: saveNote: error: ${saveNoteResult.error}")
 
-            is Result.Success -> {
-                Timber.tag("MyTag")
-                    .d("upsertNoteViewModel: saveNote: success: ${saveNoteResult.data}")
-                _events.send(UpsertNoteEvents.Close)
+                is Result.Success -> {
+                    Timber.tag("MyTag")
+                        .d("upsertNoteViewModel: saveNote: success: ${saveNoteResult.data}")
+                    _events.send(UpsertNoteEvents.Close)
+                }
             }
         }
     }

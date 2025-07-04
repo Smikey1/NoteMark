@@ -1,6 +1,4 @@
-package com.twugteam.admin.notemark.features.auth.data
-
-import com.twugteam.admin.notemark.features.auth.domain.PatternValidator
+package com.twugteam.admin.notemark.features.auth.domain
 
 object EmailPatternValidator : PatternValidator {
     private val STRICT_EMAIL_REGEX =

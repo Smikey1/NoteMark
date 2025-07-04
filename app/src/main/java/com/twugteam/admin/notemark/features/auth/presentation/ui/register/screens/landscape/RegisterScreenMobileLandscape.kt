@@ -5,8 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
-import com.twugteam.admin.notemark.features.auth.presentation.designSystem.components.NoteMarkSharedScreen
-import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterAction
+import com.twugteam.admin.notemark.features.auth.presentation.designSystem.components.NoteMarkAuthScreen
+import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterActions
 import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterState
 import com.twugteam.admin.notemark.features.auth.presentation.ui.register.designSystem.components.RegisterContent
 
@@ -14,9 +14,9 @@ import com.twugteam.admin.notemark.features.auth.presentation.ui.register.design
 fun RegisterScreenMobileLandscape(
     modifier: Modifier = Modifier,
     state: RegisterState,
-    onAction: (RegisterAction) -> Unit
+    onAction: (RegisterActions) -> Unit
 ) {
-    NoteMarkSharedScreen(
+    NoteMarkAuthScreen(
         modifier = modifier,
         title = R.string.create_account,
         description = R.string.capture_your_thoughts_and_ideas,

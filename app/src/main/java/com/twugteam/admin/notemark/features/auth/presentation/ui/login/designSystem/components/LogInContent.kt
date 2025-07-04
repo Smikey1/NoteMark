@@ -11,15 +11,15 @@ import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkActionButton
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkInputTextField
-import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkNoOutlineActionButton
-import com.twugteam.admin.notemark.features.auth.presentation.ui.login.LogInAction
+import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkTransparentButton
+import com.twugteam.admin.notemark.features.auth.presentation.ui.login.LogInActions
 import com.twugteam.admin.notemark.features.auth.presentation.ui.login.LogInUiState
 
 @Composable
 fun LogInContent(
     modifier: Modifier,
     state: LogInUiState,
-    onActions: (LogInAction) -> Unit,
+    onActions: (LogInActions) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -32,7 +32,7 @@ fun LogInContent(
             enabled = state.isEnabled && !state.isLoading,
             inputValue = state.email,
             onValueChange = { emailValue ->
-                onActions(LogInAction.UpdateEmail(emailValue = emailValue))
+                onActions(LogInActions.UpdateEmail(emailValue = emailValue))
             },
             isTrailingShowing = false,
         )
@@ -48,7 +48,7 @@ fun LogInContent(
             inputValue = state.password,
             isLastField = true,
             onValueChange = { passwordValue ->
-                onActions(LogInAction.UpdatePassword(passwordValue = passwordValue))
+                onActions(LogInActions.UpdatePassword(passwordValue = passwordValue))
             },
             isTrailingShowing = true,
         )
@@ -61,19 +61,19 @@ fun LogInContent(
             enabled = state.isEnabled && state.isLogInEnabled,
             isLoading = state.isLoading,
             onClick = {
-                onActions(LogInAction.LogInClick)
+                onActions(LogInActions.LogInClick)
             }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        NoteMarkNoOutlineActionButton(
+        NoteMarkTransparentButton(
             text = stringResource(R.string.dont_have_account),
             modifier = Modifier.fillMaxWidth(),
             enabled = state.isEnabled,
             isLoading = false,
             onClick = {
-                onActions(LogInAction.DontHaveAccountClick)
+                onActions(LogInActions.DontHaveAccountClick)
             }
         )
     }

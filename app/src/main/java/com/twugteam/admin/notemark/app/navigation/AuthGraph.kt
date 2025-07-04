@@ -1,6 +1,6 @@
 package com.twugteam.admin.notemark.app.navigation
 
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.background
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -12,14 +12,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.twugteam.admin.notemark.R
+import com.twugteam.admin.notemark.core.presentation.designsystem.LandingBackground
 import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
 import com.twugteam.admin.notemark.features.auth.presentation.ui.landing.LandingEvents
 import com.twugteam.admin.notemark.features.auth.presentation.ui.landing.LandingScreenRoot
 import com.twugteam.admin.notemark.features.auth.presentation.ui.landing.LandingScreenViewModel
-import com.twugteam.admin.notemark.features.auth.presentation.ui.login.LogInEvent
+import com.twugteam.admin.notemark.features.auth.presentation.ui.login.LogInEvents
 import com.twugteam.admin.notemark.features.auth.presentation.ui.login.LogInScreenRoot
 import com.twugteam.admin.notemark.features.auth.presentation.ui.login.LogInViewModel
-import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterEvent
+import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterEvents
 import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterScreenRoot
 import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -56,7 +57,7 @@ fun NavGraphBuilder.authGraph(
             }
 
             LandingScreenRoot(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.background(color = LandingBackground),
                 windowSizeClass = windowSizeClass,
                 onActions = landingViewModel::onActions
             )
@@ -65,10 +66,9 @@ fun NavGraphBuilder.authGraph(
         composable<Screens.LogIn> {
             val logInViewModel = koinViewModel<LogInViewModel>()
             val logInUiState by logInViewModel.logInUiState.collectAsStateWithLifecycle()
-            val context = LocalContext.current
             ObserveAsEvents(logInViewModel.events) { events ->
                 when (events) {
-                    LogInEvent.NavigateToRegister -> navController.navigate(Screens.Register) {
+                    LogInEvents.NavigateToRegister -> navController.navigate(Screens.Register) {
                         popUpTo<Screens.LogIn> {
                             inclusive = true
                             saveState = true
@@ -76,11 +76,8 @@ fun NavGraphBuilder.authGraph(
                         restoreState = true
                     }
 
-                    is LogInEvent.Error -> {
-                        logInViewModel.showSnackBar(errorMessage = events.error.asString(context))
-                    }
 
-                    LogInEvent.LoginSuccess -> {
+                    LogInEvents.LoginSuccess -> {
                         navController.navigate(Screens.NoteGraph){
                             popUpTo(0){
                                 inclusive = true
@@ -92,7 +89,7 @@ fun NavGraphBuilder.authGraph(
             }
 
             LogInScreenRoot(
-                modifier = modifier.fillMaxSize(),
+                modifier = modifier,
                 windowSizeClass = windowSizeClass,
                 state = logInUiState,
                 onActions = logInViewModel::onActions
@@ -109,12 +106,12 @@ fun NavGraphBuilder.authGraph(
 
             ObserveAsEvents(registerViewModel.events) { events ->
                 when (events) {
-                    is RegisterEvent.RegistrationError -> {
+                    is RegisterEvents.RegistrationError -> {
                         keyboardController?.hide()
                         registerViewModel.showSnackBar(errorMessage = events.error.asString(context))
                     }
 
-                    RegisterEvent.RegistrationSuccess -> {
+                    RegisterEvents.RegistrationSuccess -> {
                         registerViewModel.showSnackBar(errorMessage = context.getString(R.string.registration_successful))
                         navController.navigate(Screens.LogIn){
                             popUpTo<Screens.Register>{
@@ -125,7 +122,7 @@ fun NavGraphBuilder.authGraph(
                         }
                     }
 
-                    RegisterEvent.NavigateToLogin -> navController.navigate(Screens.LogIn) {
+                    RegisterEvents.NavigateToLogin -> navController.navigate(Screens.LogIn) {
                         popUpTo<Screens.Register> {
                             inclusive = true
                             saveState = true
@@ -136,7 +133,7 @@ fun NavGraphBuilder.authGraph(
             }
 
             RegisterScreenRoot(
-                modifier = modifier.fillMaxSize(),
+                modifier = modifier,
                 windowSizeClass = windowSizeClass,
                 state = registerState,
                 onActions = registerViewModel::onAction

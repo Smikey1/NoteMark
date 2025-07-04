@@ -25,17 +25,6 @@ import timber.log.Timber
 class HttpClientFactory(
     private val sessionStorage: SessionStorage
 ) {
-    //refreshClient to avoid loop inside refreshToken
-    private val refreshClient = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(Json { ignoreUnknownKeys = true })
-        }
-        defaultRequest {
-            contentType(ContentType.Application.Json)
-            header("X-User-Email", ApiEndpoints.EMAIL)
-        }
-    }
-
     fun build(): HttpClient {
         return HttpClient(CIO) {
             install(ContentNegotiation) {
@@ -83,12 +72,14 @@ class HttpClientFactory(
                         val authInfo = sessionStorage.getAuthInto()
                         Timber.tag("MyTag").d("refreshTokens sessionStorage refreshToken: ${authInfo?.refreshToken}")
 
-                        val response = refreshClient.post<AccessTokenRequest, AccessTokenResponse>(
+                        val response = client.post<AccessTokenRequest, AccessTokenResponse>(
                             route = ApiEndpoints.REFRESH_TOKEN_ENDPOINT,
                             body = AccessTokenRequest(
                                 refreshToken = authInfo?.refreshToken ?: "",
                             ),
-                        )
+                        ){
+                            markAsRefreshTokenRequest()
+                        }
 
                         when (response) {
                             is Result.Error -> {

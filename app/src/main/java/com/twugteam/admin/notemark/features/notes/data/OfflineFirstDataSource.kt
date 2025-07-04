@@ -14,7 +14,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 
-class OfflineFirstNoteRepositoryImpl(
+class OfflineFirstDataSource(
     private val localNoteDataSource: LocalNoteDataSource,
     private val remoteNoteDataSource: RemoteNoteDataSource,
     private val applicationScope: CoroutineScope
@@ -55,7 +55,10 @@ class OfflineFirstNoteRepositoryImpl(
         if (localResult !is Result.Success) {
             return localResult.asEmptyDataResult()
         }
+        //localNoteDataSource.upsertNote(note) will convert note to NoteEntity and save it
+        //localNoteDataSource.upsertNote(note) returns NoteEntity.Id when success
         val noteWithId = note.copy(id = localResult.data)
+
         if (!isEditing) {
             remoteNoteDataSource.postNote(noteWithId)
         } else {

@@ -14,7 +14,7 @@ fun RegisterScreenRoot(
     modifier: Modifier = Modifier,
     windowSizeClass: WindowSizeClass,
     state: RegisterState,
-    onActions: (RegisterAction) -> Unit,
+    onActions: (RegisterActions) -> Unit,
 ) {
     val deviceConfiguration =
         DeviceConfiguration.fromWindowSizeClass(windowSizeClass = windowSizeClass)

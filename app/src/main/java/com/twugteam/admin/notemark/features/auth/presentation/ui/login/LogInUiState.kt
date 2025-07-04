@@ -1,5 +1,7 @@
 package com.twugteam.admin.notemark.features.auth.presentation.ui.login
 
+import com.twugteam.admin.notemark.core.presentation.ui.UiText
+
 data class LogInUiState(
     val email: String = "",
     val isEmailValid: Boolean = false,
@@ -8,5 +10,5 @@ data class LogInUiState(
     val isLoading: Boolean = false,
     val isLogInEnabled: Boolean = false,
     val showSnackBar: Boolean = false,
-    val snackBarText: String = ""
+    val snackBarText: UiText = UiText.DynamicString("")
 )

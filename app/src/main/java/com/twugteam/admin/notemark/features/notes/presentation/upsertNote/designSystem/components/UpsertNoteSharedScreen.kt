@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote
+package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues

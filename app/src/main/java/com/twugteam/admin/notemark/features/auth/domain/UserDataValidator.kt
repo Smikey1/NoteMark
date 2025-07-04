@@ -1,5 +1,8 @@
 package com.twugteam.admin.notemark.features.auth.domain
 
+import com.twugteam.admin.notemark.core.presentation.ui.UiText
+import com.twugteam.admin.notemark.R
+
 class UserDataValidator(
     private val patternValidator: PatternValidator
 ) {
@@ -23,7 +26,7 @@ class UserDataValidator(
 
     data class ValidityState(
         val isValid: Boolean,
-        val errorText: String
+        val errorText: UiText
     )
 
     fun isUsernameValid(username: String): ValidityState {
@@ -32,11 +35,10 @@ class UserDataValidator(
         return if (isValid) {
             ValidityState(
                 isValid = true,
-                errorText = ""
+                errorText = UiText.DynamicString("")
             )
         } else {
-            val errorText =
-                if (username.length < MIN_USERNAME_LENGTH) "Username must be at least 3 characters." else "Username canʼt be longer than 20 characters."
+            val errorText = UiText.StringResource(R.string.username_info,3,20)
             ValidityState(
                 isValid = false,
                 errorText = errorText

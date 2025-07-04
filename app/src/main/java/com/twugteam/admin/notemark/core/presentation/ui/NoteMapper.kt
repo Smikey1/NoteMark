@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.noteList.mapper
+package com.twugteam.admin.notemark.core.presentation.ui
 
 import com.twugteam.admin.notemark.core.domain.notes.Note
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi

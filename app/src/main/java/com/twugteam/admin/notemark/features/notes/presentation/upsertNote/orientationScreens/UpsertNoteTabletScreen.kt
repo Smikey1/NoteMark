@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -17,9 +18,9 @@ import androidx.compose.ui.unit.em
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteActions
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteSharedScreen
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components.UpsertNoteSharedScreen
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteState
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteTextField
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components.UpsertNoteTextField
 
 @Composable
 fun UpsertNoteTabletScreen(
@@ -75,7 +76,7 @@ fun UpsertNoteTabletScreen(
 
                     UpsertNoteTextField(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth().height(100.dp),
                         value = state.noteUi?.content,
                         onValueChange = { newContent ->
                             onActions(UpsertNoteActions.UpdateNoteUiContent(noteContent = newContent))
