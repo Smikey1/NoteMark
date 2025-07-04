@@ -50,7 +50,7 @@ import com.twugteam.admin.notemark.features.notes.presentation.noteList.util.Tex
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.util.getInitial
 
 @Composable
-fun NoteGraphSharedScreen(
+fun NoteListSharedScreen(
     modifier: Modifier = Modifier,
     topBarPaddingValues: PaddingValues,
     noteMarkListPaddingValues: PaddingValues,

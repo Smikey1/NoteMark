@@ -55,14 +55,25 @@ class OfflineFirstDataSource(
         if (localResult !is Result.Success) {
             return localResult.asEmptyDataResult()
         }
+
         //localNoteDataSource.upsertNote(note) will convert note to NoteEntity and save it
         //localNoteDataSource.upsertNote(note) returns NoteEntity.Id when success
         val noteWithId = note.copy(id = localResult.data)
 
-        if (!isEditing) {
+        val remoteDataSource = if (!isEditing) {
             remoteNoteDataSource.postNote(noteWithId)
         } else {
             remoteNoteDataSource.putNote(noteWithId)
+        }
+
+        when (remoteDataSource) {
+            is Result.Error -> Timber.tag("MyTag")
+                .d("remoteDataSource error is : ${remoteDataSource.error}")
+
+            is Result.Success -> {
+                Timber.tag("MyTag").d("remoteDataSource success is : ${remoteDataSource.data}")
+                localNoteDataSource.upsertNote(remoteDataSource.data)
+            }
         }
 
         return localResult.asEmptyDataResult()

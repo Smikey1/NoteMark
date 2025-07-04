@@ -1,54 +1,59 @@
 package com.twugteam.admin.notemark.features.notes.presentation.upsertNote
 
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.orientationScreens.UpsertNoteLandscapeScreen
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.orientationScreens.UpsertNoteMobilePortraitScreen
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.orientationScreens.UpsertNoteTabletScreen
+import com.twugteam.admin.notemark.core.presentation.ui.DeviceConfiguration
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.screens.landscape.UpsertNoteScreenMobileLandscape
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.screens.landscape.UpsertNoteScreenTabletLandscape
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.screens.portrait.UpsertNoteScreenMobilePortrait
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.screens.portrait.UpsertNoteScreenTabletPortrait
 
 @Composable
 fun UpsertNoteScreenRoot(
     modifier: Modifier = Modifier,
-    windowSize: WindowWidthSizeClass,
+    windowSizeClass: WindowSizeClass,
     state: UpsertNoteState,
     onActions: (UpsertNoteActions) -> Unit,
-){
+) {
+    val deviceConfiguration =
+        DeviceConfiguration.fromWindowSizeClass(windowSizeClass = windowSizeClass)
 
-    when (windowSize) {
-        //MOBILE PORTRAIT
-        WindowWidthSizeClass.Compact -> {
-            UpsertNoteMobilePortraitScreen(
+    when (deviceConfiguration) {
+        DeviceConfiguration.MOBILE_PORTRAIT -> {
+            UpsertNoteScreenMobilePortrait(
                 modifier = modifier,
                 state = state,
                 onActions = onActions,
             )
         }
 
-        //TABLET
-        WindowWidthSizeClass.Medium -> {
-            UpsertNoteTabletScreen(
+        DeviceConfiguration.MOBILE_LANDSCAPE -> {
+            UpsertNoteScreenMobileLandscape(
                 modifier = modifier,
                 state = state,
                 onActions = onActions,
             )
         }
 
-        //LANDSCAPE
-        WindowWidthSizeClass.Expanded -> {
-            UpsertNoteLandscapeScreen(
+        DeviceConfiguration.TABLET_PORTRAIT -> {
+            UpsertNoteScreenTabletPortrait(
                 modifier = modifier,
                 state = state,
                 onActions = onActions,
             )
         }
 
-        else -> {
-            UpsertNoteMobilePortraitScreen(
+        DeviceConfiguration.TABLET_LANDSCAPE -> {
+            UpsertNoteScreenTabletLandscape(
                 modifier = modifier,
                 state = state,
                 onActions = onActions,
             )
+        }
+
+        DeviceConfiguration.DESKTOP -> {
+            TODO()
         }
     }
 }

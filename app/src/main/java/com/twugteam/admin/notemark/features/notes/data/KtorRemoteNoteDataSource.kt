@@ -72,7 +72,6 @@ class KtorRemoteNoteDataSource(
         return httpClient.delete(
             route = ApiEndpoints.NOTES_ENDPOINT + "/$id"
         )
-
     }
 
 }

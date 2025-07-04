@@ -20,7 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 class MainActivity : ComponentActivity() {
-    val mainViewModel by  viewModel<MainViewModel>()
+    val mainViewModel by viewModel<MainViewModel>()
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,23 +35,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             NoteMarkTheme {
                 val mainState by mainViewModel.mainState.collectAsStateWithLifecycle()
-                    val navController = rememberNavController()
-                    Scaffold(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                    ) { _ ->
-                        //scaffold padding handled internally since some screens are filling size
-                        val windowSize = calculateWindowSizeClass(this)
-                        if (!mainState.isCheckingAuth) {
-                            NavigationRoot(
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                windowSize = windowSize.widthSizeClass,
-                                windowSizeClass = windowSize,
-                                isLoggedInPreviously = mainState.isLoggedInPreviously,
-                                navController = navController
-                            )
-                        }
+                val navController = rememberNavController()
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                ) { _ ->
+                    //scaffold padding handled internally since some screens are filling size
+                    val windowSizeClass = calculateWindowSizeClass(this)
+                    if (!mainState.isCheckingAuth) {
+                        NavigationRoot(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            windowSizeClass = windowSizeClass,
+                            isLoggedInPreviously = mainState.isLoggedInPreviously,
+                            navController = navController
+                        )
+                    }
                 }
             }
         }

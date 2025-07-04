@@ -1,7 +1,6 @@
 package com.twugteam.admin.notemark.app.navigation
 
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,8 +21,7 @@ import timber.log.Timber
 fun NavGraphBuilder.noteGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    windowSizeClass: WindowSizeClass,
-    windowSize: WindowWidthSizeClass
+    windowSizeClass: WindowSizeClass
 ) {
     navigation<Screens.NoteGraph>(
         startDestination = Screens.NoteList,
@@ -45,7 +43,6 @@ fun NavGraphBuilder.noteGraph(
             NoteListScreenRoot(
                 modifier = modifier,
                 windowSizeClass = windowSizeClass,
-                windowSize = windowSize,
                 state = noteListState,
                 onActions = noteListViewModel::onActions
             )
@@ -64,8 +61,8 @@ fun NavGraphBuilder.noteGraph(
 
             UpsertNoteScreenRoot(
                 modifier = modifier,
-                windowSize = windowSize,
                 state = state,
+                windowSizeClass = windowSizeClass,
                 onActions = upsertNoteViewModel::onActions,
             )
         }

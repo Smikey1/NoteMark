@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.orientationScreens
+package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.screens.portrait
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +23,7 @@ import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.Upsert
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components.UpsertNoteTextField
 
 @Composable
-fun UpsertNoteTabletScreen(
+fun UpsertNoteScreenTabletPortrait(
     modifier: Modifier = Modifier,
     state: UpsertNoteState,
     onActions: (UpsertNoteActions) -> Unit,

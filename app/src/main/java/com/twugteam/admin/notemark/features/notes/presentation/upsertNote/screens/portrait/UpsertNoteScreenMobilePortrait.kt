@@ -1,19 +1,14 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.orientationScreens
+package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.screens.portrait
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -40,7 +35,7 @@ import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.Upsert
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components.UpsertNoteTextField
 
 @Composable
-fun UpsertNoteLandscapeScreen(
+fun UpsertNoteScreenMobilePortrait(
     modifier: Modifier = Modifier,
     state: UpsertNoteState,
     onActions: (UpsertNoteActions) -> Unit,
@@ -48,35 +43,66 @@ fun UpsertNoteLandscapeScreen(
     UpsertNoteSharedScreen(
         modifier = modifier,
         topBarContent = {
+            UpsertNoteMobilePortraitTopBar(
+                modifier = Modifier.fillMaxWidth(),
+                onCloseClick = {
+                    onActions(UpsertNoteActions.OnCloseIconClick)
+                },
+                onSaveNote = {
+                    onActions(UpsertNoteActions.OnSaveNoteClick)
+                },
+                saveNoteEnabled = state.noteUi != null && state.noteUi.title.isNotBlank() && state.noteUi.content.isNotBlank(),
+                isLoading = state.isLoading
+            )
         },
         scaffoldContent = { paddingValues ->
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(state = rememberScrollState())
-                    .imePadding()
             ) {
-                UpsertNoteLandscape(
-                    modifier = Modifier.fillMaxWidth(),
-                    onCloseClick = {
-                        onActions(UpsertNoteActions.OnCloseIconClick)
-                    },
-                    onSaveNote = {
-                        onActions(UpsertNoteActions.OnSaveNoteClick)
-                    },
-                    saveNoteEnabled = state.noteUi != null && state.noteUi.title.isNotBlank() && state.noteUi.content.isNotBlank(),
-                    isLoading = state.isLoading,
-                ) { contentModifier ->
-                    UpsertNoteLandscapeContent(
-                        modifier = contentModifier,
-                        titleValue = state.noteUi?.title ?: "",
-                        onTitleValueChange = { newTitle ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = paddingValues.calculateTopPadding()),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    UpsertNoteTextField(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        value = state.noteUi?.title,
+                        placeHolderResId = R.string.note_title,
+                        onValueChange = { newTitle ->
                             onActions(UpsertNoteActions.UpdateNoteUiTitle(noteTitle = newTitle))
                         },
-                        contentValue = state.noteUi?.content ?: "",
-                        onContentValueChange = { newContent ->
+                        showIndicator = true,
+                        textFieldStyle = MaterialTheme.typography.titleMedium.copy(
+                            letterSpacing = 0.01.em,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        placeHolderStyle = MaterialTheme.typography.titleSmall.copy(
+                            letterSpacing = 0.01.em,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                        gainFocus = true
+                    )
+
+                    UpsertNoteTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 60.dp),
+                        value = state.noteUi?.content,
+                        onValueChange = { newContent ->
                             onActions(UpsertNoteActions.UpdateNoteUiContent(noteContent = newContent))
-                        }
+                        },
+                        placeHolderResId = R.string.note_content,
+                        showIndicator = false,
+                        textFieldStyle = MaterialTheme.typography.bodyLarge.copy(
+                            letterSpacing = 0.01f.em,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
+                        placeHolderStyle = MaterialTheme.typography.titleSmall.copy(
+                            letterSpacing = 0.01.em,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
                     )
                 }
 
@@ -115,71 +141,21 @@ fun UpsertNoteLandscapeScreen(
 }
 
 @Composable
-fun UpsertNoteLandscapeContent(
-    modifier: Modifier,
-    titleValue: String,
-    onTitleValueChange: (String) -> Unit,
-    contentValue: String,
-    onContentValueChange: (String) -> Unit,
-) {
-    Column(
-        modifier = modifier
-    ) {
-        UpsertNoteTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
-            value = titleValue,
-            placeHolderResId = R.string.note_title,
-            onValueChange = onTitleValueChange,
-            showIndicator = true,
-            textFieldStyle = MaterialTheme.typography.titleMedium.copy(
-                letterSpacing = 0.01.em,
-                fontWeight = FontWeight.Bold
-            ),
-            placeHolderStyle = MaterialTheme.typography.titleSmall.copy(
-                letterSpacing = 0.01.em,
-                fontWeight = FontWeight.Bold,
-            ),
-            gainFocus = true
-        )
-
-        UpsertNoteTextField(
-            modifier = Modifier
-                .fillMaxWidth().heightIn(min = 60.dp),
-            value = contentValue,
-            onValueChange = onContentValueChange,
-            placeHolderResId = R.string.note_content,
-            showIndicator = false,
-            textFieldStyle = MaterialTheme.typography.bodyLarge.copy(
-                letterSpacing = 0.01f.em,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-            placeHolderStyle = MaterialTheme.typography.titleSmall.copy(
-                letterSpacing = 0.01.em,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-        )
-
-
-    }
-}
-
-@Composable
-fun UpsertNoteLandscape(
+fun UpsertNoteMobilePortraitTopBar(
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     onSaveNote: () -> Unit,
     saveNoteEnabled: Boolean,
-    isLoading: Boolean,
-    content: @Composable (Modifier) -> Unit,
+    isLoading: Boolean
 ) {
     Row(
-        modifier = modifier.height(intrinsicSize = IntrinsicSize.Max),
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 10.dp, end = 30.dp),
             onClick = onCloseClick,
-            enabled = !isLoading,
+            enabled = !isLoading
         ) {
             Icon(
                 modifier = Modifier,
@@ -189,14 +165,7 @@ fun UpsertNoteLandscape(
             )
         }
 
-        content(
-            Modifier
-                .fillMaxHeight()
-                .weight(1f)
-        )
-
         TextButton(
-            modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 10.dp, end = 30.dp),
             onClick = onSaveNote,
             enabled = saveNoteEnabled && !isLoading,
             colors = ButtonDefaults.buttonColors(
