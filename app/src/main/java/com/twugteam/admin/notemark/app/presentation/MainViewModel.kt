@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainViewModel(
     private val sessionStorage: SessionStorage
@@ -22,7 +23,8 @@ class MainViewModel(
 
     private suspend fun getAuthInfo() {
         isCheckingAuth(isCheckingAuth = true)
-        val authInfo = sessionStorage.getAuthInto()
+        val authInfo = sessionStorage.getAuthInfo()
+        Timber.tag("MyTag").d("authInfo: $authInfo")
         _mainState.update { newState ->
             newState.copy(
                 isLoggedInPreviously = authInfo != null

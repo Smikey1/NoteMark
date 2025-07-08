@@ -5,17 +5,22 @@ sealed interface Result<out D, out E: Error> {
     data class Error<out E: com.twugteam.admin.notemark.core.domain.util.Error>(val error: E) : Result<Nothing, E>
 }
 
-inline fun<T,E: Error,R> Result<T,E>.mapToResult(map:(T)->R): Result<R,E> {
+inline fun<T,E: Error,R, NE: Error> Result<T,E>.mapToResult(
+    success: (T) -> R,
+    networkError: (E) -> NE
+): Result<R,NE> {
     return when (this){
+        is Result.Error -> Result.Error(networkError(error))
+        is Result.Success -> Result.Success(success(data))
+    }
+}
+
+fun <T, E : Error> Result<T, E>.asEmptyDataResult(): EmptyResult<E> {
+    return when (this) {
+        is Result.Success -> Result.Success(Unit)
         is Result.Error -> Result.Error(error)
-        is Result.Success -> Result.Success(map(data))
     }
 }
 
-fun <T,E: Error> Result<T,E>.asEmptyDataResult(): EmptyResult<E> {
-    return mapToResult {
-
-    }
-}
 
 typealias EmptyResult<E> = Result<Unit,E>

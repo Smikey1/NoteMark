@@ -57,7 +57,7 @@ class HttpClientFactory(
                     Timber.tag("MyTag").d("bearer")
                     loadTokens {
                         Timber.tag("MyTag").d("loadTokens")
-                        val authInfo = sessionStorage.getAuthInto()
+                        val authInfo = sessionStorage.getAuthInfo()
                         val bearerTokens = BearerTokens(
                             accessToken = authInfo?.accessToken ?: "",
                             refreshToken = authInfo?.refreshToken ?: ""
@@ -69,7 +69,7 @@ class HttpClientFactory(
 
                     refreshTokens {
                         Timber.tag("MyTag").d("refreshTokens")
-                        val authInfo = sessionStorage.getAuthInto()
+                        val authInfo = sessionStorage.getAuthInfo()
                         Timber.tag("MyTag").d("refreshTokens sessionStorage refreshToken: ${authInfo?.refreshToken}")
 
                         val response = client.post<AccessTokenRequest, AccessTokenResponse>(

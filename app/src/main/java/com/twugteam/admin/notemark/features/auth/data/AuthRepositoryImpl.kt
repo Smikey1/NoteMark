@@ -8,6 +8,10 @@ import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.EmptyResult
 import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
+import com.twugteam.admin.notemark.core.domain.util.mapToResult
+import com.twugteam.admin.notemark.core.domain.util.toDataErrorNetwork
+import com.twugteam.admin.notemark.features.auth.data.model.LoginRequest
+import com.twugteam.admin.notemark.features.auth.data.model.LoginResponse
 import com.twugteam.admin.notemark.features.auth.data.model.RegisterRequest
 import com.twugteam.admin.notemark.features.auth.domain.AuthRepository
 import io.ktor.client.HttpClient
@@ -24,9 +28,13 @@ class AuthRepositoryImpl(
         val result = httpClient.post<LoginRequest, LoginResponse>(
             route = ApiEndpoints.LOGIN_ENDPOINT,
             body = LoginRequest(email = email, password = password)
+        ).mapToResult(
+            success = { it },
+            networkError = { it.toDataErrorNetwork() }
         )
+
         if (result is Result.Success) {
-            val authInfoFirst = sessionStorage.getAuthInto()
+            val authInfoFirst = sessionStorage.getAuthInfo()
             Timber.tag("SessionStorage").d(authInfoFirst?.accessToken)
             sessionStorage.setAuthInfo(
                 authInfo = AuthInfo(
@@ -35,7 +43,7 @@ class AuthRepositoryImpl(
                     username = result.data.username,
                 )
             )
-            val authInfoSecond = sessionStorage.getAuthInto()
+            val authInfoSecond = sessionStorage.getAuthInfo()
 
             Timber.tag("SessionStorage").d(authInfoSecond?.accessToken)
         }
@@ -54,6 +62,9 @@ class AuthRepositoryImpl(
                 email = email,
                 password = password
             )
+        ).mapToResult(
+            success = {},
+            networkError = { it.toDataErrorNetwork() }
         )
         return result
     }

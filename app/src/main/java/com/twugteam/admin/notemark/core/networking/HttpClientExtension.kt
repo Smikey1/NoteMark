@@ -2,7 +2,6 @@ package com.twugteam.admin.notemark.core.networking
 
 
 import com.twugteam.admin.notemark.core.constant.ApiEndpoints
-import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.Result
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -23,7 +22,7 @@ import kotlin.coroutines.cancellation.CancellationException
 suspend inline fun <reified Response : Any> HttpClient.get(
     route: String,
     queryParams: Map<String, Any?> = mapOf()
-): Result<Response, DataError.Network> {
+): Result<Response, NetworkError> {
     return safeCall {
         get {
             url(constructRoute(route))
@@ -38,7 +37,7 @@ suspend inline fun <reified Response : Any> HttpClient.get(
 suspend inline fun <reified Response : Any> HttpClient.delete(
     route: String,
     queryParams: Map<String, Any?> = mapOf()
-): Result<Response, DataError.Network> {
+): Result<Response, NetworkError> {
     return safeCall {
         delete {
             url(constructRoute(route))
@@ -55,7 +54,7 @@ suspend inline fun <reified Request, reified Response : Any> HttpClient.post(
     //to add  markAsRefreshTokenRequest() in refreshTokens{}
     crossinline builder: HttpRequestBuilder.() -> Unit = {}
 
-): Result<Response, DataError.Network> {
+): Result<Response, NetworkError> {
     return safeCall {
         post {
             url(constructRoute(route))
@@ -68,7 +67,7 @@ suspend inline fun <reified Request, reified Response : Any> HttpClient.post(
 suspend inline fun <reified Request, reified Response : Any> HttpClient.put(
     route: String,
     body:Request
-): Result<Response, DataError.Network> {
+): Result<Response, NetworkError> {
     return safeCall {
         put {
             url(constructRoute(route))
@@ -77,33 +76,33 @@ suspend inline fun <reified Request, reified Response : Any> HttpClient.put(
     }
 }
 
-suspend inline fun <reified T> safeCall(execute: () -> HttpResponse): Result<T, DataError.Network> {
+suspend inline fun <reified T> safeCall(execute: () -> HttpResponse): Result<T, NetworkError> {
     val response = try {
         execute()
     } catch (e: UnresolvedAddressException) {
         e.printStackTrace()
-        return Result.Error(DataError.Network.NO_INTERNET)
+        return Result.Error(NetworkError.NoInternet)
     } catch (e: SerializationException) {
         e.printStackTrace()
-        return Result.Error(DataError.Network.SERIALIZATION)
+        return Result.Error(NetworkError.Serialization)
     } catch (e: Exception) {
         if (e is CancellationException) throw e
         e.printStackTrace()
-        return Result.Error(DataError.Network.UNKNOWN)
+        return Result.Error(NetworkError.Unknown)
     }
     return responseToResult(response)
 }
 
-suspend inline fun <reified T> responseToResult(response: HttpResponse): Result<T, DataError.Network> {
+suspend inline fun <reified T> responseToResult(response: HttpResponse): Result<T, NetworkError> {
     return when (response.status.value) {
         in 200..299 -> Result.Success(response.body<T>())
-        401 -> Result.Error(DataError.Network.UNAUTHORIZED)
-        408 -> Result.Error(DataError.Network.REQUEST_TIMEOUT)
-        409 -> Result.Error(DataError.Network.CONFLICT)
-        413 -> Result.Error(DataError.Network.PAYLOAD_TOO_LARGE)
-        429 -> Result.Error(DataError.Network.TOO_MANY_REQUESTS)
-        in 500..599 -> Result.Error(DataError.Network.SERVER_ERROR)
-        else -> Result.Error(DataError.Network.UNKNOWN)
+        401 -> Result.Error(NetworkError.UnAuthorized)
+        408 -> Result.Error(NetworkError.RequestTimeout)
+        409 -> Result.Error(NetworkError.Conflict)
+        413 -> Result.Error(NetworkError.PayloadTooLarge)
+        429 -> Result.Error(NetworkError.TooManyRequests)
+        in 500..599 -> Result.Error(NetworkError.ServerError)
+        else -> Result.Error(NetworkError.Unknown)
     }
 }
 

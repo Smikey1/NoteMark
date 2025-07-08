@@ -126,4 +126,9 @@ dependencies {
     // ktor
     implementation(libs.bundles.ktor)
 
+    //Preference DataStore
+    implementation(libs.androidx.datastore.preferences)
+
+    //Jetpack Security
+    implementation(libs.androidx.security.crypto)
 }

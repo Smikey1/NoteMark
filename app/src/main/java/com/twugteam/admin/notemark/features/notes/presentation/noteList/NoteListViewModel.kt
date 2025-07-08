@@ -33,7 +33,7 @@ class NoteListViewModel(
     )
 
     private suspend fun getUsername() {
-        val username = sessionStorage.getAuthInto()?.username
+        val username = sessionStorage.getAuthInfo()?.username
         val usernameInitial = username?.getInitial() ?: "PL"
 
         _state.update { newState ->

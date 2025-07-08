@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.auth.data
+package com.twugteam.admin.notemark.features.auth.data.model
 
 import kotlinx.serialization.Serializable
 

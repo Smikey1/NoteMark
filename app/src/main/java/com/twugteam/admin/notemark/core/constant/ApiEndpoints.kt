@@ -16,7 +16,4 @@ object ApiEndpoints {
     // Note Endpoints
     const val NOTES_ENDPOINT = BuildConfig.NOTES_ENDPOINT
 
-    // Delete Endpoints
-    const val DELETE_ENDPOINT = BuildConfig.NOTES_ENDPOINT + "/{id}"
-
 }
