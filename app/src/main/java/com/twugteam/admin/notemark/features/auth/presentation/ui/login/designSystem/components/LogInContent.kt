@@ -47,18 +47,23 @@ fun LogInContent(
             enabled = state.isEnabled && !state.isLoading,
             inputValue = state.password,
             isLastField = true,
+            onDone = {
+                onActions(LogInActions.LogInClick)
+            },
             onValueChange = { passwordValue ->
                 onActions(LogInActions.UpdatePassword(passwordValue = passwordValue))
             },
             isTrailingShowing = true,
+            isOnDoneEnabled = state.isEnabled && state.canLogIn
         )
+
 
         Spacer(modifier = Modifier.height(24.dp))
 
         NoteMarkActionButton(
             text = stringResource(R.string.login),
             modifier = Modifier.fillMaxWidth(),
-            enabled = state.isEnabled && state.isLogInEnabled,
+            enabled = state.canLogIn,
             isLoading = state.isLoading,
             onClick = {
                 onActions(LogInActions.LogInClick)
@@ -70,7 +75,7 @@ fun LogInContent(
         NoteMarkTransparentButton(
             text = stringResource(R.string.dont_have_account),
             modifier = Modifier.fillMaxWidth(),
-            enabled = state.isEnabled,
+            enabled = !state.isLoading,
             isLoading = false,
             onClick = {
                 onActions(LogInActions.DontHaveAccountClick)

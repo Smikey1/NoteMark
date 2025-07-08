@@ -3,6 +3,8 @@ package com.twugteam.admin.notemark.features.auth.presentation.ui.landing.design
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +21,7 @@ fun LandingLandscapeComponent(
     onClickLogIn: () -> Unit,
 ) {
     Row(
-        modifier = modifier.padding(),
+        modifier = modifier.verticalScroll(state = rememberScrollState()),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(

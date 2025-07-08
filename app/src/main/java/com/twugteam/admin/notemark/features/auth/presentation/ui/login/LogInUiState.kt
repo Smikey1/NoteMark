@@ -8,7 +8,7 @@ data class LogInUiState(
     val password: String = "",
     val isEnabled: Boolean = true,
     val isLoading: Boolean = false,
-    val isLogInEnabled: Boolean = false,
+    val canLogIn: Boolean = false,
     val showSnackBar: Boolean = false,
     val snackBarText: UiText = UiText.DynamicString("")
 )

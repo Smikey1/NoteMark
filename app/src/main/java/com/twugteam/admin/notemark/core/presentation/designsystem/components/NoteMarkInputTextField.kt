@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
+import timber.log.Timber
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -44,6 +45,7 @@ fun NoteMarkInputTextField(
     @StringRes
     hint: Int,
     inputValue: String,
+    onValueChange: (String) -> Unit,
     showLabel: Boolean = true,
     isTrailingShowing: Boolean = false,
     enabled: Boolean = true,
@@ -51,7 +53,8 @@ fun NoteMarkInputTextField(
     isError: Boolean = false,
     errorText: String = "",
     isLastField: Boolean = false,
-    onValueChange: (String) -> Unit,
+    isOnDoneEnabled: Boolean = false,
+    onDone: () -> Unit = {},
 ) {
     //keyboard controller to show or hide keyboard
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -145,13 +148,24 @@ fun NoteMarkInputTextField(
             keyboardActions = KeyboardActions(
                 onNext = {
                     //move down
+                    Timber.tag("MyTag").d("here")
                     focusManager.moveFocus(FocusDirection.Down)
                 },
                 onDone = {
+                    Timber.tag("MyTag").d("hone")
                     //close keyboard
                     keyboardController?.hide()
-                    //clear focus
-                    focusManager.clearFocus()
+
+
+                    //clear focus force = true used to avoid focus jumping to first field
+                    focusManager.clearFocus(force = true)
+
+                    //check if button is enabled (logIn/register...)
+                    if(isOnDoneEnabled) {
+                        //perform done action
+                        onDone()
+                    }
+
                 }),
             visualTransformation = if (isEyeOpened == true) {
                 VisualTransformation.None

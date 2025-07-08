@@ -214,7 +214,7 @@ fun NoteMarkList(
         columns = staggeredGridCells,
         verticalItemSpacing = verticalSpace,
         horizontalArrangement = Arrangement.spacedBy(horizontalSpace),
-        state = state
+        state = state,
     ) {
         items(items = noteMarkList, key = {
             it.id!!

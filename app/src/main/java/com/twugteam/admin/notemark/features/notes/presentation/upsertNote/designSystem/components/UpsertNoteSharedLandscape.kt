@@ -134,7 +134,5 @@ fun UpsertNoteLandscapeContent(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             ),
         )
-
-
     }
 }

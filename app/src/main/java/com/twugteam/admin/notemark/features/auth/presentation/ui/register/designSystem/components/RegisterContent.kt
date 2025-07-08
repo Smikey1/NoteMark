@@ -84,13 +84,17 @@ fun RegisterContent(
             showLabel = true,
             isTrailingShowing = true,
             enabled = true,
-            isLastField = true,
             supportingText = state.confirmPassword.supportingText?.asString(),
             isError = state.confirmPassword.isError,
             errorText = state.confirmPassword.errorText.asString(),
             onValueChange = { confirmPassword ->
                 onAction(RegisterActions.UpdateConfirmPassword(confirmPassword = confirmPassword))
             },
+            isLastField = true,
+            isOnDoneEnabled = state.canRegister,
+            onDone = {
+                onAction(RegisterActions.OnRegisterClick)
+            }
         )
         Spacer(modifier = Modifier.height(24.dp))
         NoteMarkActionButton(
@@ -105,7 +109,7 @@ fun RegisterContent(
         Spacer(modifier = Modifier.height(12.dp))
         NoteMarkTransparentButton(
             text = stringResource(R.string.already_have_an_account),
-            enabled = true,
+            enabled = !state.isRegistering,
             onClick = {
                 onAction(RegisterActions.OnAlreadyHaveAnAccountClick)
             }

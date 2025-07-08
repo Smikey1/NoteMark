@@ -130,7 +130,8 @@ fun NoteMarkTransparentButton(
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = MaterialTheme.colorScheme.onPrimary,
+            contentColor = MaterialTheme.colorScheme.primary,
+            disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
         ),
         border = BorderStroke(width = 0.dp, color = Color.Transparent),
         shape = MaterialTheme.shapes.small,
@@ -154,7 +155,7 @@ fun NoteMarkTransparentButton(
                 modifier = Modifier
                     .alpha(if (isLoading) 0f else 1f),
                 style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primary,
+                    color = LocalContentColor.current,
                 ),
             )
         }

@@ -45,13 +45,13 @@ class LogInViewModel(
             }
             if (_logInUiState.value.password.isNotBlank()) {
                 _logInUiState.update { newState ->
-                    newState.copy(isLogInEnabled = true)
+                    newState.copy(canLogIn = true)
                 }
             }
         } else {
             //if email not valid just update the email without updating logIn button state
             _logInUiState.update { newState ->
-                newState.copy(email = emailValue, isLogInEnabled = false)
+                newState.copy(email = emailValue, canLogIn = false)
             }
         }
     }
@@ -64,17 +64,17 @@ class LogInViewModel(
             }
             if (passwordValue.isNotBlank()) {
                 _logInUiState.update { newState ->
-                    newState.copy(isLogInEnabled = true)
+                    newState.copy(canLogIn = true)
                 }
             } else {
                 _logInUiState.update { newState ->
-                    newState.copy(isLogInEnabled = false)
+                    newState.copy(canLogIn = false)
                 }
             }
         } else {
             //if email not valid just update the password without updating logIn button state
             _logInUiState.update { newState ->
-                newState.copy(password = passwordValue, isLogInEnabled = false)
+                newState.copy(password = passwordValue, canLogIn = false)
             }
         }
     }
@@ -126,6 +126,7 @@ class LogInViewModel(
                     snackBarText = errorMessage
                 )
             }
+            //show snackBar for 2 seconds
             delay(2.seconds)
             _logInUiState.update { newState ->
                 newState.copy(

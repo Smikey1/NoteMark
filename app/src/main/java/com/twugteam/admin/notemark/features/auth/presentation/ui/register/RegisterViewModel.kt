@@ -116,7 +116,6 @@ class RegisterViewModel(
     private fun register() {
         viewModelScope.launch {
             _state.update { it.copy(isRegistering = true) }
-
             val result = authRepository.register(
                 username = _state.value.username.value,
                 email = _state.value.email.value,
@@ -168,6 +167,7 @@ class RegisterViewModel(
                     snackBarText = errorMessage
                 )
             }
+            //show snackBar for 2 seconds
             delay(2.seconds)
             _state.update { newState ->
                 newState.copy(

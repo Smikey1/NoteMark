@@ -1,6 +1,7 @@
 package com.twugteam.admin.notemark.app.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -57,7 +58,7 @@ fun NavGraphBuilder.authGraph(
             }
 
             LandingScreenRoot(
-                modifier = modifier.background(color = LandingBackground),
+                modifier = modifier.background(color = LandingBackground).navigationBarsPadding(),
                 windowSizeClass = windowSizeClass,
                 onActions = landingViewModel::onActions
             )
