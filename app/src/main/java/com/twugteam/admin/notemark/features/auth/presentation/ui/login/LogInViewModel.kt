@@ -22,8 +22,8 @@ class LogInViewModel(
     private val userDataValidator: UserDataValidator,
     private val authRepository: AuthRepository
 ) : ViewModel() {
-    private val _logInUiState: MutableStateFlow<LogInUiState> = MutableStateFlow(LogInUiState())
-    val logInUiState = _logInUiState.asStateFlow()
+    private val _state: MutableStateFlow<LogInUiState> = MutableStateFlow(LogInUiState())
+    val state = _state.asStateFlow()
 
     private val _events = Channel<LogInEvents>()
     val events = _events.receiveAsFlow()
@@ -40,17 +40,17 @@ class LogInViewModel(
     private fun updateEmail(emailValue: String) {
         //we check if email valid to check state of logIn button enabled or not
         if (userDataValidator.isValidEmail(emailValue)) {
-            _logInUiState.update { newState ->
+            _state.update { newState ->
                 newState.copy(email = emailValue)
             }
-            if (_logInUiState.value.password.isNotBlank()) {
-                _logInUiState.update { newState ->
+            if (_state.value.password.isNotBlank()) {
+                _state.update { newState ->
                     newState.copy(canLogIn = true)
                 }
             }
         } else {
             //if email not valid just update the email without updating logIn button state
-            _logInUiState.update { newState ->
+            _state.update { newState ->
                 newState.copy(email = emailValue, canLogIn = false)
             }
         }
@@ -58,22 +58,22 @@ class LogInViewModel(
 
     private fun updatePassword(passwordValue: String) {
         //we check if email valid to check state of logIn button enabled or not
-        if (userDataValidator.isValidEmail(_logInUiState.value.email)) {
-            _logInUiState.update { newState ->
+        if (userDataValidator.isValidEmail(_state.value.email)) {
+            _state.update { newState ->
                 newState.copy(password = passwordValue)
             }
             if (passwordValue.isNotBlank()) {
-                _logInUiState.update { newState ->
+                _state.update { newState ->
                     newState.copy(canLogIn = true)
                 }
             } else {
-                _logInUiState.update { newState ->
+                _state.update { newState ->
                     newState.copy(canLogIn = false)
                 }
             }
         } else {
             //if email not valid just update the password without updating logIn button state
-            _logInUiState.update { newState ->
+            _state.update { newState ->
                 newState.copy(password = passwordValue, canLogIn = false)
             }
         }
@@ -81,15 +81,15 @@ class LogInViewModel(
 
     private fun logIn() {
         viewModelScope.launch {
-            _logInUiState.update { newState ->
+            _state.update { newState ->
                 newState.copy(isEnabled = false, isLoading = true)
             }
             val result = authRepository.login(
-                email = _logInUiState.value.email.trim(),
-                password = _logInUiState.value.password
+                email = _state.value.email.trim(),
+                password = _state.value.password
             )
 
-            _logInUiState.update { newState ->
+            _state.update { newState ->
                 newState.copy(isEnabled = true, isLoading = false)
             }
             when (result) {
@@ -108,11 +108,11 @@ class LogInViewModel(
 
     private fun onDontHaveAccountClick() {
         viewModelScope.launch {
-            _logInUiState.update { newState ->
+            _state.update { newState ->
                 newState.copy(isEnabled = false, isLoading = true)
             }
             _events.send(element = LogInEvents.NavigateToRegister)
-            _logInUiState.update { newState ->
+            _state.update { newState ->
                 newState.copy(isEnabled = true, isLoading = false)
             }
         }
@@ -120,7 +120,7 @@ class LogInViewModel(
 
     private fun showSnackBar(errorMessage: UiText) {
         viewModelScope.launch {
-            _logInUiState.update { newState ->
+            _state.update { newState ->
                 newState.copy(
                     showSnackBar = true,
                     snackBarText = errorMessage
@@ -128,7 +128,7 @@ class LogInViewModel(
             }
             //show snackBar for 2 seconds
             delay(2.seconds)
-            _logInUiState.update { newState ->
+            _state.update { newState ->
                 newState.copy(
                     showSnackBar = false,
                     snackBarText = UiText.DynamicString("")

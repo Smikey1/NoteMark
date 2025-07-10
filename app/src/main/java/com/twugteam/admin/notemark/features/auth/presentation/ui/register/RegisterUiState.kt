@@ -3,7 +3,7 @@ package com.twugteam.admin.notemark.features.auth.presentation.ui.register
 import com.twugteam.admin.notemark.core.presentation.ui.UiText
 import com.twugteam.admin.notemark.R
 
-data class RegisterState(
+data class RegisterUiState(
     val username: InputFieldState = InputFieldState(
         value = "",
         isValid= false,

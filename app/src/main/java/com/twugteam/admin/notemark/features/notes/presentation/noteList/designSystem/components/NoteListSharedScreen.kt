@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -44,7 +45,7 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
 import com.twugteam.admin.notemark.core.presentation.ui.formatAsNoteDate
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListActions
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListState
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListUiState
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.util.TextUtil
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.util.getInitial
@@ -57,7 +58,7 @@ fun NoteListSharedScreen(
     verticalSpace: Dp,
     horizontalSpace: Dp,
     staggeredGridCells: StaggeredGridCells,
-    state: NoteListState,
+    state: NoteListUiState,
     onActions: (NoteListActions) -> Unit,
     windowSizeClass: WindowSizeClass
 ) {
@@ -69,7 +70,10 @@ fun NoteListSharedScreen(
                 modifier = Modifier
                     .background(color = MaterialTheme.colorScheme.onPrimary)
                     .padding(topBarPaddingValues),
-                username = state.username
+                username = state.username,
+                onSettingsClick = {
+                    onActions(NoteListActions.NavigateToSettings)
+                }
             )
         },
         floatingActionButton = {
@@ -165,6 +169,7 @@ fun NoteListSharedScreen(
 fun NoteListTopBar(
     modifier: Modifier = Modifier,
     username: String,
+    onSettingsClick: () -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -179,20 +184,36 @@ fun NoteListTopBar(
                 fontWeight = FontWeight.Bold
             )
         )
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(shape = MaterialTheme.shapes.small)
-                .background(color = MaterialTheme.colorScheme.primary),
+
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = username.getInitial(),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.onPrimary
-                ),
-                textAlign = TextAlign.Center
-            )
+            IconButton(
+                onClick = onSettingsClick,
+            ) {
+                Icon(
+                    imageVector = NoteMarkIcons.Settings,
+                    contentDescription = stringResource(R.string.settings),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(shape = MaterialTheme.shapes.small)
+                    .background(color = MaterialTheme.colorScheme.primary),
+            ) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = username.getInitial(),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.onPrimary
+                    ),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }

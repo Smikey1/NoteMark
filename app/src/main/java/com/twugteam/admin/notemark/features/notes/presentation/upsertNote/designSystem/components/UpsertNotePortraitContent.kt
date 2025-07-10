@@ -21,11 +21,11 @@ import androidx.compose.ui.unit.em
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteActions
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteState
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteUiState
 
 @Composable
 fun UpsertNotePortraitContent(
-    state: UpsertNoteState,
+    state: UpsertNoteUiState,
     onActions: (UpsertNoteActions) -> Unit,
     paddingValues: PaddingValues
 ) {

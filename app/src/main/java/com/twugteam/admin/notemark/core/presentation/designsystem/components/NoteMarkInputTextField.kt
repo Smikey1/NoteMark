@@ -34,7 +34,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
-import timber.log.Timber
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -148,11 +147,9 @@ fun NoteMarkInputTextField(
             keyboardActions = KeyboardActions(
                 onNext = {
                     //move down
-                    Timber.tag("MyTag").d("here")
                     focusManager.moveFocus(FocusDirection.Down)
                 },
                 onDone = {
-                    Timber.tag("MyTag").d("hone")
                     //close keyboard
                     keyboardController?.hide()
 

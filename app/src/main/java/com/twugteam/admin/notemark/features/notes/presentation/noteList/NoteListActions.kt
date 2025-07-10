@@ -5,4 +5,5 @@ sealed interface NoteListActions {
     data class OnNoteDelete(val noteId: String) : NoteListActions
     data object OnDialogConfirm : NoteListActions
     data object OnDialogDismiss : NoteListActions
+    data object NavigateToSettings: NoteListActions
 }

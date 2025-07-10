@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListActions
-import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListState
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListUiState
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.designSystem.components.NoteListSharedScreen
 
 @Composable
@@ -18,7 +18,7 @@ fun NoteListScreenTabletLandscape(
     verticalSpace: Dp,
     horizontalSpace: Dp,
     staggeredGridCells: StaggeredGridCells,
-    state: NoteListState,
+    state: NoteListUiState,
     onActions: (NoteListActions) -> Unit,
     windowSizeClass: WindowSizeClass
 ) {

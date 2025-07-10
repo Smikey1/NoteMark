@@ -21,14 +21,14 @@ import androidx.compose.ui.unit.sp
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteActions
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteState
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteUiState
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components.UpsertNotePortraitContent
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components.UpsertNoteSharedScreen
 
 @Composable
 fun UpsertNoteScreenMobilePortrait(
     modifier: Modifier = Modifier,
-    state: UpsertNoteState,
+    state: UpsertNoteUiState,
     onActions: (UpsertNoteActions) -> Unit,
 ) {
     UpsertNoteSharedScreen(

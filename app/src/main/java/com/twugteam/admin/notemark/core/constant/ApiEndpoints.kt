@@ -11,6 +11,7 @@ object ApiEndpoints {
     const val LOGIN_ENDPOINT = BuildConfig.AUTH_ENDPOINT + "/login"
     const val REGISTER_ENDPOINT = BuildConfig.AUTH_ENDPOINT + "/register"
     const val REFRESH_TOKEN_ENDPOINT = BuildConfig.AUTH_ENDPOINT + "/refresh"
+    const val LOGOUT_ENDPOINT = BuildConfig.AUTH_ENDPOINT + "/logout"
 
 
     // Note Endpoints

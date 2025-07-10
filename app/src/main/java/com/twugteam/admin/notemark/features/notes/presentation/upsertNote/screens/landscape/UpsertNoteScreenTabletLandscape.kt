@@ -3,14 +3,14 @@ package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.scree
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteActions
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteState
+import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteUiState
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components.UpsertNoteSharedLandscape
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components.UpsertNoteSharedScreen
 
 @Composable
 fun UpsertNoteScreenTabletLandscape(
     modifier: Modifier = Modifier,
-    state: UpsertNoteState,
+    state: UpsertNoteUiState,
     onActions: (UpsertNoteActions) -> Unit,
 ){
     UpsertNoteSharedScreen(

@@ -18,7 +18,9 @@ val Context.dataStore: DataStore<AuthInfoSerializable?> by dataStore(
 )
 
 val appModule = module {
-        single<DataStore<AuthInfoSerializable?>> {
+    single<Context> { androidApplication().applicationContext }
+
+    single<DataStore<AuthInfoSerializable?>> {
             //get applicationContext from koin
             get<Context>().dataStore
     }

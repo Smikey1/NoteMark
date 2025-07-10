@@ -17,7 +17,7 @@ class RoomLocalNoteDataSource(
 ) : LocalNoteDataSource {
     override suspend fun getNotesById(id: NoteId): Note {
         return noteDao.getNoteById(id).toNote()
-        }
+    }
 
     override fun getAllNotes(): Flow<List<Note>> {
         return noteDao.getAllNotes().map { entities ->
@@ -33,7 +33,7 @@ class RoomLocalNoteDataSource(
             noteDao.upsertNote(noteEntity)
             Result.Success(noteEntity.id)
         } catch (_: SQLiteFullException) {
-            Result.Error(DataError.Local.DISK_FULL)
+            Result.Error(DataError.Local.DiskFull)
         }
     }
 
@@ -45,7 +45,8 @@ class RoomLocalNoteDataSource(
             noteDao.upsertNotes(noteEntities)
             Result.Success(noteEntities.map { it.id })
         } catch (_: SQLiteFullException) {
-            Result.Error(DataError.Local.DISK_FULL)
+            val error: DataError.Local = DataError.Local.DiskFull
+            Result.Error(error)
         }
     }
 
@@ -53,4 +54,16 @@ class RoomLocalNoteDataSource(
         noteDao.deleteNoteById(id)
     }
 
+    override suspend fun clearNotes(): Result<Unit, DataError.Local> {
+        return try {
+            noteDao.clearNotes()
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(
+                error = DataError.Local.Unknown(
+                    unknownError = e.localizedMessage?.toString() ?: ""
+                )
+            )
+        }
+    }
 }

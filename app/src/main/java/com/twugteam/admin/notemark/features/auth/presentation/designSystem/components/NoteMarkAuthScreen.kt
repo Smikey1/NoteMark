@@ -1,6 +1,5 @@
 package com.twugteam.admin.notemark.features.auth.presentation.designSystem.components
 
-import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -36,7 +35,6 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.ScaffoldLinear
 import com.twugteam.admin.notemark.core.presentation.designsystem.ScaffoldLinearGradientSecond
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NoteMarkAuthScreen(
     modifier: Modifier = Modifier,

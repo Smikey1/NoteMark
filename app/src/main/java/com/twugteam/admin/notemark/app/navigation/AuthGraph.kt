@@ -1,5 +1,6 @@
 package com.twugteam.admin.notemark.app.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -25,7 +26,9 @@ import com.twugteam.admin.notemark.features.auth.presentation.ui.register.Regist
 import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterScreenRoot
 import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterViewModel
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
+@SuppressLint("RestrictedApi")
 fun NavGraphBuilder.authGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
@@ -35,9 +38,11 @@ fun NavGraphBuilder.authGraph(
         startDestination = Screens.Landing,
     ) {
         composable<Screens.Landing> {
+            val backstack = navController.currentBackStack.value
+            Timber.tag("BackStack").d("$backstack")
             val landingViewModel = koinViewModel<LandingScreenViewModel>()
 
-            ObserveAsEvents(flow = landingViewModel.landingEvents) { events ->
+            ObserveAsEvents(flow = landingViewModel.events) { events ->
                 when (events) {
                     LandingEvents.NavigateToLogInScreen -> {
                         navController.navigate(Screens.LogIn) {
@@ -65,8 +70,10 @@ fun NavGraphBuilder.authGraph(
         }
 
         composable<Screens.LogIn> {
+            val backstack = navController.currentBackStack.value
+            Timber.tag("BackStack").d("$backstack")
             val logInViewModel = koinViewModel<LogInViewModel>()
-            val logInUiState by logInViewModel.logInUiState.collectAsStateWithLifecycle()
+            val logInUiState by logInViewModel.state.collectAsStateWithLifecycle()
             ObserveAsEvents(logInViewModel.events) { events ->
                 when (events) {
                     LogInEvents.NavigateToRegister -> navController.navigate(Screens.Register) {
@@ -99,6 +106,8 @@ fun NavGraphBuilder.authGraph(
         }
 
         composable<Screens.Register> {
+            val backstack = navController.currentBackStack.value
+            Timber.tag("BackStack").d("$backstack")
             val registerViewModel = koinViewModel<RegisterViewModel>()
             val registerState by registerViewModel.state.collectAsStateWithLifecycle()
 

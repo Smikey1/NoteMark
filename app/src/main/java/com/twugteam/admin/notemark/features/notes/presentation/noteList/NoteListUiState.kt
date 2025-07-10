@@ -2,7 +2,7 @@ package com.twugteam.admin.notemark.features.notes.presentation.noteList
 
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 
-data class NoteListState(
+data class NoteListUiState(
     val notes: List<NoteUi> = emptyList(),
     val username: String = "PL",
     val showDialog: Boolean = false,

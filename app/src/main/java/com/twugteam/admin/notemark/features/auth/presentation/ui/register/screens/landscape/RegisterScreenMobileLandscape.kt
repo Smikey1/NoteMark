@@ -7,13 +7,13 @@ import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 import com.twugteam.admin.notemark.features.auth.presentation.designSystem.components.NoteMarkAuthScreen
 import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterActions
-import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterState
+import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterUiState
 import com.twugteam.admin.notemark.features.auth.presentation.ui.register.designSystem.components.RegisterContent
 
 @Composable
 fun RegisterScreenMobileLandscape(
     modifier: Modifier = Modifier,
-    state: RegisterState,
+    state: RegisterUiState,
     onAction: (RegisterActions) -> Unit
 ) {
     NoteMarkAuthScreen(
@@ -37,7 +37,7 @@ fun RegisterScreenMobileLandscape(
 private fun RegisterScreenLandscapePreview() {
     NoteMarkTheme {
         RegisterScreenMobileLandscape(
-            state = RegisterState(),
+            state = RegisterUiState(),
             onAction = {}
         )
     }

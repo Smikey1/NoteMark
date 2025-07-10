@@ -19,7 +19,7 @@ class NoteListViewModel(
     private val noteRepository: NoteRepository,
     private val sessionStorage: SessionStorage,
 ) : ViewModel() {
-    private val _state: MutableStateFlow<NoteListState> = MutableStateFlow(NoteListState())
+    private val _state: MutableStateFlow<NoteListUiState> = MutableStateFlow(NoteListUiState())
     val state = _state.onStart {
         //getUsername() and getNotes() run in parallel
         //because getNotes() launch in a viewmodelScope.launch{}
@@ -28,7 +28,7 @@ class NoteListViewModel(
 
     }.stateIn(
         scope = viewModelScope,
-        initialValue = NoteListState(),
+        initialValue = NoteListUiState(),
         started = SharingStarted.WhileSubscribed(5000)
     )
 
@@ -52,6 +52,7 @@ class NoteListViewModel(
             is NoteListActions.OnNoteDelete -> noteToDelete(noteId = noteListActions.noteId)
             NoteListActions.OnDialogConfirm -> deleteNote()
             NoteListActions.OnDialogDismiss -> onDialogCancel()
+            NoteListActions.NavigateToSettings -> navigateToSettings()
         }
     }
 
@@ -121,4 +122,9 @@ class NoteListViewModel(
         }
     }
 
+    private fun navigateToSettings(){
+        viewModelScope.launch {
+            _events.send(NoteListEvents.NavigateToSettings)
+        }
+    }
 }

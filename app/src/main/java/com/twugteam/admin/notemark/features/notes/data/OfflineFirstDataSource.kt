@@ -1,5 +1,6 @@
 package com.twugteam.admin.notemark.features.notes.data
 
+import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
 import com.twugteam.admin.notemark.core.domain.notes.Note
 import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.EmptyResult
@@ -12,11 +13,13 @@ import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class OfflineFirstDataSource(
     private val localNoteDataSource: LocalNoteDataSource,
     private val remoteNoteDataSource: RemoteNoteDataSource,
+    private val sessionStorage: SessionStorage,
     private val applicationScope: CoroutineScope
 ) : NoteRepository {
     override suspend fun getNoteById(id: NoteId): Note {
@@ -68,7 +71,7 @@ class OfflineFirstDataSource(
 
         when (remoteDataSource) {
             is Result.Error -> Timber.tag("MyTag")
-                .d("remoteDataSource error is : ${remoteDataSource.error}")
+                .e("remoteDataSource error is : ${remoteDataSource.error}")
 
             is Result.Success -> {
                 Timber.tag("MyTag").d("remoteDataSource success is : ${remoteDataSource.data}")
@@ -87,4 +90,43 @@ class OfflineFirstDataSource(
         Timber.tag("MyTag").d("delete note: ${remoteResult.asEmptyDataResult()}")
     }
 
+    override suspend fun logOut(): EmptyResult<DataError> {
+        val refreshToken = sessionStorage.getAuthInfo()?.refreshToken
+
+        //logout from server
+        val remoteLogOut = remoteNoteDataSource.logout(refreshToken = refreshToken ?: "")
+        when (remoteLogOut) {
+            is Result.Error -> {
+                Timber.tag("MyTag")
+                    .e("logout: ${remoteLogOut.error}")
+            }
+
+            is Result.Success -> {
+                applicationScope.launch {
+                    val clearNotes = localNoteDataSource.clearNotes()
+
+                    //clear session tokens and username
+                    clearAuthInfo()
+
+                    when (clearNotes) {
+                        is Result.Error<*> -> Timber.tag("MyTag")
+                            .e("clearNotes: ${clearNotes.error}")
+                        is Result.Success<*> -> Timber.tag("MyTag").d("clearNotes: Success")
+                    }
+                }
+            }
+        }
+        return remoteLogOut.asEmptyDataResult()
+    }
+
+
+    //clearing refreshToken only and username
+    private suspend fun clearAuthInfo() {
+        try {
+            sessionStorage.setAuthInfo(null)
+            Timber.tag("MyTag").d("clearAuthInfo: success")
+        } catch (e: Exception) {
+            Timber.tag("MyTag").e("clearAuthInfo: ${e.localizedMessage}")
+        }
+    }
 }

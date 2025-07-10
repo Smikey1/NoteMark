@@ -7,6 +7,7 @@ import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListViewModel
+import com.twugteam.admin.notemark.features.notes.presentation.settings.SettingsViewModel
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteViewModel
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -17,6 +18,7 @@ val noteModule = module {
 
     viewModelOf(::NoteListViewModel)
     viewModelOf(::UpsertNoteViewModel)
+    viewModelOf(::SettingsViewModel)
 
     singleOf(::OfflineFirstDataSource).bind<NoteRepository>()
     singleOf(::KtorRemoteNoteDataSource).bind<RemoteNoteDataSource>()

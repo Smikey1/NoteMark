@@ -1,5 +1,6 @@
 package com.twugteam.admin.notemark.app.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -12,12 +13,16 @@ import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListEvents
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListScreenRoot
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListViewModel
+import com.twugteam.admin.notemark.features.notes.presentation.settings.SettingsEvents
+import com.twugteam.admin.notemark.features.notes.presentation.settings.SettingsScreenRoot
+import com.twugteam.admin.notemark.features.notes.presentation.settings.SettingsViewModel
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteEvents
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteScreenRoot
 import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteViewModel
 import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 
+@SuppressLint("RestrictedApi")
 fun NavGraphBuilder.noteGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
@@ -27,6 +32,8 @@ fun NavGraphBuilder.noteGraph(
         startDestination = Screens.NoteList,
     ) {
         composable<Screens.NoteList> {
+            val backstack = navController.currentBackStack.value
+            Timber.tag("BackStack").d("$backstack")
             val noteListViewModel = koinViewModel<NoteListViewModel>()
             val noteListState by noteListViewModel.state.collectAsStateWithLifecycle()
 
@@ -38,6 +45,8 @@ fun NavGraphBuilder.noteGraph(
                             isEdit = false
                         )
                     )
+
+                    NoteListEvents.NavigateToSettings -> navController.navigate(Screens.Settings)
                 }
             }
             NoteListScreenRoot(
@@ -49,6 +58,8 @@ fun NavGraphBuilder.noteGraph(
         }
 
         composable<Screens.UpsertNote> { entry ->
+            val backstack = navController.currentBackStack.value
+            Timber.tag("BackStack").d("$backstack")
             val upsertNoteViewModel = koinViewModel<UpsertNoteViewModel>()
             val state by upsertNoteViewModel.state.collectAsStateWithLifecycle()
 
@@ -64,6 +75,31 @@ fun NavGraphBuilder.noteGraph(
                 state = state,
                 windowSizeClass = windowSizeClass,
                 onActions = upsertNoteViewModel::onActions,
+            )
+        }
+
+        composable<Screens.Settings> {
+            val backstack = navController.currentBackStack.value
+            Timber.tag("BackStack").d("$backstack")
+            val settingsViewModel = koinViewModel<SettingsViewModel>()
+            val state by settingsViewModel.state.collectAsStateWithLifecycle()
+
+            ObserveAsEvents(settingsViewModel.events) { event->
+                when(event){
+                    SettingsEvents.OnBack -> navController.navigateUp()
+                    SettingsEvents.OnLogout -> navController.navigate(Screens.LogIn){
+                        popUpTo(Screens.NoteGraph){
+                            inclusive = true
+                        }
+                    }
+                }
+            }
+
+            SettingsScreenRoot(
+                modifier = modifier,
+                windowSizeClass = windowSizeClass,
+                state = state,
+                onActions = settingsViewModel::onActions
             )
         }
     }

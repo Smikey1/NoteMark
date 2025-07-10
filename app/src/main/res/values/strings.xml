@@ -53,6 +53,9 @@ changes will be lost.</string>
     <string name="error_serialization">Oops, couldn\'t parse data.</string>
     <string name="error_unknown">An unknown error occurred.</string>
     <string name="error_conflict">Username or Email already exists!</string>
+    <string name="settings">Settings</string>
+    <string name="back">Back</string>
+    <string name="logout">Logout</string>
 
 
 </resources>

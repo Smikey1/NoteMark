@@ -11,4 +11,5 @@ interface RemoteNoteDataSource {
     suspend fun postNote(note: Note): Result<Note, DataError.Network>
     suspend fun putNote(note: Note): Result<Note, DataError.Network>
     suspend fun deleteNoteById(id: NoteId): EmptyResult<DataError.Network>
+    suspend fun logout(refreshToken: String): EmptyResult<DataError.Network>
 }

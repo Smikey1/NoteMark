@@ -13,12 +13,12 @@ import com.twugteam.admin.notemark.core.presentation.designsystem.components.Not
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkInputTextField
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkTransparentButton
 import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterActions
-import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterState
+import com.twugteam.admin.notemark.features.auth.presentation.ui.register.RegisterUiState
 
 @Composable
 fun RegisterContent(
     modifier: Modifier = Modifier,
-    state: RegisterState,
+    state: RegisterUiState,
     onAction: (RegisterActions) -> Unit
 ) {
     Column(

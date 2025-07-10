@@ -12,7 +12,8 @@ sealed interface DataError: Error {
         SERIALIZATION,
         UNKNOWN
     }
-    enum class Local : DataError {
-        DISK_FULL
+    sealed interface Local : DataError {
+        data object DiskFull: Local
+        data class Unknown(val unknownError: String): Local
     }
 }

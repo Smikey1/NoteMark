@@ -5,7 +5,8 @@ import com.twugteam.admin.notemark.core.domain.util.DataError
 
 fun DataError.asUiText(): UiText {
     return when (this) {
-        DataError.Local.DISK_FULL -> UiText.StringResource(R.string.error_disk_full)
+        DataError.Local.DiskFull -> UiText.StringResource(R.string.error_disk_full)
+        is DataError.Local.Unknown -> UiText.DynamicString(value = unknownError)
         DataError.Network.REQUEST_TIMEOUT -> UiText.StringResource(R.string.error_request_timeout)
         DataError.Network.TOO_MANY_REQUESTS -> UiText.StringResource(R.string.error_too_many_requests)
         DataError.Network.NO_INTERNET -> UiText.StringResource(R.string.error_no_internet)

@@ -2,7 +2,7 @@ package com.twugteam.admin.notemark.core.presentation.designsystem
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -23,4 +23,15 @@ object NoteMarkIcons {
     val Close: ImageVector
         @Composable
         get() = ImageVector.vectorResource(R.drawable.close)
+
+    val Logout: ImageVector
+        @Composable
+        get() = ImageVector.vectorResource(R.drawable.logout)
+
+    val Settings: ImageVector
+        get() = Icons.Default.Settings
+
+    val Back: ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(R.drawable.back)
 }

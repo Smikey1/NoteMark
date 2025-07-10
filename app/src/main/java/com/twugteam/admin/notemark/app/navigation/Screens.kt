@@ -32,4 +32,7 @@ sealed interface Screens {
     @Serializable
     data class UpsertNote(val noteId: String?, val isEdit: Boolean): Screens
 
+    @Serializable
+    data object Settings: Screens
+
 }

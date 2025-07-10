@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class LandingScreenViewModel() : ViewModel() {
-    private val _landingEvents = Channel<LandingEvents>()
-    val landingEvents = _landingEvents.receiveAsFlow()
+    private val _events = Channel<LandingEvents>()
+    val events = _events.receiveAsFlow()
 
     fun onActions(landingActions: LandingActions) {
         viewModelScope.launch {
@@ -20,11 +20,11 @@ class LandingScreenViewModel() : ViewModel() {
     }
 
     private suspend fun onClickGetStarted() {
-        _landingEvents.send(LandingEvents.NavigateToRegisterScreen)
+        _events.send(LandingEvents.NavigateToRegisterScreen)
     }
 
     private suspend fun onClickLogIn() {
-        _landingEvents.send(LandingEvents.NavigateToLogInScreen)
+        _events.send(LandingEvents.NavigateToLogInScreen)
     }
 
 }

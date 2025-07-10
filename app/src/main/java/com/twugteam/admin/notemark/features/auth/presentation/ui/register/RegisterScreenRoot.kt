@@ -13,7 +13,7 @@ import com.twugteam.admin.notemark.features.auth.presentation.ui.register.screen
 fun RegisterScreenRoot(
     modifier: Modifier = Modifier,
     windowSizeClass: WindowSizeClass,
-    state: RegisterState,
+    state: RegisterUiState,
     onActions: (RegisterActions) -> Unit,
 ) {
     val deviceConfiguration =

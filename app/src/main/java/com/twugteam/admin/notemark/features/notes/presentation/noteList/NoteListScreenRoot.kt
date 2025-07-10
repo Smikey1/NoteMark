@@ -16,7 +16,7 @@ import com.twugteam.admin.notemark.features.notes.presentation.noteList.screens.
 fun NoteListScreenRoot(
     modifier: Modifier = Modifier,
     windowSizeClass: WindowSizeClass,
-    state: NoteListState,
+    state: NoteListUiState,
     onActions: (NoteListActions) -> Unit,
 ) {
     val deviceConfiguration =

@@ -13,7 +13,7 @@ import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.screen
 fun UpsertNoteScreenRoot(
     modifier: Modifier = Modifier,
     windowSizeClass: WindowSizeClass,
-    state: UpsertNoteState,
+    state: UpsertNoteUiState,
     onActions: (UpsertNoteActions) -> Unit,
 ) {
     val deviceConfiguration =

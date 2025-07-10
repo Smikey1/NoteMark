@@ -25,8 +25,8 @@ class UpsertNoteViewModel(
     private val noteRepository: NoteRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val _state: MutableStateFlow<UpsertNoteState> =
-        MutableStateFlow(UpsertNoteState())
+    private val _state: MutableStateFlow<UpsertNoteUiState> =
+        MutableStateFlow(UpsertNoteUiState())
     val state = _state.asStateFlow()
 
     private val _events = Channel<UpsertNoteEvents>()

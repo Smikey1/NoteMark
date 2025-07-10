@@ -23,11 +23,11 @@ class RegisterViewModel(
     private val authRepository: AuthRepository,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(RegisterState())
+    private val _state = MutableStateFlow(RegisterUiState())
     val state = _state.asStateFlow()
 
-    private val _eventChannel = Channel<RegisterEvents>()
-    val events = _eventChannel.receiveAsFlow()
+    private val _events = Channel<RegisterEvents>()
+    val events = _events.receiveAsFlow()
 
     fun onAction(action: RegisterActions) {
             when (action) {
@@ -125,7 +125,7 @@ class RegisterViewModel(
             when (result) {
                 is Result.Error -> {
                     if (result.error == DataError.Network.CONFLICT) {
-                        _eventChannel.send(
+                        _events.send(
                             RegisterEvents.RegistrationError(
                                 error = UiText.StringResource(
                                     R.string.error_conflict
@@ -133,7 +133,7 @@ class RegisterViewModel(
                             )
                         )
                     } else {
-                        _eventChannel.send(RegisterEvents.RegistrationError(error = result.error.asUiText()))
+                        _events.send(RegisterEvents.RegistrationError(error = result.error.asUiText()))
                     }
                     _state.update { it.copy(isRegistering = false) }
                 }
@@ -141,7 +141,7 @@ class RegisterViewModel(
                 is Result.Success -> {
                     //clear state
                     resetState()
-                    _eventChannel.send(RegisterEvents.RegistrationSuccess)
+                    _events.send(RegisterEvents.RegistrationSuccess)
                 }
             }
         }
@@ -155,7 +155,7 @@ class RegisterViewModel(
 
     private  fun navigateToLogin() {
         viewModelScope.launch {
-            _eventChannel.send(RegisterEvents.NavigateToLogin)
+            _events.send(RegisterEvents.NavigateToLogin)
         }
     }
 
@@ -179,6 +179,6 @@ class RegisterViewModel(
     }
 
     private fun resetState() {
-        _state.value = RegisterState()
+        _state.value = RegisterUiState()
     }
 }

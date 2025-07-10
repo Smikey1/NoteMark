@@ -7,6 +7,7 @@ import com.twugteam.admin.notemark.core.domain.util.EmptyResult
 import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.domain.util.mapToResult
 import com.twugteam.admin.notemark.core.domain.util.toDataErrorNetwork
+import com.twugteam.admin.notemark.core.networking.AccessTokenRequest
 import com.twugteam.admin.notemark.core.networking.delete
 import com.twugteam.admin.notemark.core.networking.get
 import com.twugteam.admin.notemark.core.networking.post
@@ -46,8 +47,8 @@ class KtorRemoteNoteDataSource(
             route = ApiEndpoints.NOTES_ENDPOINT,
             body = note.toCreateNoteRequest()
         ).mapToResult(
-            success = {it.toNote()},
-            networkError = {it.toDataErrorNetwork()}
+            success = { it.toNote() },
+            networkError = { it.toDataErrorNetwork() }
         )
         when (postNote) {
             is Result.Error -> Timber.tag("MyTag").e("postNote: error")
@@ -61,8 +62,8 @@ class KtorRemoteNoteDataSource(
             route = ApiEndpoints.NOTES_ENDPOINT,
             body = note.toCreateNoteRequest()
         ).mapToResult(
-            success = {it.toNote()},
-            networkError = {it.toDataErrorNetwork()}
+            success = { it.toNote() },
+            networkError = { it.toDataErrorNetwork() }
         )
         when (putNote) {
             is Result.Error -> Timber.tag("MyTag").e("putNote: error")
@@ -80,4 +81,14 @@ class KtorRemoteNoteDataSource(
         )
     }
 
+    override suspend fun logout(refreshToken: String): EmptyResult<DataError.Network> {
+        val accessTokenRequest = AccessTokenRequest(refreshToken = refreshToken)
+        return httpClient.post<AccessTokenRequest, Unit>(
+            route = ApiEndpoints.LOGOUT_ENDPOINT,
+            body = accessTokenRequest
+        ).mapToResult(
+            success = {},
+            networkError = { it.toDataErrorNetwork() }
+        )
+    }
 }
