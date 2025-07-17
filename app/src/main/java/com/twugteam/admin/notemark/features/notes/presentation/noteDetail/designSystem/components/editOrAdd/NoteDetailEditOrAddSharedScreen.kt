@@ -1,19 +1,20 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components
+package com.twugteam.admin.notemark.features.notes.presentation.noteDetail.designSystem.components.editOrAdd
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 
 @Composable
-fun UpsertNoteSharedScreen(
+fun NoteDetailEditOrAddSharedScreen(
     modifier: Modifier,
     topBarContent: @Composable (() -> Unit?)?,
     scaffoldContent: @Composable ((PaddingValues) -> Unit),
 ) {
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.imePadding(),
         topBar = {
             topBarContent?.let { it() }
         },

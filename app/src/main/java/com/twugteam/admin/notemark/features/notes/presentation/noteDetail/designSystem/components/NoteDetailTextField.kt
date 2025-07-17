@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components
+package com.twugteam.admin.notemark.features.notes.presentation.noteDetail.designSystem.components
 
 import androidx.annotation.StringRes
 import androidx.compose.material3.MaterialTheme
@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 
 @Composable
-fun UpsertNoteTextField(
+fun NoteDetailTextField(
     modifier: Modifier = Modifier,
     value: String?,
     @StringRes placeHolderResId: Int,

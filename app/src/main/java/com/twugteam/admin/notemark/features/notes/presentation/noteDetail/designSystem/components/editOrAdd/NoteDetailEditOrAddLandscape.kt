@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components
+package com.twugteam.admin.notemark.features.notes.presentation.noteDetail.designSystem.components.editOrAdd
 
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -24,7 +24,7 @@ import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 
 @Composable
-fun UpsertNoteLandscape(
+fun NoteDetailEditOrAddLandscape(
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     onSaveNote: () -> Unit,

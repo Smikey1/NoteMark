@@ -1,5 +1,6 @@
 package com.twugteam.admin.notemark.core.presentation.ui
 
+import java.time.Duration
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -20,4 +21,17 @@ fun ZonedDateTime.formatAsNoteDate(): String {
         DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH)
     }
     return formatter.format(localDate).uppercase(Locale.ENGLISH)
+}
+
+//convert ZonedDateTime into String
+fun formatToViewMode(dateTime: ZonedDateTime): String {
+    val now = ZonedDateTime.now(dateTime.zone)
+    val duration = Duration.between(dateTime, now)
+
+    return if (duration.toMinutes() < 5) {
+        "Just now"
+    } else {
+        val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm")
+        dateTime.format(formatter)
+    }
 }

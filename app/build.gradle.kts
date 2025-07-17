@@ -109,8 +109,6 @@ dependencies {
     // Splashscreen & Widget
     implementation(libs.androidx.core.splashscreen)
 
-//    implementation(libs.bundles.widget.glance)
-
     // Database - Room
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)

@@ -93,7 +93,7 @@ fun NoteListSharedScreen(
                         )
                     )
                     .clickable {
-                        onActions(NoteListActions.NavigateToUpsertNote(noteId = null))
+                        onActions(NoteListActions.NavigateToNoteDetail(noteId = null))
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -119,7 +119,7 @@ fun NoteListSharedScreen(
                     noteMarkList = state.notes,
                     staggeredGridCells = staggeredGridCells,
                     onNoteClick = { noteUi ->
-                        onActions(NoteListActions.NavigateToUpsertNote(noteId = noteUi.id))
+                        onActions(NoteListActions.NavigateToNoteDetail(noteId = noteUi.id))
                     },
                     onNoteDelete = { noteUi ->
                         onActions(NoteListActions.OnNoteDelete(noteId = noteUi.id!!))

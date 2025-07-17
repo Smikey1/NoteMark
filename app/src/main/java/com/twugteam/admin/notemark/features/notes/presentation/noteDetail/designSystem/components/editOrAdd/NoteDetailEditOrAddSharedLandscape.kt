@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components
+package com.twugteam.admin.notemark.features.notes.presentation.noteDetail.designSystem.components.editOrAdd
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,13 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteActions
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteUiState
+import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.NoteDetailActions
+import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.NoteDetailUiState
+import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.designSystem.components.NoteDetailTextField
 
 @Composable
-fun UpsertNoteSharedLandscape(
-    state: UpsertNoteUiState,
-    onActions: (UpsertNoteActions) -> Unit,
+fun NoteDetailEditOrAddSharedLandscape(
+    state: NoteDetailUiState,
+    onActions: (NoteDetailActions) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -33,26 +34,26 @@ fun UpsertNoteSharedLandscape(
             .verticalScroll(state = rememberScrollState())
             .imePadding()
     ) {
-        UpsertNoteLandscape(
+        NoteDetailEditOrAddLandscape(
             modifier = Modifier.fillMaxWidth(),
             onCloseClick = {
-                onActions(UpsertNoteActions.OnCloseIconClick)
+                onActions(NoteDetailActions.OnCloseIconClick)
             },
             onSaveNote = {
-                onActions(UpsertNoteActions.OnSaveNoteClick)
+                onActions(NoteDetailActions.OnSaveNoteDetailClick)
             },
             saveNoteEnabled = state.noteUi != null && state.noteUi.title.isNotBlank() && state.noteUi.content.isNotBlank(),
             isLoading = state.isLoading,
         ) { contentModifier ->
-            UpsertNoteLandscapeContent(
+            NoteDetailEditOrAddLandscapeContent(
                 modifier = contentModifier,
                 titleValue = state.noteUi?.title ?: "",
                 onTitleValueChange = { newTitle ->
-                    onActions(UpsertNoteActions.UpdateNoteUiTitle(noteTitle = newTitle))
+                    onActions(NoteDetailActions.UpdateNoteDetailUiTitle(noteTitle = newTitle))
                 },
                 contentValue = state.noteUi?.content ?: "",
                 onContentValueChange = { newContent ->
-                    onActions(UpsertNoteActions.UpdateNoteUiContent(noteContent = newContent))
+                    onActions(NoteDetailActions.UpdateNoteDetailUiContent(noteContent = newContent))
                 }
             )
         }
@@ -69,13 +70,13 @@ fun UpsertNoteSharedLandscape(
             dismissButtonId = state.dismissButtonId,
             onConfirmClick = {
                 if (state.isSaveNote) {
-                    onActions(UpsertNoteActions.SaveNote(noteUi = state.noteUi!!))
+                    onActions(NoteDetailActions.SaveNoteDetail(noteUi = state.noteUi!!))
                 } else {
-                    onActions(UpsertNoteActions.Close)
+                    onActions(NoteDetailActions.Close)
                 }
             },
             onDismissClick = {
-                onActions(UpsertNoteActions.OnDialogDismiss)
+                onActions(NoteDetailActions.OnDialogDismiss)
             },
         )
 
@@ -90,7 +91,7 @@ fun UpsertNoteSharedLandscape(
 }
 
 @Composable
-fun UpsertNoteLandscapeContent(
+fun NoteDetailEditOrAddLandscapeContent(
     modifier: Modifier,
     titleValue: String,
     onTitleValueChange: (String) -> Unit,
@@ -100,7 +101,7 @@ fun UpsertNoteLandscapeContent(
     Column(
         modifier = modifier
     ) {
-        UpsertNoteTextField(
+        NoteDetailTextField(
             modifier = Modifier
                 .fillMaxWidth(),
             value = titleValue,
@@ -118,7 +119,7 @@ fun UpsertNoteLandscapeContent(
             gainFocus = true
         )
 
-        UpsertNoteTextField(
+        NoteDetailTextField(
             modifier = Modifier
                 .fillMaxWidth().heightIn(min = 60.dp),
             value = contentValue,

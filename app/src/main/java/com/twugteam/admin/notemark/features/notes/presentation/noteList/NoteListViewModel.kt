@@ -48,7 +48,7 @@ class NoteListViewModel(
 
     fun onActions(noteListActions: NoteListActions) {
         when (noteListActions) {
-            is NoteListActions.NavigateToUpsertNote -> navigateToUpsertNote(noteId = noteListActions.noteId)
+            is NoteListActions.NavigateToNoteDetail -> navigateToNoteDetail(noteId = noteListActions.noteId)
             is NoteListActions.OnNoteDelete -> noteToDelete(noteId = noteListActions.noteId)
             NoteListActions.OnDialogConfirm -> deleteNote()
             NoteListActions.OnDialogDismiss -> onDialogCancel()
@@ -116,9 +116,9 @@ class NoteListViewModel(
         }
     }
 
-    private fun navigateToUpsertNote(noteId: String?) {
+    private fun navigateToNoteDetail(noteId: String?) {
         viewModelScope.launch {
-            _events.send(NoteListEvents.NavigateToUpsertNote(noteId))
+            _events.send(NoteListEvents.NavigateToNoteDetail(noteId))
         }
     }
 

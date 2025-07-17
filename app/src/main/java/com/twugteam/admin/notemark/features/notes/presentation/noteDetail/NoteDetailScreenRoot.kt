@@ -1,27 +1,29 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote
+package com.twugteam.admin.notemark.features.notes.presentation.noteDetail
 
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.twugteam.admin.notemark.core.presentation.ui.DeviceConfiguration
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.screens.landscape.UpsertNoteScreenMobileLandscape
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.screens.landscape.UpsertNoteScreenTabletLandscape
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.screens.portrait.UpsertNoteScreenMobilePortrait
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.screens.portrait.UpsertNoteScreenTabletPortrait
+import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.screens.landscape.NoteDetailScreenMobileLandscape
+import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.screens.landscape.NoteDetailScreenTabletLandscape
+import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.screens.portrait.NoteDetailScreenMobilePortrait
+import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.screens.portrait.NoteDetailScreenTabletPortrait
+import timber.log.Timber
 
 @Composable
-fun UpsertNoteScreenRoot(
+fun NoteDetailScreenRoot(
     modifier: Modifier = Modifier,
     windowSizeClass: WindowSizeClass,
-    state: UpsertNoteUiState,
-    onActions: (UpsertNoteActions) -> Unit,
+    state: NoteDetailUiState,
+    onActions: (NoteDetailActions) -> Unit,
 ) {
     val deviceConfiguration =
         DeviceConfiguration.fromWindowSizeClass(windowSizeClass = windowSizeClass)
 
     when (deviceConfiguration) {
         DeviceConfiguration.MOBILE_PORTRAIT -> {
-            UpsertNoteScreenMobilePortrait(
+            Timber.tag("WindowSize").d("MOBILE_PORTRAIT")
+            NoteDetailScreenMobilePortrait(
                 modifier = modifier,
                 state = state,
                 onActions = onActions,
@@ -29,7 +31,8 @@ fun UpsertNoteScreenRoot(
         }
 
         DeviceConfiguration.MOBILE_LANDSCAPE -> {
-            UpsertNoteScreenMobileLandscape(
+            Timber.tag("WindowSize").d("MOBILE_LANDSCAPE")
+            NoteDetailScreenMobileLandscape(
                 modifier = modifier,
                 state = state,
                 onActions = onActions,
@@ -37,7 +40,8 @@ fun UpsertNoteScreenRoot(
         }
 
         DeviceConfiguration.TABLET_PORTRAIT -> {
-            UpsertNoteScreenTabletPortrait(
+            Timber.tag("WindowSize").d("TABLET_PORTRAIT")
+            NoteDetailScreenTabletPortrait(
                 modifier = modifier,
                 state = state,
                 onActions = onActions,
@@ -45,7 +49,8 @@ fun UpsertNoteScreenRoot(
         }
 
         DeviceConfiguration.TABLET_LANDSCAPE -> {
-            UpsertNoteScreenTabletLandscape(
+            Timber.tag("WindowSize").d("TABLET_LANDSCAPE")
+            NoteDetailScreenTabletLandscape(
                 modifier = modifier,
                 state = state,
                 onActions = onActions,
@@ -53,7 +58,7 @@ fun UpsertNoteScreenRoot(
         }
 
         DeviceConfiguration.DESKTOP -> {
-            TODO()
+
         }
     }
 }

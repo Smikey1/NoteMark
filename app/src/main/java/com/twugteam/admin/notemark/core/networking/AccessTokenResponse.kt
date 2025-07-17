@@ -1,9 +1,12 @@
 package com.twugteam.admin.notemark.core.networking
 
+import androidx.annotation.Keep
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Keep
 @Serializable
 data class AccessTokenResponse(
-    val accessToken: String,
-    val refreshToken: String,
+    @SerialName("accessToken") val accessToken: String,
+    @SerialName("refreshToken") val refreshToken: String,
 )

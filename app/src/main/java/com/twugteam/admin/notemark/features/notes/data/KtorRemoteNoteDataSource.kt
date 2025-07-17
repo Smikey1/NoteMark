@@ -67,7 +67,7 @@ class KtorRemoteNoteDataSource(
         )
         when (putNote) {
             is Result.Error -> Timber.tag("MyTag").e("putNote: error")
-            is Result.Success -> Timber.tag("MyTag").d("putNote: success $note")
+            is Result.Success -> Timber.tag("MyTag").d("putNote: success ${note.title}")
         }
         return putNote
     }

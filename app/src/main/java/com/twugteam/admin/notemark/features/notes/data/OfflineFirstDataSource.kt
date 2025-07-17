@@ -53,7 +53,7 @@ class OfflineFirstDataSource(
         }
     }
 
-    override suspend fun upsertNote(note: Note, isEditing: Boolean): EmptyResult<DataError> {
+    override suspend fun upsertNote(note: Note, isAdd: Boolean): EmptyResult<DataError> {
         val localResult = localNoteDataSource.upsertNote(note)
         if (localResult !is Result.Success) {
             return localResult.asEmptyDataResult()
@@ -63,7 +63,9 @@ class OfflineFirstDataSource(
         //localNoteDataSource.upsertNote(note) returns NoteEntity.Id when success
         val noteWithId = note.copy(id = localResult.data)
 
-        val remoteDataSource = if (!isEditing) {
+        //adding new note (isAdd)
+        //updating existing note (!isAdd)
+        val remoteDataSource = if (isAdd) {
             remoteNoteDataSource.postNote(noteWithId)
         } else {
             remoteNoteDataSource.putNote(noteWithId)
@@ -74,7 +76,7 @@ class OfflineFirstDataSource(
                 .e("remoteDataSource error is : ${remoteDataSource.error}")
 
             is Result.Success -> {
-                Timber.tag("MyTag").d("remoteDataSource success is : ${remoteDataSource.data}")
+                Timber.tag("MyTag").d("remoteDataSource success is : ${remoteDataSource.data.title}")
                 localNoteDataSource.upsertNote(remoteDataSource.data)
             }
         }

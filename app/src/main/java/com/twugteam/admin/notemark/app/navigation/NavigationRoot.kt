@@ -1,5 +1,6 @@
 package com.twugteam.admin.notemark.app.navigation
 
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
@@ -26,7 +27,7 @@ fun NavigationRoot(
         )
 
         noteGraph(
-            modifier = Modifier.statusBarsPadding(),
+            modifier = Modifier.statusBarsPadding().navigationBarsPadding(),
             navController = navController,
             windowSizeClass = windowSizeClass
         )

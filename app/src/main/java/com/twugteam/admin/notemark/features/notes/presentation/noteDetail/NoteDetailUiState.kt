@@ -1,11 +1,13 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote
+package com.twugteam.admin.notemark.features.notes.presentation.noteDetail
 
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 
-data class UpsertNoteUiState(
+data class NoteDetailUiState(
     val noteUi: NoteUi? = null,
-    val isEdit: Boolean = false,
+    val originalNote: NoteUi? = null,
+    val mode: Mode = Mode(),
+    val isReadModeActivate: Boolean = false,
     val isLoading: Boolean = false,
     val showDialog: Boolean = false,
     val titleResId: Int = R.string.dialog_save_title,
@@ -13,4 +15,11 @@ data class UpsertNoteUiState(
     val confirmButtonId: Int = R.string.save,
     val dismissButtonId: Int = R.string.cancel,
     val isSaveNote: Boolean = true,
+)
+
+data class Mode(
+    val isView: Boolean = false,
+    val isReader: Boolean = false,
+    val isEdit: Boolean = false,
+    val isAdd: Boolean = false
 )

@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.presentation.upsertNote.designSystem.components
+package com.twugteam.admin.notemark.features.notes.presentation.noteDetail.designSystem.components.editOrAdd
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,13 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteActions
-import com.twugteam.admin.notemark.features.notes.presentation.upsertNote.UpsertNoteUiState
+import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.NoteDetailActions
+import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.NoteDetailUiState
+import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.designSystem.components.NoteDetailTextField
 
 @Composable
-fun UpsertNotePortraitContent(
-    state: UpsertNoteUiState,
-    onActions: (UpsertNoteActions) -> Unit,
+fun NoteDetailEditOrAddPortraitContent(
+    state: NoteDetailUiState,
+    onActions: (NoteDetailActions) -> Unit,
     paddingValues: PaddingValues
 ) {
     Box(
@@ -34,18 +35,18 @@ fun UpsertNotePortraitContent(
     ) {
         Column(
             modifier = Modifier
+                .padding(top = paddingValues.calculateTopPadding())
                 .fillMaxSize()
-                .verticalScroll(state = rememberScrollState())
-                .padding(top = paddingValues.calculateTopPadding()),
+                .verticalScroll(state = rememberScrollState()),
             horizontalAlignment = Alignment.Start
         ) {
-            UpsertNoteTextField(
+            NoteDetailTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
                 value = state.noteUi?.title,
                 placeHolderResId = R.string.note_title,
                 onValueChange = { newTitle ->
-                    onActions(UpsertNoteActions.UpdateNoteUiTitle(noteTitle = newTitle))
+                    onActions(NoteDetailActions.UpdateNoteDetailUiTitle(noteTitle = newTitle))
                 },
                 showIndicator = true,
                 textFieldStyle = MaterialTheme.typography.titleMedium.copy(
@@ -59,13 +60,13 @@ fun UpsertNotePortraitContent(
                 gainFocus = true
             )
 
-            UpsertNoteTextField(
+            NoteDetailTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 60.dp),
                 value = state.noteUi?.content,
                 onValueChange = { newContent ->
-                    onActions(UpsertNoteActions.UpdateNoteUiContent(noteContent = newContent))
+                    onActions(NoteDetailActions.UpdateNoteDetailUiContent(noteContent = newContent))
                 },
                 placeHolderResId = R.string.note_content,
                 showIndicator = false,
@@ -92,13 +93,13 @@ fun UpsertNotePortraitContent(
             dismissButtonId = state.dismissButtonId,
             onConfirmClick = {
                 if (state.isSaveNote) {
-                    onActions(UpsertNoteActions.SaveNote(noteUi = state.noteUi!!))
+                    onActions(NoteDetailActions.SaveNoteDetail(noteUi = state.noteUi!!))
                 } else {
-                    onActions(UpsertNoteActions.Close)
+                    onActions(NoteDetailActions.Close)
                 }
             },
             onDismissClick = {
-                onActions(UpsertNoteActions.OnDialogDismiss)
+                onActions(NoteDetailActions.OnDialogDismiss)
             },
         )
 
