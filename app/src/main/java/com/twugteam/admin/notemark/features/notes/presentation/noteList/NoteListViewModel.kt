@@ -3,34 +3,48 @@ package com.twugteam.admin.notemark.features.notes.presentation.noteList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
+import com.twugteam.admin.notemark.core.domain.network.ConnectivityObserver
 import com.twugteam.admin.notemark.core.presentation.ui.toNoteUi
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.util.getInitial
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class NoteListViewModel(
     private val noteRepository: NoteRepository,
     private val sessionStorage: SessionStorage,
+    private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
     private val _state: MutableStateFlow<NoteListUiState> = MutableStateFlow(NoteListUiState())
-    val state = _state.onStart {
-        //getUsername() and getNotes() run in parallel
-        //because getNotes() launch in a viewmodelScope.launch{}
-        getNotes()
-        getUsername()
+    val state = _state.asStateFlow()
 
-    }.stateIn(
-        scope = viewModelScope,
-        initialValue = NoteListUiState(),
-        started = SharingStarted.WhileSubscribed(5000)
-    )
+    init {
+        viewModelScope.launch {
+            //getNetworkConnectivity(), getUsername() and getNotes() run in parallel
+            //because getNetworkConnectivity() and getNotes() launch in a viewmodelScope.launch{}
+            getNetworkConnectivity()
+            getNotes()
+            getUsername()
+        }
+    }
+
+    private fun getNetworkConnectivity() {
+        viewModelScope.launch {
+            connectivityObserver.isConnected.collect { isConnected ->
+                Timber.tag("NetworkConnectivity").d("viewModel: $isConnected")
+                _state.update { newState ->
+                    newState.copy(
+                        isConnected = isConnected
+                    )
+                }
+            }
+        }
+    }
 
     private suspend fun getUsername() {
         val username = sessionStorage.getAuthInfo()?.username
@@ -122,7 +136,7 @@ class NoteListViewModel(
         }
     }
 
-    private fun navigateToSettings(){
+    private fun navigateToSettings() {
         viewModelScope.launch {
             _events.send(NoteListEvents.NavigateToSettings)
         }

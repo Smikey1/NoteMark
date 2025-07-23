@@ -62,6 +62,7 @@ changes will be lost.</string>
     <string name="edit">Edit</string>
     <string name="view">View</string>
     <string name="reader">"Reader "</string>
+    <string name="cloud_off">Cloud Off\n</string>
 
 
 </resources>

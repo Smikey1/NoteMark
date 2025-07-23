@@ -8,4 +8,5 @@ data class NoteListUiState(
     val showDialog: Boolean = false,
     val noteToDeleteId: String? = null,
     val isLoading: Boolean = false,
+    val isConnected: Boolean = false
 )

@@ -34,4 +34,8 @@ object NoteMarkIcons {
     val Back: ImageVector
     @Composable
     get() = ImageVector.vectorResource(R.drawable.back)
+
+    val CloudOff: ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(R.drawable.cloudoff)
 }

@@ -2,8 +2,10 @@ package com.twugteam.admin.notemark.core.di
 
 import androidx.room.Room
 import com.twugteam.admin.notemark.core.data.auth.EncryptedSessionStorage
+import com.twugteam.admin.notemark.core.data.network.NetworkConnectivityObserver
 import com.twugteam.admin.notemark.core.database.notes.NoteDatabase
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
+import com.twugteam.admin.notemark.core.domain.network.ConnectivityObserver
 import com.twugteam.admin.notemark.core.networking.HttpClientFactory
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.singleOf
@@ -26,6 +28,8 @@ val coreModule = module {
             name = "notes.db"
         ).build()
     }
+
+    singleOf(::NetworkConnectivityObserver).bind<ConnectivityObserver>()
 
     single {
         get<NoteDatabase>().noteDao

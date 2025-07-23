@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
+import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons.CloudOff
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
@@ -70,6 +71,7 @@ fun NoteListSharedScreen(
                 modifier = Modifier
                     .background(color = MaterialTheme.colorScheme.onPrimary)
                     .padding(topBarPaddingValues),
+                isConnected = state.isConnected,
                 username = state.username,
                 onSettingsClick = {
                     onActions(NoteListActions.NavigateToSettings)
@@ -168,6 +170,7 @@ fun NoteListSharedScreen(
 @Composable
 fun NoteListTopBar(
     modifier: Modifier = Modifier,
+    isConnected: Boolean,
     username: String,
     onSettingsClick: () -> Unit,
 ) {
@@ -176,14 +179,31 @@ fun NoteListTopBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
+        Row(
             modifier = Modifier.weight(1f),
-            text = stringResource(R.string.noteMark),
-            style = MaterialTheme.typography.titleSmall.copy(
-                fontSize = 20.sp, lineHeight = 24.sp, letterSpacing = 0.sp,
-                fontWeight = FontWeight.Bold
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier,
+                text = stringResource(R.string.noteMark),
+                style = MaterialTheme.typography.titleSmall.copy(
+                    fontSize = 20.sp, lineHeight = 24.sp, letterSpacing = 0.sp,
+                    fontWeight = FontWeight.Bold
+                )
             )
-        )
+
+            //!isConnected = no internet connection available
+            if(!isConnected)
+                Icon(
+                    modifier = Modifier.padding(start = 10.dp),
+                    imageVector = CloudOff,
+                    contentDescription = stringResource(R.string.cloud_off),
+                    tint = Color.Unspecified
+                )
+
+        }
+
 
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -261,7 +281,9 @@ fun NoteListItem(
 ) {
     NoteMarkTheme {
         Surface(
-            modifier = modifier.combinedClickable(
+            //clip is used because when using shape if we click. longClick on the item it will show background
+            //without roundedCornerRadius
+            modifier = modifier.clip(MaterialTheme.shapes.small).combinedClickable(
                 onClick = {
                     onNoteClick(noteUi)
                 },
@@ -270,7 +292,6 @@ fun NoteListItem(
                 }
             ),
             color = SurfaceLowest,
-            shape = MaterialTheme.shapes.small
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
