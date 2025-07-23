@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -16,6 +15,7 @@ import androidx.navigation.navigation
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.LandingBackground
 import com.twugteam.admin.notemark.core.presentation.ui.ObserveAsEvents
+import com.twugteam.admin.notemark.core.presentation.ui.UiText
 import com.twugteam.admin.notemark.features.auth.presentation.ui.landing.LandingEvents
 import com.twugteam.admin.notemark.features.auth.presentation.ui.landing.LandingScreenRoot
 import com.twugteam.admin.notemark.features.auth.presentation.ui.landing.LandingScreenViewModel
@@ -111,18 +111,17 @@ fun NavGraphBuilder.authGraph(
             val registerViewModel = koinViewModel<RegisterViewModel>()
             val registerState by registerViewModel.state.collectAsStateWithLifecycle()
 
-            val context = LocalContext.current
             val keyboardController = LocalSoftwareKeyboardController.current
 
             ObserveAsEvents(registerViewModel.events) { events ->
                 when (events) {
                     is RegisterEvents.RegistrationError -> {
                         keyboardController?.hide()
-                        registerViewModel.showSnackBar(errorMessage = events.error.asString(context))
+                        registerViewModel.showSnackBar(errorMessage = events.error)
                     }
 
                     RegisterEvents.RegistrationSuccess -> {
-                        registerViewModel.showSnackBar(errorMessage = context.getString(R.string.registration_successful))
+                        registerViewModel.showSnackBar(errorMessage = UiText.StringResource(R.string.registration_successful))
                         navController.navigate(Screens.LogIn){
                             popUpTo<Screens.Register>{
                                 inclusive = true

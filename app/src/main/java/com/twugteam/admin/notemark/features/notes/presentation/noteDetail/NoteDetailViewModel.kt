@@ -1,11 +1,11 @@
 package com.twugteam.admin.notemark.features.notes.presentation.noteDetail
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.domain.util.Result
+import com.twugteam.admin.notemark.core.presentation.ui.UiText
 import com.twugteam.admin.notemark.core.presentation.ui.toNote
 import com.twugteam.admin.notemark.core.presentation.ui.toNoteUi
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
@@ -89,18 +89,18 @@ class NoteDetailViewModel(
             is NoteDetailActions.UpdateNoteDetailUiTitle -> updateNoteUiTitle(noteTitle = noteDetailActions.noteTitle)
             NoteDetailActions.OnDialogDismiss -> onDialogCancel()
             NoteDetailActions.OnSaveNoteDetailClick -> onDialogShow(
-                titleResId = R.string.dialog_save_title,
-                bodyResId = R.string.dialog_save_body_text,
-                confirmButtonId = R.string.save,
-                dismissButtonId = R.string.cancel,
+                titleResId = UiText.StringResource(R.string.dialog_save_title),
+                bodyResId = UiText.StringResource(R.string.dialog_save_body_text),
+                confirmButtonId = UiText.StringResource(R.string.save),
+                dismissButtonId = UiText.StringResource(R.string.cancel),
                 isSaveNote = true,
             )
 
             NoteDetailActions.OnCloseIconClick -> onDialogShow(
-                titleResId = R.string.dialog_discard_title,
-                bodyResId = R.string.dialog_discard_body_text,
-                confirmButtonId = R.string.discard,
-                dismissButtonId = R.string.keep_editing,
+                titleResId = UiText.StringResource(R.string.dialog_discard_title),
+                bodyResId = UiText.StringResource(R.string.dialog_discard_body_text),
+                confirmButtonId = UiText.StringResource(R.string.discard),
+                dismissButtonId = UiText.StringResource(R.string.keep_editing),
                 isSaveNote = false,
             )
 
@@ -209,10 +209,10 @@ class NoteDetailViewModel(
     }
 
     private fun onDialogShow(
-        @StringRes titleResId: Int,
-        @StringRes bodyResId: Int,
-        @StringRes confirmButtonId: Int,
-        @StringRes dismissButtonId: Int,
+        titleResId: UiText,
+        bodyResId: UiText,
+        confirmButtonId: UiText,
+        dismissButtonId: UiText,
         isSaveNote: Boolean,
     ) {
         _state.update { newState ->

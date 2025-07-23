@@ -1,6 +1,5 @@
 package com.twugteam.admin.notemark.core.presentation.designsystem.components
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -12,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 
@@ -21,11 +19,11 @@ import androidx.compose.ui.unit.dp
 fun NoteMarkDialog(
     modifier: Modifier = Modifier,
     showDialog: Boolean,
-    @StringRes titleResId: Int,
+    titleResId: String,
     isLoading: Boolean,
-    @StringRes bodyResId: Int,
-    @StringRes confirmButtonId: Int,
-    @StringRes dismissButtonId: Int,
+    bodyResId: String,
+    confirmButtonId: String,
+    dismissButtonId: String,
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit,
     ) {
@@ -34,7 +32,7 @@ fun NoteMarkDialog(
             title = {
                 Text(
                     modifier = Modifier,
-                    text = stringResource(titleResId),
+                    text = titleResId,
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.primary,
                     )
@@ -44,7 +42,7 @@ fun NoteMarkDialog(
                 if (!isLoading) {
                     Text(
                         modifier = Modifier,
-                        text = stringResource(bodyResId),
+                        text = bodyResId,
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -62,7 +60,7 @@ fun NoteMarkDialog(
             modifier = modifier,
             confirmButton = {
                 NoteMarkActionButton(
-                    text = stringResource(confirmButtonId),
+                    text = confirmButtonId,
                     isLoading = false,
                     modifier = Modifier,
                     enabled = !isLoading,
@@ -71,7 +69,7 @@ fun NoteMarkDialog(
             },
             dismissButton = {
                 NoteMarkActionButton(
-                    text = stringResource(dismissButtonId),
+                    text = dismissButtonId,
                     isLoading = false,
                     modifier = Modifier,
                     enabled = !isLoading,

@@ -86,11 +86,11 @@ fun NoteDetailEditOrAddPortraitContent(
                 .fillMaxWidth()
                 .align(Alignment.Center),
             showDialog = state.showDialog,
-            titleResId = state.titleResId,
+            titleResId = state.titleResId.asString(),
             isLoading = state.isLoading,
-            bodyResId = state.bodyResId,
-            confirmButtonId = state.confirmButtonId,
-            dismissButtonId = state.dismissButtonId,
+            bodyResId = state.bodyResId.asString(),
+            confirmButtonId = state.confirmButtonId.asString(),
+            dismissButtonId = state.dismissButtonId.asString(),
             onConfirmClick = {
                 if (state.isSaveNote) {
                     onActions(NoteDetailActions.SaveNoteDetail(noteUi = state.noteUi!!))

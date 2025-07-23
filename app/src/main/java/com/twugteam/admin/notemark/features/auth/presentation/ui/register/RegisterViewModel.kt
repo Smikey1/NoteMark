@@ -159,7 +159,7 @@ class RegisterViewModel(
         }
     }
 
-    fun showSnackBar(errorMessage: String) {
+    fun showSnackBar(errorMessage: UiText) {
         viewModelScope.launch {
             _state.update { newState ->
                 newState.copy(
@@ -172,7 +172,7 @@ class RegisterViewModel(
             _state.update { newState ->
                 newState.copy(
                     showSnackBar = false,
-                    snackBarText = ""
+                    snackBarText = UiText.DynamicString("")
                 )
             }
         }

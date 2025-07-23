@@ -24,7 +24,7 @@ fun RegisterScreenTabletPortrait(
         title = R.string.create_account,
         description = R.string.capture_your_thoughts_and_ideas,
         showSnackBar = state.showSnackBar,
-        snackBarText = state.snackBarText
+        snackBarText = state.snackBarText.asString()
     ) { contentModifier ->
         RegisterContent(
             modifier = contentModifier,

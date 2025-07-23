@@ -21,7 +21,7 @@ fun RegisterScreenTabletLandscape(
         isPortrait = false,
         halfContent = false,
         showSnackBar = state.showSnackBar,
-        snackBarText = state.snackBarText
+        snackBarText = state.snackBarText.asString()
     ) { contentModifier ->
         RegisterContent(
             modifier = contentModifier,

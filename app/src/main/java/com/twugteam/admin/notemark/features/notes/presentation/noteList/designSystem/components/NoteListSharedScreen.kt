@@ -131,11 +131,11 @@ fun NoteListSharedScreen(
                         .fillMaxWidth()
                         .align(Alignment.Center),
                     showDialog = state.showDialog,
-                    titleResId = R.string.dialog_delete_title,
+                    titleResId = stringResource(R.string.dialog_delete_title),
                     isLoading = state.isLoading,
-                    bodyResId = R.string.dialog_delete_body_text,
-                    confirmButtonId = R.string.delete,
-                    dismissButtonId = R.string.cancel,
+                    bodyResId = stringResource(R.string.dialog_delete_body_text),
+                    confirmButtonId = stringResource(R.string.delete),
+                    dismissButtonId = stringResource(R.string.cancel),
                     onConfirmClick = {
                         onActions(NoteListActions.OnDialogConfirm)
                     },

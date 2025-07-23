@@ -33,7 +33,7 @@ data class RegisterUiState(
     val isRegistering: Boolean = false,
     val canRegister: Boolean = false,
     val showSnackBar: Boolean = false,
-    val snackBarText: String = ""
+    val snackBarText: UiText = UiText.DynamicString("")
 )
 
 data class InputFieldState(

@@ -22,7 +22,7 @@ fun RegisterScreenMobileLandscape(
         description = R.string.capture_your_thoughts_and_ideas,
         isPortrait = false,
         showSnackBar = state.showSnackBar,
-        snackBarText = state.snackBarText
+        snackBarText = state.snackBarText.asString()
     ) { contentModifier ->
         RegisterContent(
             modifier = contentModifier,
