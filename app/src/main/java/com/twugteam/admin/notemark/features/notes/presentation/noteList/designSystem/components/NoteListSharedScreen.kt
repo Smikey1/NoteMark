@@ -194,7 +194,7 @@ fun NoteListTopBar(
             )
 
             //!isConnected = no internet connection available
-            if(!isConnected)
+            if (!isConnected)
                 Icon(
                     modifier = Modifier.padding(start = 10.dp),
                     imageVector = CloudOff,
@@ -283,14 +283,16 @@ fun NoteListItem(
         Surface(
             //clip is used because when using shape if we click. longClick on the item it will show background
             //without roundedCornerRadius
-            modifier = modifier.clip(MaterialTheme.shapes.small).combinedClickable(
-                onClick = {
-                    onNoteClick(noteUi)
-                },
-                onLongClick = {
-                    onNoteDelete(noteUi)
-                }
-            ),
+            modifier = modifier
+                .clip(MaterialTheme.shapes.small)
+                .combinedClickable(
+                    onClick = {
+                        onNoteClick(noteUi)
+                    },
+                    onLongClick = {
+                        onNoteDelete(noteUi)
+                    }
+                ),
             color = SurfaceLowest,
         ) {
             Column(
@@ -322,6 +324,7 @@ fun NoteListItem(
                 )
             }
         }
-
     }
 }
+
+

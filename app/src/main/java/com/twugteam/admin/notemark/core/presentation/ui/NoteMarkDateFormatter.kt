@@ -35,3 +35,4 @@ fun formatToViewMode(dateTime: ZonedDateTime): String {
         dateTime.format(formatter)
     }
 }
+

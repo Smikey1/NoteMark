@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.data
+package com.twugteam.admin.notemark.features.notes.data.dataSource
 
 import android.database.sqlite.SQLiteFullException
 import com.twugteam.admin.notemark.core.database.mappers.toNote
@@ -37,21 +37,13 @@ class RoomLocalNoteDataSource(
         }
     }
 
-    override suspend fun upsertNotes(notes: List<Note>): Result<List<NoteId>, DataError.Local> {
+    override suspend fun deleteNoteById(id: NoteId): Result<Unit, DataError.Local> {
         return try {
-            val noteEntities = notes.map {
-                it.toNoteEntity()
-            }
-            noteDao.upsertNotes(noteEntities)
-            Result.Success(noteEntities.map { it.id })
-        } catch (_: SQLiteFullException) {
-            val error: DataError.Local = DataError.Local.DiskFull
-            Result.Error(error)
+            noteDao.deleteNoteById(id)
+            Result.Success(Unit)
+        } catch (e: Exception){
+            Result.Error(DataError.Local.Unknown(unknownError = "${e.localizedMessage}"))
         }
-    }
-
-    override suspend fun deleteNoteById(id: NoteId) {
-        noteDao.deleteNoteById(id)
     }
 
     override suspend fun clearNotes(): Result<Unit, DataError.Local> {

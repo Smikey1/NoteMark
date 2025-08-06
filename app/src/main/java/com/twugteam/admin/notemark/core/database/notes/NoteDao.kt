@@ -10,11 +10,9 @@ interface NoteDao {
     @Upsert
     suspend fun upsertNote(noteEntity: NoteEntity)
 
-    @Upsert
-    suspend fun upsertNotes(notesEntities: List<NoteEntity>)
-
     @Query("select * from NoteEntity where id = :id")
     suspend fun getNoteById(id: String): NoteEntity
+
     @Query("select * from NoteEntity order by lastEditedAt desc")
     fun getAllNotes(): Flow<List<NoteEntity>>
 

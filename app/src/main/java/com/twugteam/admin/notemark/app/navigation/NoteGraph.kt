@@ -43,6 +43,7 @@ fun NavGraphBuilder.noteGraph(
             val noteListViewModel = koinViewModel<NoteListViewModel>()
             val noteListState by noteListViewModel.state.collectAsStateWithLifecycle()
 
+
             ObserveAsEvents(noteListViewModel.events) { event ->
                 when (event) {
                     is NoteListEvents.NavigateToNoteDetail -> navController.navigate(
@@ -78,13 +79,14 @@ fun NavGraphBuilder.noteGraph(
                 }
             }
 
-            val deviceType = DeviceConfiguration.fromWindowSizeClass(windowSizeClass = windowSizeClass)
+            val deviceType =
+                DeviceConfiguration.fromWindowSizeClass(windowSizeClass = windowSizeClass)
 
             //Tablet doesn't allow force orientation only mobile does
             LaunchedEffect(state.mode) {
-                if(state.mode.isReader && deviceType != DeviceConfiguration.TABLET_PORTRAIT){
+                if (state.mode.isReader && deviceType != DeviceConfiguration.TABLET_PORTRAIT) {
                     activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                }else{
+                } else {
                     activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                 }
             }
@@ -114,11 +116,11 @@ fun NavGraphBuilder.noteGraph(
             val settingsViewModel = koinViewModel<SettingsViewModel>()
             val state by settingsViewModel.state.collectAsStateWithLifecycle()
 
-            ObserveAsEvents(settingsViewModel.events) { event->
-                when(event){
+            ObserveAsEvents(settingsViewModel.events) { event ->
+                when (event) {
                     SettingsEvents.OnBack -> navController.navigateUp()
-                    SettingsEvents.OnLogout -> navController.navigate(Screens.LogIn){
-                        popUpTo(Screens.NoteGraph){
+                    SettingsEvents.OnLogout -> navController.navigate(Screens.LogIn) {
+                        popUpTo(Screens.NoteGraph) {
                             inclusive = true
                         }
                     }

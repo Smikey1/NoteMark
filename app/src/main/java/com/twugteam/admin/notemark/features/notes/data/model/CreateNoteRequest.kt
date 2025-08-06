@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.data
+package com.twugteam.admin.notemark.features.notes.data.model
 
 import androidx.annotation.Keep
 import kotlinx.serialization.SerialName

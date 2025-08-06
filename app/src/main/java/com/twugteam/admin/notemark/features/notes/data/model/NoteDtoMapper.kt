@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.data
+package com.twugteam.admin.notemark.features.notes.data.model
 
 import com.twugteam.admin.notemark.core.domain.notes.Note
 import java.time.Instant
@@ -13,6 +13,17 @@ fun NoteDto.toNote(): Note {
         lastEditedAt = Instant.parse(lastEditedAt).atZone(ZoneId.of("UTC")),
     )
 }
+
+fun Note.toDto(): NoteDto {
+    return NoteDto(
+        id = id ?: "",
+        title = title,
+        content = content,
+        createdAt = createdAt.toInstant().toString(),
+        lastEditedAt = lastEditedAt.toInstant().toString()
+    )
+}
+
 
 fun Note.toCreateNoteRequest(): CreateNoteRequest {
     return CreateNoteRequest(

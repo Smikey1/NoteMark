@@ -98,7 +98,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.security.crypto.ktx)
 
     // Koin
     implementation(libs.bundles.koin.compose)
@@ -127,6 +126,10 @@ dependencies {
     //Preference DataStore
     implementation(libs.androidx.datastore.preferences)
 
-    //Jetpack Security
-    implementation(libs.androidx.security.crypto)
+    //WorkManager
+    implementation(libs.androidx.work.runtime.ktx.v281)
+
+    //core is needed to use those in WorkerUtils
+    //ActivityCompat NotificationCompat NotificationManagerCompat
+    implementation (libs.androidx.core)
 }

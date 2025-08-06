@@ -1,5 +1,6 @@
 package com.twugteam.admin.notemark.features.notes.presentation.noteList
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
@@ -15,10 +16,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+@SuppressLint("MissingPermission")
 class NoteListViewModel(
     private val noteRepository: NoteRepository,
     private val sessionStorage: SessionStorage,
-    private val connectivityObserver: ConnectivityObserver
+    private val connectivityObserver: ConnectivityObserver,
 ) : ViewModel() {
     private val _state: MutableStateFlow<NoteListUiState> = MutableStateFlow(NoteListUiState())
     val state = _state.asStateFlow()
@@ -32,6 +34,20 @@ class NoteListViewModel(
             getUsername()
         }
     }
+
+    private val _events = Channel<NoteListEvents>()
+    val events = _events.receiveAsFlow()
+
+    fun onActions(noteListActions: NoteListActions) {
+        when (noteListActions) {
+            is NoteListActions.NavigateToNoteDetail -> navigateToNoteDetail(noteId = noteListActions.noteId)
+            is NoteListActions.OnNoteDelete -> noteToDelete(noteId = noteListActions.noteId)
+            NoteListActions.OnDialogConfirm -> deleteNote()
+            NoteListActions.OnDialogDismiss -> onDialogCancel()
+            NoteListActions.NavigateToSettings -> navigateToSettings()
+        }
+    }
+
 
     private fun getNetworkConnectivity() {
         viewModelScope.launch {
@@ -54,19 +70,6 @@ class NoteListViewModel(
             newState.copy(
                 username = usernameInitial
             )
-        }
-    }
-
-    private val _events = Channel<NoteListEvents>()
-    val events = _events.receiveAsFlow()
-
-    fun onActions(noteListActions: NoteListActions) {
-        when (noteListActions) {
-            is NoteListActions.NavigateToNoteDetail -> navigateToNoteDetail(noteId = noteListActions.noteId)
-            is NoteListActions.OnNoteDelete -> noteToDelete(noteId = noteListActions.noteId)
-            NoteListActions.OnDialogConfirm -> deleteNote()
-            NoteListActions.OnDialogDismiss -> onDialogCancel()
-            NoteListActions.NavigateToSettings -> navigateToSettings()
         }
     }
 

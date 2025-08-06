@@ -12,7 +12,6 @@
     <string name="password">Password</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="username_info">Use between %d and %d characters for your username</string>
-    <string name="username_error">Username must be at least %d characters</string>
     <string name="invalid_email">Invalid email provided</string>
     <string name="password_do_not_match">Passwords do not match</string>
     <string name="password_info">Use %d characters with a number or symbol for better security</string>
@@ -63,6 +62,20 @@ changes will be lost.</string>
     <string name="view">View</string>
     <string name="reader">"Reader "</string>
     <string name="cloud_off">Cloud Off\n</string>
+    <string name="check">Check</string>
+    <string name="chevron_right">Chevron Right</string>
+    <string name="username_error">Username must be at least %d characters</string>
+
+
+    <string name="sync">Sync</string>
+    <string name="sync_interval">Sync interval</string>
+    <string name="refresh">Refresh</string>
+    <string name="sync_data">Sync Data</string>
+    <string name="last_sync">Last sync</string>
+    <string name="sync_in_progress">Sync in progress…</string>
+    <string name="sync_completed_successfully">Sync completed successfully!</string>
+    <string name="sync_failed">Sync failed: %s !</string>
+    <string name="already_synced">Already synced!</string>
 
 
 </resources>

@@ -15,6 +15,8 @@ import com.twugteam.admin.notemark.features.auth.data.model.LoginResponse
 import com.twugteam.admin.notemark.features.auth.data.model.RegisterRequest
 import com.twugteam.admin.notemark.features.auth.domain.AuthRepository
 import io.ktor.client.HttpClient
+import timber.log.Timber
+import java.util.UUID
 
 class AuthRepositoryImpl(
     private val httpClient: HttpClient,
@@ -33,11 +35,15 @@ class AuthRepositoryImpl(
         )
 
         if (result is Result.Success) {
+            val userId = UUID.nameUUIDFromBytes(email.toByteArray(Charsets.UTF_8)).toString()
+            sessionStorage.setRefreshTokenExpired(refreshTokenExpired = false)
+            Timber.tag("userIdValue").d("userIdValue: $userId")
             sessionStorage.setAuthInfo(
                 authInfo = AuthInfo(
                     accessToken = result.data.accessToken,
                     refreshToken = result.data.refreshToken,
                     username = result.data.username,
+                    userId = userId
                 )
             )
         }

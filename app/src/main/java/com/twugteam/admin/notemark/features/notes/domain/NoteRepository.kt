@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.Flow
 interface NoteRepository {
     suspend fun getNoteById(id: NoteId): Note
     fun getNotes(): Flow<List<Note>>
-    suspend fun fetchNoteById(id: NoteId): EmptyResult<DataError>
-    suspend fun fetchAllNotes(): EmptyResult<DataError>
     suspend fun upsertNote(note: Note, isAdd: Boolean): EmptyResult<DataError>
     suspend fun deleteNoteById(id: NoteId)
     suspend fun logOut(): EmptyResult<DataError>

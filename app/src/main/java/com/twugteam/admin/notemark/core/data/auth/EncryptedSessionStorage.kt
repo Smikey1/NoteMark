@@ -3,19 +3,28 @@ package com.twugteam.admin.notemark.core.data.auth
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStoreFile
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import com.twugteam.admin.notemark.core.domain.auth.AuthInfo
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
+import com.twugteam.admin.notemark.features.notes.constant.Constants.REFRESH_TOKEN
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class EncryptedSessionStorage(
-    private val dataStore: DataStore<AuthInfoSerializable?>,
+    private val syncDataStore: DataStore<AuthInfoSerializable?>,
+    private val refreshTokenDataStore: DataStore<Preferences>,
     private val context: Context
 ) : SessionStorage {
+    private val refreshTokenBoolean = booleanPreferencesKey(REFRESH_TOKEN)
+
     override suspend fun getAuthInfo(): AuthInfo? = withContext(Dispatchers.IO) {
-        return@withContext dataStore.data.firstOrNull()?.toAuthInfo()
+        return@withContext syncDataStore.data.firstOrNull()?.toAuthInfo()
     }
 
     override suspend fun setAuthInfo(authInfo: AuthInfo?) {
@@ -25,7 +34,7 @@ class EncryptedSessionStorage(
                     context.dataStoreFile("notemark_pref").delete()
                     return@withContext
                 }
-                dataStore.updateData {
+                syncDataStore.updateData {
                     authInfo.toAuthInfoSerializable()
                 }
             }
@@ -33,4 +42,24 @@ class EncryptedSessionStorage(
             Timber.tag("MyTag").e("setAuthInfo: ${e.localizedMessage}")
         }
     }
+
+    override suspend fun setRefreshTokenExpired(refreshTokenExpired: Boolean) {
+        refreshTokenDataStore.edit { preferences ->
+            try {
+                preferences[refreshTokenBoolean] = refreshTokenExpired
+            } catch (e: Exception) {
+                Timber.tag("MyTag").e("setRefreshToken: ${e.localizedMessage}")
+            }
+        }
+    }
+
+    override fun getRefreshTokenExpired(): Flow<Boolean> =
+        refreshTokenDataStore.data.map { preferences ->
+            val refreshTokenBoolean = preferences[refreshTokenBoolean]
+            //refreshTokenBoolean ?: false
+            //if refreshTokenBoolean = false -> false == true return false
+            //if refreshTokenBoolean is null -> null == true return false
+            //if refreshTokenBoolean is true -> true == true return true
+            refreshTokenBoolean == true
+        }
 }

@@ -62,32 +62,73 @@ class HttpClientFactory(
                             accessToken = authInfo?.accessToken ?: "",
                             refreshToken = authInfo?.refreshToken ?: ""
                         )
-                        Timber.tag("MyTag").d("loadTokens: accessToken: ${bearerTokens.accessToken}")
-                        Timber.tag("MyTag").d("loadTokens: refreshToken: ${bearerTokens.refreshToken}")
+                        Timber.tag("MyTag")
+                            .d("loadTokens: accessToken: ${bearerTokens.accessToken}")
+                        Timber.tag("MyTag")
+                            .d("loadTokens: refreshToken: ${bearerTokens.refreshToken}")
                         bearerTokens
                     }
 
                     refreshTokens {
                         Timber.tag("MyTag").d("refreshTokens")
                         val authInfo = sessionStorage.getAuthInfo()
-                        Timber.tag("MyTag").d("refreshTokens sessionStorage refreshToken: ${authInfo?.refreshToken}")
+                        Timber.tag("MyTag")
+                            .d("refreshTokens sessionStorage refreshToken: ${authInfo?.refreshToken}")
 
                         val response = client.post<AccessTokenRequest, AccessTokenResponse>(
                             route = ApiEndpoints.REFRESH_TOKEN_ENDPOINT,
                             body = AccessTokenRequest(
                                 refreshToken = authInfo?.refreshToken ?: "",
                             ),
-                        ){
+                        ) {
                             markAsRefreshTokenRequest()
                         }
 
                         when (response) {
                             is Result.Error -> {
-                                Timber.tag("MyTag").d("response error: ${response.error}")
+                                when (response.error) {
+                                    NetworkError.Conflict -> {
+                                        Timber.tag("MyTag").d("response error: Conflict")
+
+                                    }
+
+                                    NetworkError.NoInternet -> {
+                                        Timber.tag("MyTag").d("response error: NoInternet")
+                                    }
+
+                                    NetworkError.PayloadTooLarge -> {
+                                        Timber.tag("MyTag").d("response error: PayloadTooLarge")
+                                    }
+
+                                    NetworkError.RequestTimeout -> {
+                                        Timber.tag("MyTag").d("response error: RequestTimeout")
+                                    }
+
+                                    NetworkError.Serialization -> {
+                                        Timber.tag("MyTag").d("response error: Serialization")
+                                    }
+
+                                    NetworkError.ServerError -> {
+                                        Timber.tag("MyTag").d("response error: ServerError")
+                                    }
+
+                                    NetworkError.TooManyRequests -> {
+                                        Timber.tag("MyTag").d("response error: TooManyRequests")
+                                    }
+
+                                    NetworkError.UnAuthorized -> {
+                                        Timber.tag("MyTag").d("response error: UnAuthorized")
+                                    }
+
+                                    NetworkError.Unknown -> {
+                                        Timber.tag("MyTag").d("response error: Unknown")
+                                    }
+                                }
                                 val bearerTokens = BearerTokens(
                                     accessToken = "",
                                     refreshToken = ""
                                 )
+                                sessionStorage.setRefreshTokenExpired(refreshTokenExpired = true)
                                 Timber.tag("MyTag").d("else: ${bearerTokens.accessToken}")
                                 bearerTokens
                             }
@@ -96,7 +137,8 @@ class HttpClientFactory(
                                 val newAuthInfo = AuthInfo(
                                     accessToken = response.data.accessToken,
                                     refreshToken = response.data.refreshToken,
-                                    username = authInfo?.username ?: ""
+                                    username = authInfo?.username ?: "",
+                                    userId = authInfo?.userId ?: ""
                                 )
 
                                 sessionStorage.setAuthInfo(newAuthInfo)
@@ -106,8 +148,10 @@ class HttpClientFactory(
                                     accessToken = newAuthInfo.accessToken,
                                     refreshToken = newAuthInfo.refreshToken
                                 )
-                                Timber.tag("MyTag").d("refreshTokens: accessToken: ${bearerTokens.accessToken}")
-                                Timber.tag("MyTag").d("refreshTokens: refreshToken: ${bearerTokens.refreshToken}")
+                                Timber.tag("MyTag")
+                                    .d("refreshTokens: accessToken: ${bearerTokens.accessToken}")
+                                Timber.tag("MyTag")
+                                    .d("refreshTokens: refreshToken: ${bearerTokens.refreshToken}")
                                 bearerTokens
                             }
                         }

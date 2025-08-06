@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.data
+package com.twugteam.admin.notemark.features.notes.data.dataSource
 
 import com.twugteam.admin.notemark.core.constant.ApiEndpoints
 import com.twugteam.admin.notemark.core.domain.notes.Note
@@ -12,6 +12,11 @@ import com.twugteam.admin.notemark.core.networking.delete
 import com.twugteam.admin.notemark.core.networking.get
 import com.twugteam.admin.notemark.core.networking.post
 import com.twugteam.admin.notemark.core.networking.put
+import com.twugteam.admin.notemark.features.notes.data.model.CreateNoteRequest
+import com.twugteam.admin.notemark.features.notes.data.model.NoteDto
+import com.twugteam.admin.notemark.features.notes.data.model.SyncOperationResponse
+import com.twugteam.admin.notemark.features.notes.data.model.toCreateNoteRequest
+import com.twugteam.admin.notemark.features.notes.data.model.toNote
 import com.twugteam.admin.notemark.features.notes.domain.NoteId
 import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
 import io.ktor.client.HttpClient
@@ -32,11 +37,20 @@ class KtorRemoteNoteDataSource(
         )
     }
 
-    override suspend fun fetchAllNotes(): Result<List<Note>, DataError.Network> {
-        return httpClient.get<List<NoteDto>>(
-            route = ApiEndpoints.NOTES_ENDPOINT
+    override suspend fun fetchAllNotes(
+        //by default page = -1 size = 0 which means will fetch all notes
+        page: Int,
+        size: Int
+    ): Result<List<Note>, DataError.Network> {
+        Timber.tag("AllNotes").d("page: $page size: $size")
+        return httpClient.get<SyncOperationResponse>(
+            route = ApiEndpoints.NOTES_ENDPOINT,
+            queryParams = mapOf(
+                "page" to page,
+                "size" to size
+            )
         ).mapToResult(
-            success = { list -> list.map { it.toNote() } },
+            success = { list -> list.notes.map { it.toNote() } },
             networkError = { it.toDataErrorNetwork() }
         )
     }
@@ -51,7 +65,7 @@ class KtorRemoteNoteDataSource(
             networkError = { it.toDataErrorNetwork() }
         )
         when (postNote) {
-            is Result.Error -> Timber.tag("MyTag").e("postNote: error")
+            is Result.Error -> Timber.tag("MyTag").e("postNote: error ${postNote.error}")
             is Result.Success -> Timber.tag("MyTag").d("postNote: success ${postNote.data}")
         }
         return postNote
@@ -66,7 +80,7 @@ class KtorRemoteNoteDataSource(
             networkError = { it.toDataErrorNetwork() }
         )
         when (putNote) {
-            is Result.Error -> Timber.tag("MyTag").e("putNote: error")
+            is Result.Error -> Timber.tag("MyTag").e("putNote: error ${putNote.error}")
             is Result.Success -> Timber.tag("MyTag").d("putNote: success ${note.title}")
         }
         return putNote

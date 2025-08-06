@@ -38,4 +38,20 @@ object NoteMarkIcons {
     val CloudOff: ImageVector
     @Composable
     get() = ImageVector.vectorResource(R.drawable.cloudoff)
+
+    val ChevronRight: ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(R.drawable.chevronright)
+
+    val Check: ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(R.drawable.check)
+
+    val Refresh: ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(R.drawable.refresh)
+
+    val Sync: ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(R.drawable.sync)
 }

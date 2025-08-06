@@ -26,7 +26,7 @@ fun SettingsScreenRoot(
                 modifier = modifier,
                 scaffoldPaddingValues = PaddingValues(start = 16.dp),
                 topBarPaddingValues = PaddingValues(top = 16.dp),
-                contentPaddingValues = PaddingValues(top = 16.dp),
+                contentPaddingValues = PaddingValues(16.dp),
                 state = state,
                 onActions = onActions
             )
@@ -37,7 +37,7 @@ fun SettingsScreenRoot(
                 modifier = modifier,
                 scaffoldPaddingValues = PaddingValues(start = 60.dp),
                 topBarPaddingValues = PaddingValues(top = 12.dp),
-                contentPaddingValues = PaddingValues(top = 16.dp),
+                contentPaddingValues = PaddingValues(16.dp),
                 state = state,
                 onActions = onActions
             )
@@ -48,7 +48,7 @@ fun SettingsScreenRoot(
                 modifier = modifier,
                 scaffoldPaddingValues = PaddingValues(start = 24.dp),
                 topBarPaddingValues = PaddingValues(top = 16.dp),
-                contentPaddingValues = PaddingValues(top = 16.dp),
+                contentPaddingValues = PaddingValues(16.dp),
                 state = state,
                 onActions = onActions
             )
@@ -59,7 +59,7 @@ fun SettingsScreenRoot(
                 modifier = modifier,
                 scaffoldPaddingValues = PaddingValues(start = 60.dp),
                 topBarPaddingValues = PaddingValues(top = 12.dp),
-                contentPaddingValues = PaddingValues(top = 16.dp),
+                contentPaddingValues = PaddingValues(16.dp),
                 state = state,
                 onActions = onActions
             )
