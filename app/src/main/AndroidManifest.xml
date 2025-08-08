@@ -31,8 +31,11 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".core.data.broadcastReceiver.MyBroadcastReceiver" android:exported="true" android:enabled="true"     android:directBootAware="true">
+        <receiver android:name=".core.data.broadcastReceiver.MyBroadcastReceiver" android:exported="true" android:enabled="true"  android:directBootAware="true">
             <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
