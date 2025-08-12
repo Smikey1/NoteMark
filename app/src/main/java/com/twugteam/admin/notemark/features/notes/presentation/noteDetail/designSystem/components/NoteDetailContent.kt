@@ -70,7 +70,7 @@ fun NoteDetailContent(
                 modifier = Modifier.weight(1f),
                 label = R.string.date_created,
                 body = state.noteUi?.createdAt?.let {
-                    formatToViewMode(it)
+                    formatToViewMode(it).asString()
                 } ?: stringResource(R.string.date_created),
             )
 
@@ -78,7 +78,7 @@ fun NoteDetailContent(
                 modifier = Modifier.weight(1f),
                 label = R.string.last_edit,
                 body = state.noteUi?.lastEditedAt?.let {
-                    formatToViewMode(it)
+                    formatToViewMode(it).asString()
                 } ?: stringResource(R.string.last_edit),
                 paddingValues = PaddingValues(start = labelAndBodySpacing)
             )

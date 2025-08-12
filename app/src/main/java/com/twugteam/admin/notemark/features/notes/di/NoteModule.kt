@@ -6,8 +6,8 @@ import com.twugteam.admin.notemark.features.notes.data.dataSource.RoomLocalNoteD
 import com.twugteam.admin.notemark.features.notes.data.dataSource.RoomLocalSyncDataSource
 import com.twugteam.admin.notemark.features.notes.data.dataSource.SyncIntervalDataStoreImpl
 import com.twugteam.admin.notemark.core.data.syncing.SyncRepositoryImpl
-import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.SyncIntervalDataSource
-import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.SyncIntervalDataSourceImpl
+import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.SyncIntervalDataStoreDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.SyncIntervalDataStoreDataSourceImpl
 import com.twugteam.admin.notemark.core.data.syncing.dataSource.SyncDataSource
 import com.twugteam.admin.notemark.core.data.syncing.dataSource.SyncDataSourceImpl
 import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
@@ -38,8 +38,8 @@ val noteModule = module {
     singleOf(::SyncDataSourceImpl).bind<SyncDataSource>()
     singleOf(::SyncRepositoryImpl).bind<SyncRepository>()
 
-    single<SyncIntervalDataSource>{
-        SyncIntervalDataSourceImpl(
+    single<SyncIntervalDataStoreDataSource>{
+        SyncIntervalDataStoreDataSourceImpl(
             dataStore = get(named("syncDataStore"))
         )
     }

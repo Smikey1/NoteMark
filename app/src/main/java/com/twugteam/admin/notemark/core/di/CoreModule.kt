@@ -1,6 +1,7 @@
 package com.twugteam.admin.notemark.core.di
 
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.twugteam.admin.notemark.core.data.auth.EncryptedSessionStorage
 import com.twugteam.admin.notemark.core.data.broadcastReceiver.MyBroadcastReceiver
 import com.twugteam.admin.notemark.core.data.network.NetworkConnectivityObserver
@@ -49,6 +50,10 @@ val coreModule = module {
 
     single<SyncDao> {
         get<NoteDatabase>().syncDao
+    }
+
+    single{
+        WorkManager.getInstance(context = get())
     }
 
     workerOf(::SyncingWorker)

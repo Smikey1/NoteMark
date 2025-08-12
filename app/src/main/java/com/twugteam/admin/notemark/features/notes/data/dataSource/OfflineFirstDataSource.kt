@@ -10,12 +10,14 @@ import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
 import com.twugteam.admin.notemark.core.presentation.ui.formatToString
 import com.twugteam.admin.notemark.core.data.syncing.dataSource.SyncDataSource
+import com.twugteam.admin.notemark.features.notes.constant.Constants
 import com.twugteam.admin.notemark.features.notes.data.model.toDto
 import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
 import com.twugteam.admin.notemark.features.notes.domain.LocalSyncDataSource
 import com.twugteam.admin.notemark.features.notes.domain.NoteId
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
+import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -29,6 +31,8 @@ class OfflineFirstDataSource(
     private val remoteNoteDataSource: RemoteNoteDataSource,
     private val syncDataSource: SyncDataSource,
     private val sessionStorage: SessionStorage,
+    private val syncIntervalDataStore: SyncIntervalDataStore,
+
     private val applicationScope: CoroutineScope
 ) : NoteRepository {
     override suspend fun getNoteById(id: NoteId): Note {
@@ -170,24 +174,27 @@ class OfflineFirstDataSource(
                         .d("logout: success")
                     //clear all local notes so when new user log in local notes should be empty
                     localNoteDataSource.clearNotes()
-                    //clear session tokens and username
-                    clearAuthInfo()
-                    //cancel all sync work that are currently working/in queue
-                    syncDataSource.cancelAllWork()
+
+                    //clear session tokens and username/userId
+                    sessionStorage.clearAuthInfo()
+
+                    //reset interval to manual
+                    syncIntervalDataStore.saveInterval(
+                        interval = null,
+                        text = Constants.syncingIntervalList.first().text,
+                        timeUnit = null
+                    )
+
+                    //reset last sync timeStamp to Never synced
+                    syncIntervalDataStore.resetTimeStamp()
+
+                    //reset
+                    //cancel all sync work that are currently working/in queue such as interval sync
+                    val cancelSyncing = syncDataSource.cancelIntervalWorker()
+                    Timber.tag("MyTag").d("logout cancelSyncing: $cancelSyncing")
             }
         }
         //if clearNotes is Error return clearNotes error
         return remoteLogOut.asEmptyDataResult()
-    }
-
-
-    //clearing refreshToken only and username
-    private suspend fun clearAuthInfo() {
-        try {
-            sessionStorage.setAuthInfo(null)
-            Timber.tag("MyTag").d("clearAuthInfo: success")
-        } catch (e: Exception) {
-            Timber.tag("MyTag").e("clearAuthInfo: ${e.localizedMessage}")
-        }
     }
 }

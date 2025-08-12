@@ -5,5 +5,5 @@ import java.util.concurrent.TimeUnit
 interface SyncDataSource {
     suspend fun manualSync()
     suspend fun syncWithInterval(interval: Long?, timeUnit: TimeUnit?)
-    suspend fun cancelAllWork():  Boolean
+    suspend fun cancelIntervalWorker():  Boolean
 }

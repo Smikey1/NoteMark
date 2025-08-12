@@ -4,13 +4,18 @@ import android.Manifest
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import com.twugteam.admin.notemark.R
+import com.twugteam.admin.notemark.core.domain.SyncRepository
+import com.twugteam.admin.notemark.core.domain.network.ConnectivityObserver
 import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.presentation.ui.UiText
 import com.twugteam.admin.notemark.core.presentation.ui.asUiText
+import com.twugteam.admin.notemark.features.notes.constant.Constants.MANUAL_SYNC_WORK_NAME
 import com.twugteam.admin.notemark.features.notes.data.model.SyncInterval
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
-import com.twugteam.admin.notemark.core.domain.SyncRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,13 +26,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 class SettingsViewModel(
     private val noteRepository: NoteRepository,
     private val syncRepository: SyncRepository,
     private val syncIntervalDataStore: SyncIntervalDataStore,
+    private val connectivityObserver: ConnectivityObserver,
+    private val workManager: WorkManager,
 ) : ViewModel() {
+    private val manualWorkName = MANUAL_SYNC_WORK_NAME
     private val _state: MutableStateFlow<SettingsUiState> = MutableStateFlow(SettingsUiState())
     val state = _state.asStateFlow()
 
@@ -35,33 +45,159 @@ class SettingsViewModel(
     val events = _events.receiveAsFlow()
 
     init {
-        viewModelScope.launch {
+        //each one should run internally on an independent scope
             //read interval and timeUnit from dataStore
             getInterval()
-        }
+            //launch on independent scope
+            getLastSyncTimestamp()
     }
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun onActions(settingsActions: SettingsActions) {
         when (settingsActions) {
             SettingsActions.OnBack -> onBack()
-            SettingsActions.OnLogout -> onLogout()
+            SettingsActions.OnLogoutClick -> onLogoutClick()
             SettingsActions.OnExpand -> onExpand()
             is SettingsActions.SyncWithInterval -> onSyncIntervalSelect(syncInterval = settingsActions.syncInterval)
             SettingsActions.ManualSync -> syncData()
+            is SettingsActions.OnLogOutConfirm -> onLogoutConfirm(withSyncing = settingsActions.withSyncing)
+            SettingsActions.OnDismissRequest -> onDismissRequest()
         }
     }
 
-    private suspend fun getInterval() {
-        syncIntervalDataStore.getInterval().collectLatest { (interval,text, timeUnit) ->
+    private fun onDismissRequest() {
+        _state.update { newState ->
+            newState.copy(
+                isLoading = false,
+                showDialog = false,
+            )
+        }
+    }
+
+    //confirming logout either with syncing or without
+    private fun onLogoutConfirm(withSyncing: Boolean) {
+        viewModelScope.launch {
             _state.update { newState ->
                 newState.copy(
-                    selectedSyncingInterval = newState.selectedSyncingInterval.copy(
-                        interval = interval,
-                        text = text,
-                        timeUnit = timeUnit
-                    )
+                    isLoading = true
                 )
+            }
+
+            if (withSyncing) {
+                //start syncing
+                syncRepository.manualSync()
+
+                //access the workInfo state
+                val workInfo =
+                    workManager.getWorkInfosForUniqueWorkFlow(uniqueWorkName = manualWorkName)
+                workInfo.collectLatest { workInfo ->
+                    if (workInfo.firstOrNull() != null) {
+                        Timber.tag("SyncingWorker").d("workInfo: ${workInfo.first().state}")
+                        when (workInfo.first().state) {
+                            WorkInfo.State.SUCCEEDED -> {
+                                //sync succeed, logout now
+                                logOut()
+                            }
+
+                            WorkInfo.State.FAILED -> {
+                                _state.update { newState ->
+                                    newState.copy(
+                                        isLoading = false,
+                                        showDialog = false
+                                    )
+                                }
+                                showSnackBar(
+                                    snackBarText = UiText.StringResource(R.string.logout_sync_failed),
+                                    delay = 3.seconds
+                                )
+                            }
+
+                            WorkInfo.State.CANCELLED -> {
+                                _state.update { newState ->
+                                    newState.copy(
+                                        isLoading = false,
+                                        showDialog = false
+                                    )
+                                }
+                                showSnackBar(
+                                    snackBarText = UiText.StringResource(R.string.logout_sync_failed),
+                                    delay = 3.seconds
+                                )
+                            }
+
+                            WorkInfo.State.ENQUEUED -> {
+                                Timber.tag("SyncingWorker").d("sync: Enqueued")
+                            }
+
+                            WorkInfo.State.RUNNING -> {
+                                Timber.tag("SyncingWorker").d("sync: RUNNING")
+                            }
+
+                            WorkInfo.State.BLOCKED -> {
+                                Timber.tag("SyncingWorker").d("sync: BLOCKED")
+                            }
+                        }
+                    }
+                }
+                return@launch
+            }
+
+            //logOut  directly if without sync
+            logOut()
+        }
+    }
+
+    private suspend fun logOut() {
+        val logOut = noteRepository.logOut()
+
+        //after logOut finish hide dialog and hide loader before checking if
+        //success or error
+        _state.update { newState ->
+            newState.copy(
+                showDialog = false,
+                isLoading = false
+            )
+        }
+
+        //small delay to avoid showing dialog on the navigated screen after logout
+        delay(100.milliseconds)
+
+        when (logOut) {
+            is Result.Error -> {
+                showSnackBar(snackBarText = logOut.error.asUiText())
+            }
+
+            is Result.Success -> {
+
+                _events.send(SettingsEvents.OnLogout)
+            }
+        }
+    }
+
+    private fun getInterval() {
+        viewModelScope.launch {
+            syncIntervalDataStore.getInterval().collectLatest { (interval, text, timeUnit) ->
+                _state.update { newState ->
+                    newState.copy(
+                        selectedSyncingInterval = newState.selectedSyncingInterval.copy(
+                            interval = interval,
+                            text = text,
+                            timeUnit = timeUnit
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private fun getLastSyncTimestamp() {
+        viewModelScope.launch {
+            syncIntervalDataStore.getLastSyncTimestamp().collectLatest { lastSyncTimestamp ->
+                _state.update { newState ->
+                    newState.copy(
+                        lastSyncTimestamp = lastSyncTimestamp
+                    )
+                }
             }
         }
     }
@@ -135,23 +271,23 @@ class SettingsViewModel(
         }
     }
 
-    private fun onLogout() {
-        viewModelScope.launch {
-            val logOut = noteRepository.logOut()
-            when (logOut) {
-                is Result.Error -> {
-                    showSnackBar(snackBarText = logOut.error.asUiText())
-                }
-
-                is Result.Success -> {
-
-                    _events.send(SettingsEvents.OnLogout)
-                }
+    private fun onLogoutClick() {
+        val isCurrentlyConnected = connectivityObserver.isCurrentlyConnected()
+        Timber.tag("MyTag").d("isCurrentlyConnected: $isCurrentlyConnected")
+        if (isCurrentlyConnected) {
+            _state.update { newState ->
+                newState.copy(
+                    showDialog = true,
+                )
             }
+        } else {
+            showSnackBar(
+                snackBarText = UiText.StringResource(R.string.no_internet)
+            )
         }
     }
 
-    private fun showSnackBar(snackBarText: UiText) {
+    private fun showSnackBar(snackBarText: UiText, delay: Duration = 2.seconds) {
         viewModelScope.launch {
             _state.update { newState ->
                 newState.copy(
@@ -160,14 +296,16 @@ class SettingsViewModel(
                 )
             }
             //show snackBar for 2 seconds
-            delay(2.seconds)
+            delay(delay)
 
             //reset state
-            resetUiState()
+            _state.update { newState ->
+                newState.copy(
+                    showSnackBar = false,
+                    snackBarText = UiText.DynamicString("")
+                )
+            }
         }
     }
 
-    private fun resetUiState() {
-        _state.value = SettingsUiState()
-    }
 }

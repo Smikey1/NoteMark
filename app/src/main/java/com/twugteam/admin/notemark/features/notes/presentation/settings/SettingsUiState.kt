@@ -10,5 +10,7 @@ data class SettingsUiState(
     val selectedSyncingInterval: SyncInterval = Constants.syncingIntervalList.first(),
     val syncingIntervalList: List<SyncInterval> = Constants.syncingIntervalList,
     val isSyncExpanded: Boolean = false,
-    val lastSyncDate: String = ""
+    val lastSyncTimestamp: Long = -1L,
+    val showDialog: Boolean = false,
+    val isLoading: Boolean = false,
 )

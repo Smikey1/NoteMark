@@ -76,6 +76,14 @@ changes will be lost.</string>
     <string name="sync_completed_successfully">Sync completed successfully!</string>
     <string name="sync_failed">Sync failed: %s !</string>
     <string name="already_synced">Already synced!</string>
+    <string name="sync_your_data_or_skip_syncing">Before logging out, would you like to sync your data or skip syncing?</string>
+    <string name="sync_and_logout">Sync &amp; Logout</string>
+    <string name="sync_without_logout">Sync without Logout</string>
+    <string name="confirm_logout">Confirm Logout</string>
+    <string name="no_internet">No internet connection!</string>
+    <string name="logout_sync_failed">An error occurred during sync. You can try again or log out without syncing.</string>
+    <string name="never_synced">Never synced</string>
+    <string name="just_now">Just now</string>
 
 
 </resources>

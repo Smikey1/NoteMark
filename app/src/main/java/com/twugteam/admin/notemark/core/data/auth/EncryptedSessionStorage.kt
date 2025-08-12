@@ -8,6 +8,8 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import com.twugteam.admin.notemark.core.domain.auth.AuthInfo
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
+import com.twugteam.admin.notemark.core.domain.util.DataError
+import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.features.notes.constant.Constants.REFRESH_TOKEN
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -62,4 +64,16 @@ class EncryptedSessionStorage(
             //if refreshTokenBoolean is true -> true == true return true
             refreshTokenBoolean == true
         }
+
+    //clearing refreshToken only and username
+    override suspend fun clearAuthInfo(): Result<Unit, DataError.Local> {
+        return try {
+            setAuthInfo(null)
+            Timber.tag("MyTag").d("clearAuthInfo: success")
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Timber.tag("MyTag").e("clearAuthInfo: ${e.localizedMessage}")
+            Result.Error(error = DataError.Local.Unknown(unknownError = e.message.toString()))
+        }
+    }
 }

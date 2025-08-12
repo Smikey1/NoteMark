@@ -13,4 +13,8 @@ interface SyncIntervalDataStore {
     ): Result<Unit, DataError.Local>
 
     fun getInterval(): Flow<Triple<Long?, String, TimeUnit?>>
+
+    suspend fun saveLastSyncTimestamp(): Result<Unit, DataError.Local>
+    fun getLastSyncTimestamp(): Flow<Long>
+    suspend fun resetTimeStamp()
 }

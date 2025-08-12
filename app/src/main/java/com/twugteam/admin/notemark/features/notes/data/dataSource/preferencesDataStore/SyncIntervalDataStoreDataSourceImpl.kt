@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.Result
+import com.twugteam.admin.notemark.features.notes.constant.Constants.LAST_SYNC_TIMESTAMP
 import com.twugteam.admin.notemark.features.notes.constant.Constants.SYNC_INTERVAL
 import com.twugteam.admin.notemark.features.notes.constant.Constants.SYNC_TEXT
 import com.twugteam.admin.notemark.features.notes.constant.Constants.SYNC_TIME_UNIT
@@ -15,12 +16,14 @@ import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class SyncIntervalDataSourceImpl(
+class SyncIntervalDataStoreDataSourceImpl(
     private val dataStore: DataStore<Preferences>,
-) : SyncIntervalDataSource {
+) : SyncIntervalDataStoreDataSource {
     private val syncInterval = longPreferencesKey(SYNC_INTERVAL)
     private val syncText = stringPreferencesKey(SYNC_TEXT)
     private val syncTimeUnit = stringPreferencesKey(SYNC_TIME_UNIT)
+
+    private val lastSyncTimestamp = longPreferencesKey(LAST_SYNC_TIMESTAMP)
 
     override suspend fun saveInterval(
         interval: Long?,
@@ -64,5 +67,38 @@ class SyncIntervalDataSourceImpl(
             }
             Timber.tag("MyTag").d("getInterval: interval: $interval timeUnit: $timeUnit")
             Triple(interval, syncText ?: "Manual only", timeUnit)
+        }
+
+    override suspend fun saveLastSyncTimestamp(): Result<Unit, DataError.Local> {
+        return try {
+            val nowMillis = System.currentTimeMillis()
+            dataStore.edit { preferences ->
+                preferences[lastSyncTimestamp] = nowMillis
+            }
+            Timber.tag("MyTag").d("saveLastSyncTimestamp: success")
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Timber.tag("MyTag").e("saveLastSyncTimestamp: error: ${e.localizedMessage}")
+            Result.Error(DataError.Local.DiskFull)
+        }
+    }
+
+    //after logOut reset last sync timeStamp
+    override suspend fun resetTimeStamp() {
+        try {
+            dataStore.edit { preferences->
+                preferences.remove(lastSyncTimestamp)
+                Timber.tag("MyTag").d("resetTimeStamp: success")
+            }
+        }catch (e: Exception){
+            Timber.tag("MyTag").e("resetTimeStamp: error: ${e.localizedMessage}")
+        }
+    }
+
+    override fun getLastSyncTimestamp(): Flow<Long> =
+        dataStore.data.map { preferences ->
+            val timeStamp = preferences[lastSyncTimestamp] ?: -1L
+            Timber.tag("MyTag").d("getLastSyncTimestamp(): $timeStamp")
+            timeStamp
         }
 }

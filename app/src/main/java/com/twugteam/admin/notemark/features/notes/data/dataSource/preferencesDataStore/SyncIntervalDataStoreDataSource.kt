@@ -5,7 +5,7 @@ import com.twugteam.admin.notemark.core.domain.util.Result
 import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.TimeUnit
 
-interface SyncIntervalDataSource {
+interface SyncIntervalDataStoreDataSource {
     suspend fun saveInterval(
         interval: Long?,
         text: String,
@@ -13,4 +13,8 @@ interface SyncIntervalDataSource {
     ): Result<Unit, DataError.Local>
 
     fun getInterval(): Flow<Triple<Long?, String, TimeUnit?>>
+
+    suspend fun saveLastSyncTimestamp(): Result<Unit, DataError.Local>
+    fun getLastSyncTimestamp(): Flow<Long>
+    suspend fun resetTimeStamp()
 }

@@ -12,8 +12,10 @@ import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
 import com.twugteam.admin.notemark.features.notes.data.model.toNote
 import com.twugteam.admin.notemark.features.notes.data.workManager.WorkUtils.makeStatusNotification
+import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
 import com.twugteam.admin.notemark.features.notes.domain.LocalSyncDataSource
 import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
+import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -22,12 +24,14 @@ class SyncingWorker(
     private val context: Context,
     private val localSyncDataSource: LocalSyncDataSource,
     private val remoteNoteDataSource: RemoteNoteDataSource,
+    private val localNoteDataSource: LocalNoteDataSource,
     private val sessionStorage: SessionStorage,
+    private val syncIntervalDataStore: SyncIntervalDataStore,
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
     private var message: String = context.getString(R.string.sync_in_progress)
     private var result: com.twugteam.admin.notemark.core.domain.util.Result<Any, DataError> =
-        com.twugteam.admin.notemark.core.domain.util.Result.Success(200)
+        com.twugteam.admin.notemark.core.domain.util.Result.Success(Unit)
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override suspend fun doWork(): Result {
@@ -79,6 +83,30 @@ class SyncingWorker(
 
                             makeStatusNotification(message = message, context = context)
                             return@withContext Result.failure()
+                        }
+                    }
+                }
+
+
+                //reaching here means the worker succeed syncing
+                //update lastSyncTimestamp in datastore
+                syncIntervalDataStore.saveLastSyncTimestamp()
+
+                //fetchAllNotes from server if sync success
+                val notes = remoteNoteDataSource.fetchAllNotes()
+                when (notes) {
+                    is com.twugteam.admin.notemark.core.domain.util.Result.Error -> {
+                        message = notes.error.toString()
+                        makeStatusNotification(
+                            message = message,
+                            context = context
+                        )
+                        return@withContext Result.failure()
+                    }
+
+                    is com.twugteam.admin.notemark.core.domain.util.Result.Success -> {
+                        notes.data.forEach { note ->
+                            localNoteDataSource.upsertNote(note)
                         }
                     }
                 }

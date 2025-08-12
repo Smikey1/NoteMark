@@ -11,6 +11,7 @@ import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
 import com.twugteam.admin.notemark.features.notes.domain.NoteId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 
 class RoomLocalNoteDataSource(
     private val noteDao: NoteDao
@@ -49,8 +50,10 @@ class RoomLocalNoteDataSource(
     override suspend fun clearNotes(): Result<Unit, DataError.Local> {
         return try {
             noteDao.clearNotes()
+            Timber.tag("MyTag").d("clearNotes success")
             Result.Success(Unit)
         } catch (e: Exception) {
+            Timber.tag("MyTag").e("clearNotes error: ${e.localizedMessage}")
             Result.Error(
                 error = DataError.Local.Unknown(
                     unknownError = e.localizedMessage?.toString() ?: ""

@@ -21,6 +21,7 @@ object Constants {
     const val SYNC_INTERVAL = "SyncInterval"
     const val SYNC_TEXT = "SyncText"
     const val SYNC_TIME_UNIT = "SyncTimeUnit"
+    const val LAST_SYNC_TIMESTAMP = "LastSyncTimestamp"
 
     const val REFRESH_TOKEN = "RefreshToken"
 

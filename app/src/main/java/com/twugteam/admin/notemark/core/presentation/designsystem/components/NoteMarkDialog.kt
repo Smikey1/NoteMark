@@ -26,6 +26,7 @@ fun NoteMarkDialog(
     dismissButtonId: String,
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit,
+    onDismissRequest: () -> Unit = {}
     ) {
     if (showDialog) {
         AlertDialog(
@@ -56,7 +57,7 @@ fun NoteMarkDialog(
                 }
             },
             //user not allowed to dismiss dialog when clicking outside of dialog only if clicking on cancel
-            onDismissRequest = { },
+            onDismissRequest = onDismissRequest,
             modifier = modifier,
             confirmButton = {
                 NoteMarkActionButton(

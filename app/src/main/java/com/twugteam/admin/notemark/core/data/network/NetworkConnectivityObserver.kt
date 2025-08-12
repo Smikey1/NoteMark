@@ -19,6 +19,7 @@ class NetworkConnectivityObserver(
 
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
 
+    //trigger all network connection status changes
     override val isConnected: Flow<Boolean>
         get() = callbackFlow {
             val callback = object : NetworkCallback(){
@@ -66,4 +67,12 @@ class NetworkConnectivityObserver(
                 connectivityManager.unregisterNetworkCallback(callback)
             }
         }
+
+    //will only return current network connection and doesn't trigger any live changes
+    //of the status of network
+    override fun isCurrentlyConnected(): Boolean {
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+    }
 }

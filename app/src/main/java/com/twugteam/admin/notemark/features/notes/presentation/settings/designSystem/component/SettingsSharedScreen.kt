@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -47,6 +48,8 @@ import androidx.compose.ui.unit.sp
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
+import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
+import com.twugteam.admin.notemark.core.presentation.ui.formatToUiText
 import com.twugteam.admin.notemark.features.notes.data.model.SyncInterval
 import com.twugteam.admin.notemark.features.notes.presentation.settings.SettingsActions
 import com.twugteam.admin.notemark.features.notes.presentation.settings.SettingsUiState
@@ -97,15 +100,38 @@ fun SettingsSharedScreen(
                 })
         }
     ) { innerPadding ->
-        SettingsScreenContent(
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(innerPadding)
-                .verticalScroll(state = rememberScrollState()),
-            contentPaddingValues = contentPaddingValues,
-            state = state,
-            onActions = onActions,
-        )
+        ){
+            SettingsScreenContent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(state = rememberScrollState()),
+                contentPaddingValues = contentPaddingValues,
+                state = state,
+                onActions = onActions,
+            )
+            NoteMarkDialog(
+                modifier = Modifier,
+                showDialog = state.showDialog,
+                titleResId = stringResource(R.string.confirm_logout),
+                isLoading = state.isLoading,
+                bodyResId = stringResource(R.string.sync_your_data_or_skip_syncing),
+                confirmButtonId = stringResource(R.string.sync_and_logout),
+                dismissButtonId = stringResource(R.string.sync_without_logout),
+                onConfirmClick = {
+                    onActions(SettingsActions.OnLogOutConfirm(withSyncing = true))
+                },
+                onDismissClick = {
+                    onActions(SettingsActions.OnLogOutConfirm(withSyncing = false))
+                },
+                onDismissRequest = {
+                    onActions(SettingsActions.OnDismissRequest)
+                }
+            )
+        }
     }
 }
 
@@ -155,7 +181,8 @@ fun SettingsScreenContent(
     ) {
         SettingsSyncInterval(
             modifier = Modifier
-                .fillMaxWidth().padding(contentPaddingValues),
+                .fillMaxWidth()
+                .padding(contentPaddingValues),
             syncIntervalList = state.syncingIntervalList,
             isSyncExpanded = state.isSyncExpanded,
             selectedInterval = state.selectedSyncingInterval,
@@ -170,7 +197,7 @@ fun SettingsScreenContent(
         //Refresh data component
         SettingsRefreshData(
             modifier = Modifier.padding(contentPaddingValues),
-            lastSyncDate = state.lastSyncDate,
+            lastSyncDate = state.lastSyncTimestamp,
             onRefreshData = {
                 onActions(SettingsActions.ManualSync)
             }
@@ -180,7 +207,7 @@ fun SettingsScreenContent(
         SettingsLogOut(
             modifier = Modifier.padding(contentPaddingValues),
             onLogOut = {
-                onActions(SettingsActions.OnLogout)
+                onActions(SettingsActions.OnLogoutClick)
             }
         )
     }
@@ -241,7 +268,7 @@ fun SettingsSyncInterval(
 @Composable
 fun SettingsRefreshData(
     modifier: Modifier = Modifier,
-    lastSyncDate: String,
+    lastSyncDate: Long,
     onRefreshData: () -> Unit,
 ) {
     Row(
@@ -269,7 +296,7 @@ fun SettingsRefreshData(
             )
             Text(
                 modifier = Modifier.padding(top = 2.dp),
-                text = stringResource(R.string.last_sync) + ":" + lastSyncDate,
+                text = stringResource(R.string.last_sync) + ": " + formatToUiText(lastSyncDate).asString(),
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

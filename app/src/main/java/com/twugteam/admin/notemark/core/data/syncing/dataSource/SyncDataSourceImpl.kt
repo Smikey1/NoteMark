@@ -33,13 +33,13 @@ class SyncDataSourceImpl(
         .setRequiredNetworkType(NetworkType.CONNECTED)
         .build()
 
-    override suspend fun manualSync() {
+    override suspend fun manualSync(){
         Timber.tag("SyncingWorker").d("manualSync started")
         val syncingRequest =
-            OneTimeWorkRequestBuilder<SyncingWorker>().setConstraints(constraints).addTag(manualWorkTag).build()
-        //if constraints isn't achieved(no internet) and we call manualSync() nothing will happen
-        //but when internet is restored/turned on the workerManager will start working alone
-        //this ensure if manualSync() clicked multiple times to keep the old syncing running
+            OneTimeWorkRequestBuilder<SyncingWorker>().addTag(manualWorkTag).build()
+
+        //this ensure ExistingWorkPolicy.REPLACE if manualSync() clicked multiple times to replace the old syncing running
+        //with this one it's like cancelling the old one and starting new one
         workManager.enqueueUniqueWork(
             manualWorkName,
             ExistingWorkPolicy.REPLACE,
@@ -53,13 +53,14 @@ class SyncDataSourceImpl(
             //.await() to wait the operation to finish cancelling to check for result Success/Failure
             val operation = workManager.cancelUniqueWork(SYNC_INTERVAL_WORK_NAME).await()
 
-
             Timber.tag("SyncingWorker").d("syncWithInterval cancellation operation: $operation")
             return
         }
         Timber.tag("SyncingWorker")
             .d("periodicWorkRequest started interval: $interval and timeUnit: $timeUnit")
 
+        //if constraints isn't achieved(no internet) and we call manualSync() nothing will happen
+        //but when internet is restored/turned on the workerManager will start working alone
         //setInitialDelay is used to avoid syncing immediately when enqueue it
         //like that it will sync after the given interval without syncing immediately after being called
         val periodicWorkRequest = PeriodicWorkRequestBuilder<SyncingWorker>(interval, timeUnit)
@@ -80,23 +81,25 @@ class SyncDataSourceImpl(
         )
     }
 
-    override suspend fun cancelAllWork(): Boolean {
+    //only cancel queue syncing worker but keep manual running
+    override suspend fun cancelIntervalWorker(): Boolean {
        return try {
            //this will cancel all work
-           workManager.cancelAllWork()
+//           workManager.cancelAllWork()
 
            //this can be used if we have multiple work working and we want to cancel some by name
 //            workManager.cancelUniqueWork(manualWorkName).await()
 //            workManager.cancelUniqueWork(syncIntervalWorkName).await()
 
+
            //this can be used to cancel some working work by tag
 //           workManager.cancelAllWorkByTag(manualWorkTag)
-//           workManager.cancelAllWorkByTag(syncingWorkTag)
+           workManager.cancelAllWorkByTag(syncingWorkTag)
 
-            Timber.tag("SyncingWorker").d("cancelAllWork: success")
+            Timber.tag("SyncingWorker").d("cancelIntervalWorker: success")
             true
         } catch (e: Exception){
-            Timber.tag("SyncingWorker").e("cancelAllWork: ${e.localizedMessage}")
+            Timber.tag("SyncingWorker").e("cancelIntervalWorker: ${e.localizedMessage}")
             false
         }
     }
