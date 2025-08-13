@@ -128,10 +128,15 @@ class HttpClientFactory(
                                     accessToken = "",
                                     refreshToken = ""
                                 )
-                                //set refreshTokenExpired true to force logout
-                                sessionStorage.setRefreshTokenExpired(refreshTokenExpired = true)
-                                //clear sessionTokens, username and userId after force logout
-                                sessionStorage.clearAuthInfo()
+
+                                //if the user is logged out and we enter username/password wrong
+                                //does not force logout neither clearAuthInfo since it's already null
+                                if(sessionStorage.getAuthInfo() != null) {
+                                    //clear sessionTokens, username and userId after force logout
+                                    sessionStorage.clearAuthInfo()
+                                    //set refreshTokenExpired true to force logout
+                                    sessionStorage.setRefreshTokenExpired(refreshTokenExpired = true)
+                                }
                                 Timber.tag("MyTag").d("else: ${bearerTokens.accessToken}")
                                 bearerTokens
                             }

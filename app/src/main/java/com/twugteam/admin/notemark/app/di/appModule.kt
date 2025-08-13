@@ -31,6 +31,11 @@ val Context.refreshTokenDataStore: DataStore<Preferences>
         produceFile = { preferencesDataStoreFile("refreshToken") }
     )
 
+val Context.remoteNotesFetchDataStore: DataStore<Preferences>
+    get() = PreferenceDataStoreFactory.create(
+        produceFile = { preferencesDataStoreFile("remoteNotesFetch") }
+    )
+
 val appModule = module {
     single<Context> { androidApplication().applicationContext }
 
@@ -45,6 +50,10 @@ val appModule = module {
 
     single<DataStore<Preferences>>(named("refreshTokenDataStore")){
         get<Context>().refreshTokenDataStore
+    }
+
+    single<DataStore<Preferences>>(named("remoteNotesFetchDataStore")) {
+        get<Context>().remoteNotesFetchDataStore
     }
     single<CoroutineScope> {
         (androidApplication() as NoteMarkApp).applicationScope

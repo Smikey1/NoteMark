@@ -10,6 +10,7 @@ import com.twugteam.admin.notemark.core.database.sync.SyncOperation
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
 import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
+import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.fetchRemoteDataStore.RemoteNotesFetchDataStore
 import com.twugteam.admin.notemark.features.notes.data.model.toNote
 import com.twugteam.admin.notemark.features.notes.data.workManager.WorkUtils.makeStatusNotification
 import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
@@ -27,6 +28,7 @@ class SyncingWorker(
     private val localNoteDataSource: LocalNoteDataSource,
     private val sessionStorage: SessionStorage,
     private val syncIntervalDataStore: SyncIntervalDataStore,
+    private val remoteNotesFetchDataStore: RemoteNotesFetchDataStore,
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
     private var message: String = context.getString(R.string.sync_in_progress)
@@ -92,21 +94,27 @@ class SyncingWorker(
                 //update lastSyncTimestamp in datastore
                 syncIntervalDataStore.saveLastSyncTimestamp()
 
-                //fetchAllNotes from server if sync success
-                val notes = remoteNoteDataSource.fetchAllNotes()
-                when (notes) {
-                    is com.twugteam.admin.notemark.core.domain.util.Result.Error -> {
-                        message = notes.error.toString()
-                        makeStatusNotification(
-                            message = message,
-                            context = context
-                        )
-                        return@withContext Result.failure()
-                    }
+                val shouldRemoteNotesFetch = remoteNotesFetchDataStore.getShouldFetchRemoteNotes()
+                Timber.tag("SyncingWorker").d("shouldRemoteNotesFetch: $shouldRemoteNotesFetch")
 
-                    is com.twugteam.admin.notemark.core.domain.util.Result.Success -> {
-                        notes.data.forEach { note ->
-                            localNoteDataSource.upsertNote(note)
+                if(shouldRemoteNotesFetch) {
+                    Timber.tag("SyncingWorker").d("started remote notes fetch")
+                    //fetchAllNotes from server if sync success
+                    val notes = remoteNoteDataSource.fetchAllNotes()
+                    when (notes) {
+                        is com.twugteam.admin.notemark.core.domain.util.Result.Error -> {
+                            message = notes.error.toString()
+                            makeStatusNotification(
+                                message = message,
+                                context = context
+                            )
+                            return@withContext Result.failure()
+                        }
+
+                        is com.twugteam.admin.notemark.core.domain.util.Result.Success -> {
+                            notes.data.forEach { note ->
+                                localNoteDataSource.upsertNote(note)
+                            }
                         }
                     }
                 }

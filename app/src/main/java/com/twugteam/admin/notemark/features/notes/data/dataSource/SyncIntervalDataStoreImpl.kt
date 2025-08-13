@@ -2,7 +2,7 @@ package com.twugteam.admin.notemark.features.notes.data.dataSource
 
 import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.Result
-import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.SyncIntervalDataStoreDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.syncInterval.SyncIntervalDataStoreDataSource
 import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
 import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.TimeUnit

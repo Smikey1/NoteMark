@@ -6,8 +6,8 @@ import com.twugteam.admin.notemark.features.notes.data.dataSource.RoomLocalNoteD
 import com.twugteam.admin.notemark.features.notes.data.dataSource.RoomLocalSyncDataSource
 import com.twugteam.admin.notemark.features.notes.data.dataSource.SyncIntervalDataStoreImpl
 import com.twugteam.admin.notemark.core.data.syncing.SyncRepositoryImpl
-import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.SyncIntervalDataStoreDataSource
-import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.SyncIntervalDataStoreDataSourceImpl
+import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.syncInterval.SyncIntervalDataStoreDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.syncInterval.SyncIntervalDataStoreDataSourceImpl
 import com.twugteam.admin.notemark.core.data.syncing.dataSource.SyncDataSource
 import com.twugteam.admin.notemark.core.data.syncing.dataSource.SyncDataSourceImpl
 import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
@@ -16,6 +16,10 @@ import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
 import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
 import com.twugteam.admin.notemark.core.domain.SyncRepository
+import com.twugteam.admin.notemark.features.notes.data.RemoteNotesFetchRepositoryImpl
+import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.fetchRemoteDataStore.RemoteNotesFetchDataStore
+import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.fetchRemoteDataStore.RemoteNotesFetchDataStoreImpl
+import com.twugteam.admin.notemark.features.notes.domain.RemoteNotesFetchRepository
 import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.NoteDetailViewModel
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListViewModel
 import com.twugteam.admin.notemark.features.notes.presentation.settings.SettingsViewModel
@@ -37,12 +41,21 @@ val noteModule = module {
     singleOf(::RoomLocalSyncDataSource).bind<LocalSyncDataSource>()
     singleOf(::SyncDataSourceImpl).bind<SyncDataSource>()
     singleOf(::SyncRepositoryImpl).bind<SyncRepository>()
+    singleOf(::RemoteNotesFetchDataStoreImpl).bind<RemoteNotesFetchDataStore>()
+    singleOf(::RemoteNotesFetchRepositoryImpl).bind<RemoteNotesFetchRepository>()
 
     single<SyncIntervalDataStoreDataSource>{
         SyncIntervalDataStoreDataSourceImpl(
             dataStore = get(named("syncDataStore"))
         )
     }
+
+    single<RemoteNotesFetchDataStore>{
+        RemoteNotesFetchDataStoreImpl(
+            dataStore = get(named("remoteNotesFetchDataStore"))
+        )
+    }
+
     singleOf(::SyncIntervalDataStoreImpl).bind<SyncIntervalDataStore>()
 
 }

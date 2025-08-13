@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore
+package com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.syncInterval
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

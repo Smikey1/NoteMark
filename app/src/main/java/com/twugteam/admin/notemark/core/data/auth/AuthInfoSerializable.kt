@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 @Keep
 @Serializable
 data class AuthInfoSerializable(
-    val accessToken: String,
-    val refreshToken: String,
-    val username: String,
-    val userId: String,
+    val accessToken: String = "",
+    val refreshToken: String = "",
+    val username: String = "",
+    val userId: String = "",
 )

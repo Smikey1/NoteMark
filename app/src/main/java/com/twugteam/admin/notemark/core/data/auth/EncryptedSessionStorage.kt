@@ -1,8 +1,6 @@
 package com.twugteam.admin.notemark.core.data.auth
 
-import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -20,24 +18,24 @@ import timber.log.Timber
 
 class EncryptedSessionStorage(
     private val syncDataStore: DataStore<AuthInfoSerializable?>,
-    private val refreshTokenDataStore: DataStore<Preferences>,
-    private val context: Context
+    private val refreshTokenDataStore: DataStore<Preferences>
 ) : SessionStorage {
     private val refreshTokenBoolean = booleanPreferencesKey(REFRESH_TOKEN)
 
     override suspend fun getAuthInfo(): AuthInfo? = withContext(Dispatchers.IO) {
-        return@withContext syncDataStore.data.firstOrNull()?.toAuthInfo()
+        val data = syncDataStore.data.firstOrNull()
+        return@withContext if (data == null || data == AuthInfoSerializable()) null else data.toAuthInfo()
     }
 
     override suspend fun setAuthInfo(authInfo: AuthInfo?) {
         try {
             withContext(Dispatchers.IO) {
-                if (authInfo == null) {
-                    context.dataStoreFile("notemark_pref").delete()
-                    return@withContext
-                }
                 syncDataStore.updateData {
-                    authInfo.toAuthInfoSerializable()
+                    //if authInfo is set to null just use AuthInfoSerializable()
+                    //later check if the data is null or AuthInfoSerializable() means it's null
+                    //used like that to clear the data inside AuthInfo instead of just removing/deleting it
+                    //which will remain the authInfo variables(accessToken,refreshToken,...) saved inside memory
+                    authInfo?.toAuthInfoSerializable() ?: AuthInfoSerializable()
                 }
             }
         } catch (e: Exception) {
@@ -65,7 +63,7 @@ class EncryptedSessionStorage(
             refreshTokenBoolean == true
         }
 
-    //clearing refreshToken only and username
+    //clearing authInfo
     override suspend fun clearAuthInfo(): Result<Unit, DataError.Local> {
         return try {
             setAuthInfo(null)

@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore
+package com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.syncInterval
 
 import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.Result

@@ -86,4 +86,10 @@ changes will be lost.</string>
     <string name="just_now">Just now</string>
 
 
+    //notification
+    <string name="enable_notification">Enable Notifications\n</string>
+    <string name="we_need_permission_to_alert_about_updates">We need notification permission to alert you about updates.</string>
+    <string name="go_to_settings">Go to settings</string>
+
+
 </resources>

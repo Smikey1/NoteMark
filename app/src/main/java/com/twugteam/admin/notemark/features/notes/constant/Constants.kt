@@ -13,15 +13,15 @@ object Constants {
 
     const val SYNC_INTERVAL_WORK_NAME = "SyncingWithInterval"
     const val MANUAL_SYNC_WORK_NAME = "ManualSyncing"
-    const val BROADCAST_RECEIVER_WORK_NAME = "BroadcastReceiverName"
     const val SYNC_INTERVAL_WORK_TAG = "SYNCING_TAG"
     const val MANUAL_WORK_TAG = "MANUAL_TAG"
-    const val BROADCAST_RECEIVER_TAG = "BROADCAST_RECEIVER_TAG"
 
     const val SYNC_INTERVAL = "SyncInterval"
     const val SYNC_TEXT = "SyncText"
     const val SYNC_TIME_UNIT = "SyncTimeUnit"
     const val LAST_SYNC_TIMESTAMP = "LastSyncTimestamp"
+
+    const val REMOTE_NOTES_FETCH = "RemoteNotesFetch"
 
     const val REFRESH_TOKEN = "RefreshToken"
 

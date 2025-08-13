@@ -1,5 +1,6 @@
 package com.twugteam.admin.notemark.features.notes.data.dataSource
 
+import com.twugteam.admin.notemark.core.data.syncing.dataSource.SyncDataSource
 import com.twugteam.admin.notemark.core.database.sync.SyncEntity
 import com.twugteam.admin.notemark.core.database.sync.SyncOperation
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
@@ -9,7 +10,6 @@ import com.twugteam.admin.notemark.core.domain.util.EmptyResult
 import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
 import com.twugteam.admin.notemark.core.presentation.ui.formatToString
-import com.twugteam.admin.notemark.core.data.syncing.dataSource.SyncDataSource
 import com.twugteam.admin.notemark.features.notes.constant.Constants
 import com.twugteam.admin.notemark.features.notes.data.model.toDto
 import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
@@ -18,6 +18,9 @@ import com.twugteam.admin.notemark.features.notes.domain.NoteId
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
 import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.auth.authProvider
+import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -32,7 +35,7 @@ class OfflineFirstDataSource(
     private val syncDataSource: SyncDataSource,
     private val sessionStorage: SessionStorage,
     private val syncIntervalDataStore: SyncIntervalDataStore,
-
+    private val httpClient: HttpClient,
     private val applicationScope: CoroutineScope
 ) : NoteRepository {
     override suspend fun getNoteById(id: NoteId): Note {
@@ -177,6 +180,10 @@ class OfflineFirstDataSource(
 
                     //clear session tokens and username/userId
                     sessionStorage.clearAuthInfo()
+
+                    //clear bearer token after logOut
+                    httpClient.authProvider<BearerAuthProvider>()?.clearToken()
+
 
                     //reset interval to manual
                     syncIntervalDataStore.saveInterval(

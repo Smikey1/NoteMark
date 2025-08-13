@@ -29,8 +29,7 @@ val coreModule = module {
     single<SessionStorage> {
         EncryptedSessionStorage(
             syncDataStore = get(named("authInfoDataStore")),
-            refreshTokenDataStore = get(named("refreshTokenDataStore")),
-            context = get()
+            refreshTokenDataStore = get(named("refreshTokenDataStore"))
         )
     }
 

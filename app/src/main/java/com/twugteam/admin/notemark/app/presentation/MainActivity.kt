@@ -2,9 +2,13 @@ package com.twugteam.admin.notemark.app.presentation
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -20,6 +24,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.app.navigation.NavigationRoot
 import com.twugteam.admin.notemark.app.navigation.Screens
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
@@ -95,11 +100,12 @@ class MainActivity : ComponentActivity() {
 
     //request for post notification permission
     private fun requestNotificationPermission() {
-        // This is only necessary for API level >= 33 (TIRAMISU)
+        //This is only necessary for API level >= 33 (TIRAMISU)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val hasPermission =
                 ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
                         PackageManager.PERMISSION_GRANTED
+            Timber.tag("MyTag").d("hasNotificationPermission: $hasPermission")
             if (!hasPermission) {
                 ActivityCompat.requestPermissions(
                     this, arrayOf(Manifest.permission.POST_NOTIFICATIONS),
@@ -107,5 +113,35 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String?>,
+        grantResults: IntArray,
+        deviceId: Int
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults, deviceId)
+        if (requestCode == 0) {
+            if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                //if permission not granted, showDialog that can take you to application settings
+                //to allow notification
+                showPermissionDeniedDialog()
+            }
+        }
+    }
+
+    //dialog to show when notification denied
+    private fun showPermissionDeniedDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(this.getString(R.string.enable_notification))
+            .setMessage(this.getString(R.string.we_need_permission_to_alert_about_updates))
+            .setPositiveButton(this.getString(R.string.go_to_settings)) { _, _ ->
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.fromParts("package", packageName, null)
+                startActivity(intent)
+            }
+            .setNegativeButton(this.getString(R.string.cancel), null)
+            .show()
     }
 }

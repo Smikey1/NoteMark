@@ -4,16 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_BOOT_COMPLETED
-import androidx.work.Constraints
-import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.twugteam.admin.notemark.core.data.syncing.dataSource.SyncDataSource
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
-import com.twugteam.admin.notemark.features.notes.constant.Constants.BROADCAST_RECEIVER_TAG
-import com.twugteam.admin.notemark.features.notes.constant.Constants.BROADCAST_RECEIVER_WORK_NAME
-import com.twugteam.admin.notemark.features.notes.data.workManager.SyncingWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
