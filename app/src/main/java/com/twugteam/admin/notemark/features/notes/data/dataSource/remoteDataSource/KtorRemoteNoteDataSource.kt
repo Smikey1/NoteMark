@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.data.dataSource
+package com.twugteam.admin.notemark.features.notes.data.dataSource.remoteDataSource
 
 import com.twugteam.admin.notemark.core.constant.ApiEndpoints
 import com.twugteam.admin.notemark.core.domain.notes.Note
@@ -17,8 +17,7 @@ import com.twugteam.admin.notemark.features.notes.data.model.NoteDto
 import com.twugteam.admin.notemark.features.notes.data.model.SyncOperationResponse
 import com.twugteam.admin.notemark.features.notes.data.model.toCreateNoteRequest
 import com.twugteam.admin.notemark.features.notes.data.model.toNote
-import com.twugteam.admin.notemark.features.notes.domain.NoteId
-import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.NoteId
 import io.ktor.client.HttpClient
 import timber.log.Timber
 
@@ -42,7 +41,7 @@ class KtorRemoteNoteDataSource(
         page: Int,
         size: Int
     ): Result<List<Note>, DataError.Network> {
-        Timber.tag("AllNotes").d("page: $page size: $size")
+        Timber.Forest.tag("AllNotes").d("page: $page size: $size")
         return httpClient.get<SyncOperationResponse>(
             route = ApiEndpoints.NOTES_ENDPOINT,
             queryParams = mapOf(
@@ -65,8 +64,8 @@ class KtorRemoteNoteDataSource(
             networkError = { it.toDataErrorNetwork() }
         )
         when (postNote) {
-            is Result.Error -> Timber.tag("MyTag").e("postNote: error ${postNote.error}")
-            is Result.Success -> Timber.tag("MyTag").d("postNote: success ${postNote.data}")
+            is Result.Error -> Timber.Forest.tag("MyTag").e("postNote: error ${postNote.error}")
+            is Result.Success -> Timber.Forest.tag("MyTag").d("postNote: success ${postNote.data}")
         }
         return postNote
     }
@@ -80,8 +79,8 @@ class KtorRemoteNoteDataSource(
             networkError = { it.toDataErrorNetwork() }
         )
         when (putNote) {
-            is Result.Error -> Timber.tag("MyTag").e("putNote: error ${putNote.error}")
-            is Result.Success -> Timber.tag("MyTag").d("putNote: success ${note.title}")
+            is Result.Error -> Timber.Forest.tag("MyTag").e("putNote: error ${putNote.error}")
+            is Result.Success -> Timber.Forest.tag("MyTag").d("putNote: success ${note.title}")
         }
         return putNote
     }

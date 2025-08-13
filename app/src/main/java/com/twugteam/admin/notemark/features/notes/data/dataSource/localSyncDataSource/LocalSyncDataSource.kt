@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.domain
+package com.twugteam.admin.notemark.features.notes.data.dataSource.localSyncDataSource
 
 import com.twugteam.admin.notemark.core.database.sync.SyncEntity
 import com.twugteam.admin.notemark.core.domain.util.DataError

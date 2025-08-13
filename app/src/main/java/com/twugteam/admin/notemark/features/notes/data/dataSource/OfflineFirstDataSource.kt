@@ -12,11 +12,11 @@ import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
 import com.twugteam.admin.notemark.core.presentation.ui.formatToString
 import com.twugteam.admin.notemark.features.notes.constant.Constants
 import com.twugteam.admin.notemark.features.notes.data.model.toDto
-import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
-import com.twugteam.admin.notemark.features.notes.domain.LocalSyncDataSource
-import com.twugteam.admin.notemark.features.notes.domain.NoteId
+import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.LocalNoteDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.localSyncDataSource.LocalSyncDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.NoteId
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
-import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.remoteDataSource.RemoteNoteDataSource
 import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.authProvider

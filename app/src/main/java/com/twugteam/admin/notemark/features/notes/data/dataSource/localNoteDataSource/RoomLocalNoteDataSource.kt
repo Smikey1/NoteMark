@@ -1,4 +1,4 @@
-package com.twugteam.admin.notemark.features.notes.data.dataSource
+package com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource
 
 import android.database.sqlite.SQLiteFullException
 import com.twugteam.admin.notemark.core.database.mappers.toNote
@@ -7,8 +7,7 @@ import com.twugteam.admin.notemark.core.database.notes.NoteDao
 import com.twugteam.admin.notemark.core.domain.notes.Note
 import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.Result
-import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
-import com.twugteam.admin.notemark.features.notes.domain.NoteId
+import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.NoteId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
@@ -50,10 +49,10 @@ class RoomLocalNoteDataSource(
     override suspend fun clearNotes(): Result<Unit, DataError.Local> {
         return try {
             noteDao.clearNotes()
-            Timber.tag("MyTag").d("clearNotes success")
+            Timber.Forest.tag("MyTag").d("clearNotes success")
             Result.Success(Unit)
         } catch (e: Exception) {
-            Timber.tag("MyTag").e("clearNotes error: ${e.localizedMessage}")
+            Timber.Forest.tag("MyTag").e("clearNotes error: ${e.localizedMessage}")
             Result.Error(
                 error = DataError.Local.Unknown(
                     unknownError = e.localizedMessage?.toString() ?: ""

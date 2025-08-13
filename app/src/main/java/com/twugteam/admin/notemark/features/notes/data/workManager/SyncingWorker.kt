@@ -13,9 +13,9 @@ import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
 import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.fetchRemoteDataStore.RemoteNotesFetchDataStore
 import com.twugteam.admin.notemark.features.notes.data.model.toNote
 import com.twugteam.admin.notemark.features.notes.data.workManager.WorkUtils.makeStatusNotification
-import com.twugteam.admin.notemark.features.notes.domain.LocalNoteDataSource
-import com.twugteam.admin.notemark.features.notes.domain.LocalSyncDataSource
-import com.twugteam.admin.notemark.features.notes.domain.RemoteNoteDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.LocalNoteDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.localSyncDataSource.LocalSyncDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.remoteDataSource.RemoteNoteDataSource
 import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

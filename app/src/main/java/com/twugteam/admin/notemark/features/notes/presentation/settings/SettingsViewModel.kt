@@ -101,6 +101,8 @@ class SettingsViewModel(
                         Timber.tag("SyncingWorker").d("workInfo: ${workInfo.first().state}")
                         when (workInfo.first().state) {
                             WorkInfo.State.SUCCEEDED -> {
+                                //set fetch notes from remote to true after syncing successfully
+                                remoteNotesFetchRepository.setShouldFetchRemoteNotes(shouldFetchNotes = true)
                                 //sync succeed, logout now
                                 logOut()
                             }
