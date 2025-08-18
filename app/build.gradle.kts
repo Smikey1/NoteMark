@@ -132,4 +132,11 @@ dependencies {
     //core is needed to use those in WorkerUtils
     //ActivityCompat NotificationCompat NotificationManagerCompat
     implementation (libs.androidx.core)
+
+    //paging with room
+    implementation(libs.androidx.room.paging)
+
+    //Paging 3
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
 }

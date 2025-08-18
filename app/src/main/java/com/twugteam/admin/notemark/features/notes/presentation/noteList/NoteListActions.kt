@@ -6,4 +6,5 @@ sealed interface NoteListActions {
     data object OnDialogConfirm : NoteListActions
     data object OnDialogDismiss : NoteListActions
     data object NavigateToSettings: NoteListActions
+    data class IsLoading(val isLoading: Boolean): NoteListActions
 }

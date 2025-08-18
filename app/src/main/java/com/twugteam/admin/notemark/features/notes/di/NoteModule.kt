@@ -1,25 +1,27 @@
 package com.twugteam.admin.notemark.features.notes.di
 
-import com.twugteam.admin.notemark.features.notes.data.dataSource.remoteDataSource.KtorRemoteNoteDataSource
-import com.twugteam.admin.notemark.features.notes.data.dataSource.OfflineFirstDataSource
-import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.RoomLocalNoteDataSource
-import com.twugteam.admin.notemark.features.notes.data.dataSource.localSyncDataSource.RoomLocalSyncDataSource
-import com.twugteam.admin.notemark.features.notes.data.dataSource.SyncIntervalDataStoreImpl
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.twugteam.admin.notemark.core.data.syncing.SyncRepositoryImpl
-import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.syncInterval.SyncIntervalDataStoreDataSource
-import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.syncInterval.SyncIntervalDataStoreDataSourceImpl
 import com.twugteam.admin.notemark.core.data.syncing.dataSource.SyncDataSource
 import com.twugteam.admin.notemark.core.data.syncing.dataSource.SyncDataSourceImpl
-import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.LocalNoteDataSource
-import com.twugteam.admin.notemark.features.notes.data.dataSource.localSyncDataSource.LocalSyncDataSource
-import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
-import com.twugteam.admin.notemark.features.notes.data.dataSource.remoteDataSource.RemoteNoteDataSource
-import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
+import com.twugteam.admin.notemark.core.database.notes.NoteDao
+import com.twugteam.admin.notemark.core.database.notes.NoteEntity
 import com.twugteam.admin.notemark.core.domain.SyncRepository
-import com.twugteam.admin.notemark.features.notes.data.dataSource.RemoteNotesFetchRepositoryImpl
-import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.fetchRemoteDataStore.RemoteNotesFetchDataStore
-import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.fetchRemoteDataStore.RemoteNotesFetchDataStoreImpl
-import com.twugteam.admin.notemark.features.notes.domain.RemoteNotesFetchRepository
+import com.twugteam.admin.notemark.features.notes.data.dataSource.OfflineFirstDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.SyncIntervalDataStoreImpl
+import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.LocalNoteDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.RoomLocalNoteDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.localSyncDataSource.LocalSyncDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.localSyncDataSource.RoomLocalSyncDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.syncInterval.SyncIntervalDataStoreDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.syncInterval.SyncIntervalDataStoreDataSourceImpl
+import com.twugteam.admin.notemark.features.notes.data.dataSource.remoteDataSource.KtorRemoteNoteDataSource
+import com.twugteam.admin.notemark.features.notes.data.dataSource.remoteDataSource.RemoteNoteDataSource
+import com.twugteam.admin.notemark.features.notes.data.paging.NoteRemoteMediator
+import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
+import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
 import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.NoteDetailViewModel
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListViewModel
 import com.twugteam.admin.notemark.features.notes.presentation.settings.SettingsViewModel
@@ -29,6 +31,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
+@OptIn(ExperimentalPagingApi::class)
 val noteModule = module {
 
     viewModelOf(::NoteListViewModel)
@@ -41,21 +44,39 @@ val noteModule = module {
     singleOf(::RoomLocalSyncDataSource).bind<LocalSyncDataSource>()
     singleOf(::SyncDataSourceImpl).bind<SyncDataSource>()
     singleOf(::SyncRepositoryImpl).bind<SyncRepository>()
-    singleOf(::RemoteNotesFetchDataStoreImpl).bind<RemoteNotesFetchDataStore>()
-    singleOf(::RemoteNotesFetchRepositoryImpl).bind<RemoteNotesFetchRepository>()
 
-    single<SyncIntervalDataStoreDataSource>{
+    single<SyncIntervalDataStoreDataSource> {
         SyncIntervalDataStoreDataSourceImpl(
             dataStore = get(named("syncDataStore"))
         )
     }
 
-    single<RemoteNotesFetchDataStore>{
-        RemoteNotesFetchDataStoreImpl(
-            dataStore = get(named("remoteNotesFetchDataStore"))
+    singleOf(::SyncIntervalDataStoreImpl).bind<SyncIntervalDataStore>()
+
+    single {
+        NoteRemoteMediator(
+            database = get(),
+            remoteNoteDataSource = get(),
+            localNoteDataSource = get()
         )
     }
 
-    singleOf(::SyncIntervalDataStoreImpl).bind<SyncIntervalDataStore>()
-
+    single<Pager<Int, NoteEntity>> {
+        Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                prefetchDistance = 4,
+                initialLoadSize = 20,
+                enablePlaceholders = false
+            ),
+            remoteMediator = NoteRemoteMediator(
+                database = get(),
+                remoteNoteDataSource = get(),
+                localNoteDataSource = get()
+            ),
+            pagingSourceFactory = {
+                get<NoteDao>().getPagingNotes()
+            }
+        )
+    }
 }

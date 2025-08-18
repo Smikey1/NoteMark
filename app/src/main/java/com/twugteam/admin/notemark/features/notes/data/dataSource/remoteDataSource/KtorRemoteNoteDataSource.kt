@@ -36,12 +36,12 @@ class KtorRemoteNoteDataSource(
         )
     }
 
-    override suspend fun fetchAllNotes(
+    override suspend fun fetchNotesByPageAndSize(
         //by default page = -1 size = 0 which means will fetch all notes
         page: Int,
         size: Int
     ): Result<List<Note>, DataError.Network> {
-        Timber.Forest.tag("AllNotes").d("page: $page size: $size")
+        Timber.tag("MyTag").d("page: $page size: $size")
         return httpClient.get<SyncOperationResponse>(
             route = ApiEndpoints.NOTES_ENDPOINT,
             queryParams = mapOf(
@@ -51,6 +51,17 @@ class KtorRemoteNoteDataSource(
         ).mapToResult(
             success = { list -> list.notes.map { it.toNote() } },
             networkError = { it.toDataErrorNetwork() }
+        )
+    }
+
+    override suspend fun fetchNotesTotal(): Result<Int, DataError.Network> {
+        return httpClient.get<SyncOperationResponse>(
+            route = ApiEndpoints.NOTES_ENDPOINT,
+        ).mapToResult(
+            success = { result ->
+                result.total
+            },
+            networkError = { it.toDataErrorNetwork()}
         )
     }
 

@@ -7,7 +7,6 @@ import com.twugteam.admin.notemark.core.database.notes.NoteDao
 import com.twugteam.admin.notemark.core.domain.notes.Note
 import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.Result
-import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.NoteId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
@@ -15,6 +14,18 @@ import timber.log.Timber
 class RoomLocalNoteDataSource(
     private val noteDao: NoteDao
 ) : LocalNoteDataSource {
+
+    override suspend fun upsertAllNotes(notes: List<Note>) {
+        try {
+            noteDao.insertAllNotes(notes = notes.map {
+                it.toNoteEntity()
+            })
+            Timber.tag("MyTag").d("insertAllNotes: success")
+        } catch (e: Exception) {
+            Timber.tag("MyTag").e("insertAllNotes: error: ${e.localizedMessage}")
+        }
+    }
+
     override suspend fun getNotesById(id: NoteId): Note {
         return noteDao.getNoteById(id).toNote()
     }
@@ -41,7 +52,7 @@ class RoomLocalNoteDataSource(
         return try {
             noteDao.deleteNoteById(id)
             Result.Success(Unit)
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.Error(DataError.Local.Unknown(unknownError = "${e.localizedMessage}"))
         }
     }

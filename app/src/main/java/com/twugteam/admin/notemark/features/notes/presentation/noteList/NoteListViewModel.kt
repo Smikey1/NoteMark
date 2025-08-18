@@ -3,14 +3,20 @@ package com.twugteam.admin.notemark.features.notes.presentation.noteList
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.cachedIn
+import androidx.paging.map
+import com.twugteam.admin.notemark.core.database.notes.NoteEntity
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
 import com.twugteam.admin.notemark.core.domain.network.ConnectivityObserver
-import com.twugteam.admin.notemark.core.presentation.ui.toNoteUi
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
+import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.toNoteUi
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.util.getInitial
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,22 +27,41 @@ class NoteListViewModel(
     private val noteRepository: NoteRepository,
     private val sessionStorage: SessionStorage,
     private val connectivityObserver: ConnectivityObserver,
+    pager: Pager<Int, NoteEntity>
 ) : ViewModel() {
     private val _state: MutableStateFlow<NoteListUiState> = MutableStateFlow(NoteListUiState())
     val state = _state.asStateFlow()
 
+    private val _events = Channel<NoteListEvents>()
+    val events = _events.receiveAsFlow()
+
+    //mapping pager from NoteEntity to NoteUi
+    val notesPagingFlow = pager.flow.map { pagingData ->
+        pagingData.map { entity ->
+            entity.toNoteUi()
+        }
+    }.cachedIn(viewModelScope)
+
     init {
         viewModelScope.launch {
-            //getNetworkConnectivity(), getUsername() and getNotes() run in parallel
-            //because getNetworkConnectivity() and getNotes() launch in a viewmodelScope.launch{}
+            //getNetworkConnectivity(), getUsername() and getNotesPaging() run in parallel
+            //because getNetworkConnectivity() and getNotesPaging() launch in a viewmodelScope.launch{}
             getNetworkConnectivity()
-            getNotes()
+            //getNotesPaging()
+            getNotesPaging()
             getUsername()
         }
     }
 
-    private val _events = Channel<NoteListEvents>()
-    val events = _events.receiveAsFlow()
+    private fun getNotesPaging() {
+        viewModelScope.launch {
+            _state.update { newState ->
+                newState.copy(
+                    notesPagingFlow = notesPagingFlow
+                )
+            }
+        }
+    }
 
     fun onActions(noteListActions: NoteListActions) {
         when (noteListActions) {
@@ -45,7 +70,19 @@ class NoteListViewModel(
             NoteListActions.OnDialogConfirm -> deleteNote()
             NoteListActions.OnDialogDismiss -> onDialogCancel()
             NoteListActions.NavigateToSettings -> navigateToSettings()
+            is NoteListActions.IsLoading -> isLoading(isLoading = noteListActions.isLoading)
         }
+    }
+
+    private fun isLoading(isLoading: Boolean) {
+        viewModelScope.launch {
+        delay(2000)
+        _state.update { newState ->
+            newState.copy(
+                isLoading = isLoading
+            )
+        }
+            }
     }
 
 
@@ -86,7 +123,7 @@ class NoteListViewModel(
     private fun showLoader(showLoader: Boolean) {
         _state.update { newState ->
             newState.copy(
-                isLoading = showLoader
+                dialogLoading = showLoader
             )
         }
     }
@@ -114,22 +151,6 @@ class NoteListViewModel(
             newState.copy(
                 showDialog = showDialog
             )
-        }
-    }
-
-
-    private fun getNotes() {
-        viewModelScope.launch {
-            noteRepository.getNotes().collect { note ->
-                val noteList = note.map {
-                    it.toNoteUi()
-                }
-                _state.update { newState ->
-                    newState.copy(
-                        notes = noteList,
-                    )
-                }
-            }
         }
     }
 

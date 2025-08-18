@@ -78,7 +78,7 @@ changes will be lost.</string>
     <string name="already_synced">Already synced!</string>
     <string name="sync_your_data_or_skip_syncing">Before logging out, would you like to sync your data or skip syncing?</string>
     <string name="sync_and_logout">Sync &amp; Logout</string>
-    <string name="sync_without_logout">Sync without Logout</string>
+    <string name="logout_without_syncing">Logout without Syncing</string>
     <string name="confirm_logout">Confirm Logout</string>
     <string name="no_internet">No internet connection!</string>
     <string name="logout_sync_failed">An error occurred during sync. You can try again or log out without syncing.</string>
@@ -90,6 +90,7 @@ changes will be lost.</string>
     <string name="enable_notification">Enable Notifications\n</string>
     <string name="we_need_permission_to_alert_about_updates">We need notification permission to alert you about updates.</string>
     <string name="go_to_settings">Go to settings</string>
+    <string name="retry">Retry</string>
 
 
 </resources>

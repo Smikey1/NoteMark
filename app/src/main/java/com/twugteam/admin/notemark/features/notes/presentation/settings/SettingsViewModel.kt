@@ -15,7 +15,6 @@ import com.twugteam.admin.notemark.core.presentation.ui.asUiText
 import com.twugteam.admin.notemark.features.notes.constant.Constants.MANUAL_SYNC_WORK_NAME
 import com.twugteam.admin.notemark.features.notes.data.model.SyncInterval
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
-import com.twugteam.admin.notemark.features.notes.domain.RemoteNotesFetchRepository
 import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -37,7 +36,6 @@ class SettingsViewModel(
     private val syncIntervalDataStore: SyncIntervalDataStore,
     private val connectivityObserver: ConnectivityObserver,
     private val workManager: WorkManager,
-    private val remoteNotesFetchRepository: RemoteNotesFetchRepository
 ) : ViewModel() {
     private val manualWorkName = MANUAL_SYNC_WORK_NAME
     private val _state: MutableStateFlow<SettingsUiState> = MutableStateFlow(SettingsUiState())
@@ -48,10 +46,10 @@ class SettingsViewModel(
 
     init {
         //each one should run internally on an independent scope
-            //read interval and timeUnit from dataStore
-            getInterval()
-            //launch on independent scope
-            getLastSyncTimestamp()
+        //read interval and timeUnit from dataStore
+        getInterval()
+        //launch on independent scope
+        getLastSyncTimestamp()
     }
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
@@ -86,10 +84,6 @@ class SettingsViewModel(
             }
 
             if (withSyncing) {
-                //don't fetch notes from remote and save locally cause we are going to clear local
-                //notes after logOut
-                remoteNotesFetchRepository.setShouldFetchRemoteNotes(shouldFetchNotes = false)
-
                 //start syncing
                 syncRepository.manualSync()
 
@@ -101,8 +95,6 @@ class SettingsViewModel(
                         Timber.tag("SyncingWorker").d("workInfo: ${workInfo.first().state}")
                         when (workInfo.first().state) {
                             WorkInfo.State.SUCCEEDED -> {
-                                //set fetch notes from remote to true after syncing successfully
-                                remoteNotesFetchRepository.setShouldFetchRemoteNotes(shouldFetchNotes = true)
                                 //sync succeed, logout now
                                 logOut()
                             }

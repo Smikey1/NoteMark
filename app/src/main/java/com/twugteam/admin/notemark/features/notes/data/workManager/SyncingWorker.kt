@@ -10,10 +10,8 @@ import com.twugteam.admin.notemark.core.database.sync.SyncOperation
 import com.twugteam.admin.notemark.core.domain.auth.SessionStorage
 import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
-import com.twugteam.admin.notemark.features.notes.data.dataSource.preferencesDataStore.fetchRemoteDataStore.RemoteNotesFetchDataStore
 import com.twugteam.admin.notemark.features.notes.data.model.toNote
 import com.twugteam.admin.notemark.features.notes.data.workManager.WorkUtils.makeStatusNotification
-import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.LocalNoteDataSource
 import com.twugteam.admin.notemark.features.notes.data.dataSource.localSyncDataSource.LocalSyncDataSource
 import com.twugteam.admin.notemark.features.notes.data.dataSource.remoteDataSource.RemoteNoteDataSource
 import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
@@ -25,10 +23,8 @@ class SyncingWorker(
     private val context: Context,
     private val localSyncDataSource: LocalSyncDataSource,
     private val remoteNoteDataSource: RemoteNoteDataSource,
-    private val localNoteDataSource: LocalNoteDataSource,
     private val sessionStorage: SessionStorage,
     private val syncIntervalDataStore: SyncIntervalDataStore,
-    private val remoteNotesFetchDataStore: RemoteNotesFetchDataStore,
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
     private var message: String = context.getString(R.string.sync_in_progress)
@@ -76,8 +72,7 @@ class SyncingWorker(
                             )
                             message = context.getString(R.string.sync_completed_successfully)
                         } else {
-                            val error =
-                                result.asEmptyDataResult() as com.twugteam.admin.notemark.core.domain.util.Result.Error
+                            val error = result.asEmptyDataResult() as com.twugteam.admin.notemark.core.domain.util.Result.Error
                             message = context.getString(
                                 R.string.sync_failed, error.error.toString()
                             )
@@ -89,35 +84,9 @@ class SyncingWorker(
                     }
                 }
 
-
                 //reaching here means the worker succeed syncing
                 //update lastSyncTimestamp in datastore
                 syncIntervalDataStore.saveLastSyncTimestamp()
-
-                val shouldRemoteNotesFetch = remoteNotesFetchDataStore.getShouldFetchRemoteNotes()
-                Timber.tag("SyncingWorker").d("shouldRemoteNotesFetch: $shouldRemoteNotesFetch")
-
-                if(shouldRemoteNotesFetch) {
-                    Timber.tag("SyncingWorker").d("started remote notes fetch")
-                    //fetchAllNotes from server if sync success
-                    val notes = remoteNoteDataSource.fetchAllNotes()
-                    when (notes) {
-                        is com.twugteam.admin.notemark.core.domain.util.Result.Error -> {
-                            message = notes.error.toString()
-                            makeStatusNotification(
-                                message = message,
-                                context = context
-                            )
-                            return@withContext Result.failure()
-                        }
-
-                        is com.twugteam.admin.notemark.core.domain.util.Result.Success -> {
-                            notes.data.forEach { note ->
-                                localNoteDataSource.upsertNote(note)
-                            }
-                        }
-                    }
-                }
 
                 //if interval or timeUnit was null (Manual only) it will not enter sync operations
                 //if it did not enter sync operations show successfully completed

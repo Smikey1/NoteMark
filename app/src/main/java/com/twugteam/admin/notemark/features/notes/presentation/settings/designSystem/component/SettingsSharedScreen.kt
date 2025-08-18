@@ -120,7 +120,7 @@ fun SettingsSharedScreen(
                 isLoading = state.isLoading,
                 bodyResId = stringResource(R.string.sync_your_data_or_skip_syncing),
                 confirmButtonId = stringResource(R.string.sync_and_logout),
-                dismissButtonId = stringResource(R.string.sync_without_logout),
+                dismissButtonId = stringResource(R.string.logout_without_syncing),
                 onConfirmClick = {
                     onActions(SettingsActions.OnLogOutConfirm(withSyncing = true))
                 },

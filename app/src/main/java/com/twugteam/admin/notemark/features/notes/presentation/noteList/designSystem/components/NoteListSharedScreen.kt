@@ -1,5 +1,6 @@
 package com.twugteam.admin.notemark.features.notes.presentation.noteList.designSystem.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -14,11 +15,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +42,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons.CloudOff
@@ -50,6 +58,7 @@ import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteList
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.util.TextUtil
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.util.getInitial
+import timber.log.Timber
 
 @Composable
 fun NoteListSharedScreen(
@@ -63,6 +72,8 @@ fun NoteListSharedScreen(
     onActions: (NoteListActions) -> Unit,
     windowSizeClass: WindowSizeClass
 ) {
+    val notePagingFlow = state.notesPagingFlow.collectAsLazyPagingItems()
+
     Scaffold(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.surface,
@@ -107,62 +118,47 @@ fun NoteListSharedScreen(
             }
         }
     ) { innerPadding ->
-        if (!state.notes.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                NoteMarkList(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(noteMarkListPaddingValues)
-                        .padding(innerPadding),
-                    verticalSpace = verticalSpace,
-                    horizontalSpace = horizontalSpace,
-                    noteMarkList = state.notes,
-                    staggeredGridCells = staggeredGridCells,
-                    onNoteClick = { noteUi ->
-                        onActions(NoteListActions.NavigateToNoteDetail(noteId = noteUi.id))
-                    },
-                    onNoteDelete = { noteUi ->
-                        onActions(NoteListActions.OnNoteDelete(noteId = noteUi.id!!))
-                    },
-                    windowSizeClass = windowSizeClass
-                )
-                NoteMarkDialog(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Center),
-                    showDialog = state.showDialog,
-                    titleResId = stringResource(R.string.dialog_delete_title),
-                    isLoading = state.isLoading,
-                    bodyResId = stringResource(R.string.dialog_delete_body_text),
-                    confirmButtonId = stringResource(R.string.delete),
-                    dismissButtonId = stringResource(R.string.cancel),
-                    onConfirmClick = {
-                        onActions(NoteListActions.OnDialogConfirm)
-                    },
-                    onDismissClick = {
-                        onActions(NoteListActions.OnDialogDismiss)
-                    },
-                )
-            }
-        } else {
-            Box(
+        Box(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            NoteMarkList(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(noteMarkListPaddingValues)
                     .padding(innerPadding),
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(top = 80.dp)
-                        .align(Alignment.TopCenter),
-                    text = stringResource(R.string.empty_notes),
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center
-                    ),
-                )
-            }
+                isLoading = state.isLoading,
+                verticalSpace = verticalSpace,
+                horizontalSpace = horizontalSpace,
+                notePagingFlow = notePagingFlow,
+                staggeredGridCells = staggeredGridCells,
+                onNoteClick = { noteUi ->
+                    onActions(NoteListActions.NavigateToNoteDetail(noteId = noteUi.id))
+                },
+                onNoteDelete = { noteUi ->
+                    onActions(NoteListActions.OnNoteDelete(noteId = noteUi.id!!))
+                },
+                refreshNotLoading = {
+                    onActions(NoteListActions.IsLoading(isLoading = false))
+                },
+                windowSizeClass = windowSizeClass,
+            )
+            NoteMarkDialog(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
+                showDialog = state.showDialog,
+                titleResId = stringResource(R.string.dialog_delete_title),
+                isLoading = state.dialogLoading,
+                bodyResId = stringResource(R.string.dialog_delete_body_text),
+                confirmButtonId = stringResource(R.string.delete),
+                dismissButtonId = stringResource(R.string.cancel),
+                onConfirmClick = {
+                    onActions(NoteListActions.OnDialogConfirm)
+                },
+                onDismissClick = {
+                    onActions(NoteListActions.OnDialogDismiss)
+                },
+            )
         }
     }
 }
@@ -241,32 +237,124 @@ fun NoteListTopBar(
 @Composable
 fun NoteMarkList(
     modifier: Modifier = Modifier,
+    isLoading: Boolean,
     verticalSpace: Dp,
     horizontalSpace: Dp,
-    noteMarkList: List<NoteUi>,
+    notePagingFlow: LazyPagingItems<NoteUi>,
     staggeredGridCells: StaggeredGridCells,
     onNoteClick: (NoteUi) -> Unit,
     onNoteDelete: (NoteUi) -> Unit,
+    refreshNotLoading: () -> Unit,
     windowSizeClass: WindowSizeClass
 ) {
     val state = rememberLazyStaggeredGridState()
-    LazyVerticalStaggeredGrid(
+
+    val loadState = notePagingFlow.loadState
+
+    Column(
         modifier = modifier,
-        columns = staggeredGridCells,
-        verticalItemSpacing = verticalSpace,
-        horizontalArrangement = Arrangement.spacedBy(horizontalSpace),
-        state = state,
+        verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        items(items = noteMarkList, key = {
-            it.id!!
-        }) { noteMark ->
-            NoteListItem(
-                modifier = Modifier.fillMaxWidth(),
-                noteUi = noteMark,
-                onNoteClick = onNoteClick,
-                onNoteDelete = onNoteDelete,
-                windowSizeClass = windowSizeClass
-            )
+        when (loadState.refresh) {
+            is LoadState.Error -> {
+                Timber.tag("NoteRemoteMediator").d("refresh: error")
+                //set loading to false
+                refreshNotLoading()
+                PagingError(
+                    modifier = Modifier,
+                    id = R.string.refresh,
+                    onPagingPerform = {
+                        notePagingFlow.refresh()
+                    }
+                )
+            }
+
+            LoadState.Loading -> Timber.tag("NoteRemoteMediator").d("refresh: loading")
+            is LoadState.NotLoading -> {
+                Timber.tag("NoteRemoteMediator").d("refresh: notLoading")
+                //set loading to false
+                refreshNotLoading()
+            }
+        }
+
+        when (loadState.prepend) {
+            is LoadState.Error -> Timber.tag("NoteRemoteMediator").d("prepend: error")
+            LoadState.Loading -> Timber.tag("NoteRemoteMediator").d("prepend: loading")
+            is LoadState.NotLoading -> Timber.tag("NoteRemoteMediator").d("prepend: notLoading")
+        }
+
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(modifier = Modifier.size(200.dp))
+            }
+        } else {
+            if (notePagingFlow.itemCount != 0) {
+                LazyVerticalStaggeredGrid(
+                    modifier = Modifier.fillMaxWidth(),
+                    columns = staggeredGridCells,
+                    verticalItemSpacing = verticalSpace,
+                    horizontalArrangement = Arrangement.spacedBy(horizontalSpace),
+                    state = state,
+                ) {
+                    items(count = notePagingFlow.itemCount, key = notePagingFlow.itemKey {
+                        it.id!!
+                    }) { index ->
+                        val note = notePagingFlow[index]
+                        note?.let {
+                            NoteListItem(
+                                modifier = Modifier.fillMaxWidth(),
+                                noteUi = note,
+                                onNoteClick = onNoteClick,
+                                onNoteDelete = onNoteDelete,
+                                windowSizeClass = windowSizeClass
+                            )
+                        }
+                    }
+                    when (loadState.append) {
+                        is LoadState.Error -> {
+                            Timber.tag("NoteRemoteMediator").d("append: error")
+                            //retry() resume from last page
+                            item(
+                                span = StaggeredGridItemSpan.FullLine
+                            ) {
+                                PagingError(
+                                    id = R.string.retry,
+                                    onPagingPerform = { notePagingFlow.retry() }
+                                )
+                            }
+                        }
+
+                        LoadState.Loading -> {
+                            Timber.tag("NoteRemoteMediator").d("append: loading")
+                            //GridItemSpan(maxLineSpan) placing it in single row to center
+                            item(span = StaggeredGridItemSpan.FullLine) {
+                                Column {
+                                    LoadingItems()
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                }
+                            }
+                        }
+
+                        is LoadState.NotLoading -> Timber.tag("NoteRemoteMediator").d("append: notLoading")
+                    }
+                }
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(top = 80.dp)
+                            .align(Alignment.TopCenter),
+                        text = stringResource(R.string.empty_notes),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        ),
+                    )
+                }
+            }
         }
     }
 }
@@ -327,4 +415,56 @@ fun NoteListItem(
     }
 }
 
+@Composable
+fun PagingError(
+    modifier: Modifier = Modifier,
+    @StringRes id: Int,
+    onPagingPerform: () -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        Text(
+            modifier = Modifier,
+            text = stringResource(R.string.no_internet),
+            style = MaterialTheme.typography.titleSmall
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Button(
+            modifier = Modifier,
+            onClick = {
+                onPagingPerform()
+            }
+        ) {
+            Text(
+                modifier = Modifier,
+                text = stringResource(id),
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun LoadingItems() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(52.dp)
+                .padding(8.dp),
+            strokeWidth = 5.dp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+        )
+    }
+}
 

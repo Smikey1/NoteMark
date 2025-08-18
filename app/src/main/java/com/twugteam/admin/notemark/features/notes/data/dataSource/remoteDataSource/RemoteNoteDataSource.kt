@@ -8,7 +8,8 @@ import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataS
 
 interface RemoteNoteDataSource {
     suspend fun fetchNotesById(id: NoteId): Result<Note, DataError.Network>
-    suspend fun fetchAllNotes(page: Int = -1, size: Int = 0): Result<List<Note>, DataError.Network>
+    suspend fun fetchNotesByPageAndSize(page: Int = -1, size: Int = 0): Result<List<Note>, DataError.Network>
+    suspend fun fetchNotesTotal(): Result<Int, DataError.Network>
     suspend fun postNote(note: Note): Result<Note, DataError.Network>
     suspend fun putNote(note: Note): Result<Note, DataError.Network>
     suspend fun deleteNoteById(id: NoteId): EmptyResult<DataError.Network>

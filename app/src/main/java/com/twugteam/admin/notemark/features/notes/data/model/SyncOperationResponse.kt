@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 @Keep
 @Serializable
 data class SyncOperationResponse(
-    val notes: List<NoteDto>
+    val notes: List<NoteDto>,
+    val total: Int
 )
