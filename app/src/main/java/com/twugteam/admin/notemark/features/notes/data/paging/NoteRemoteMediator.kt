@@ -10,7 +10,6 @@ import com.twugteam.admin.notemark.core.database.notes.NoteEntity
 import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.LocalNoteDataSource
 import com.twugteam.admin.notemark.features.notes.data.dataSource.remoteDataSource.RemoteNoteDataSource
-import kotlinx.coroutines.delay
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)

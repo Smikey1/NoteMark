@@ -13,7 +13,6 @@ import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.toNoteUi
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.util.getInitial
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
@@ -76,7 +75,6 @@ class NoteListViewModel(
 
     private fun isLoading(isLoading: Boolean) {
         viewModelScope.launch {
-        delay(2000)
         _state.update { newState ->
             newState.copy(
                 isLoading = isLoading

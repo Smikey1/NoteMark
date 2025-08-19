@@ -17,8 +17,4 @@ interface SyncDao {
 
     @Query("SELECT * FROM SyncEntity WHERE noteId = :noteId LIMIT 1")
     suspend fun getSyncEntityByNoteId(noteId: String): SyncEntity?
-
-    @Query("DELETE FROM SyncEntity WHERE userId = :userId")
-    suspend fun clearSync(userId: String)
-
 }

@@ -42,6 +42,7 @@ changes will be lost.</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
 
+    //network error
     <string name="error_email_password_incorrect">Either email or password is incorrect.</string>
     <string name="error_disk_full">Failed to save the item because your disk is full.</string>
     <string name="error_request_timeout">The request timed out.</string>
@@ -52,6 +53,8 @@ changes will be lost.</string>
     <string name="error_serialization">Oops, couldn\'t parse data.</string>
     <string name="error_unknown">An unknown error occurred.</string>
     <string name="error_conflict">Username or Email already exists!</string>
+
+
     <string name="settings">Settings</string>
     <string name="back">Back</string>
     <string name="logout">Logout</string>
