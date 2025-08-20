@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.presentation.ui.UiText
+import com.twugteam.admin.notemark.core.presentation.ui.UiText.*
 import com.twugteam.admin.notemark.core.presentation.ui.toNote
 import com.twugteam.admin.notemark.core.presentation.ui.toNoteUi
 import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
@@ -73,7 +74,6 @@ class NoteDetailViewModel(
         _state.update { newState ->
             newState.copy(
                 noteUi = note.toNoteUi(),
-                originalNote = note.toNoteUi()
             )
         }
         //show in viewMode
@@ -89,18 +89,18 @@ class NoteDetailViewModel(
             is NoteDetailActions.UpdateNoteDetailUiTitle -> updateNoteUiTitle(noteTitle = noteDetailActions.noteTitle)
             NoteDetailActions.OnDialogDismiss -> onDialogCancel()
             NoteDetailActions.OnSaveNoteDetailClick -> onDialogShow(
-                titleResId = UiText.StringResource(R.string.dialog_save_title),
-                bodyResId = UiText.StringResource(R.string.dialog_save_body_text),
-                confirmButtonId = UiText.StringResource(R.string.save),
-                dismissButtonId = UiText.StringResource(R.string.cancel),
+                titleResId = StringResource(R.string.dialog_save_title),
+                bodyResId = StringResource(R.string.dialog_save_body_text),
+                confirmButtonId = StringResource(R.string.save),
+                dismissButtonId = StringResource(R.string.cancel),
                 isSaveNote = true,
             )
 
             NoteDetailActions.OnCloseIconClick -> onDialogShow(
-                titleResId = UiText.StringResource(R.string.dialog_discard_title),
-                bodyResId = UiText.StringResource(R.string.dialog_discard_body_text),
-                confirmButtonId = UiText.StringResource(R.string.discard),
-                dismissButtonId = UiText.StringResource(R.string.keep_editing),
+                titleResId = StringResource(R.string.dialog_discard_title),
+                bodyResId = StringResource(R.string.dialog_discard_body_text),
+                confirmButtonId = StringResource(R.string.discard),
+                dismissButtonId = StringResource(R.string.keep_editing),
                 isSaveNote = false,
             )
 
@@ -111,6 +111,13 @@ class NoteDetailViewModel(
             is NoteDetailActions.SetReadModeActivate -> setReadModeActivate(isReadModeActivate = noteDetailActions.isReadModeActivate)
 
             is NoteDetailActions.OnScreenTap -> onScreenTap()
+            is NoteDetailActions.ShowSelectedBottomBar -> showToast(selectedMode = noteDetailActions.selectedMode)
+        }
+    }
+
+    private fun showToast(selectedMode: UiText){
+        viewModelScope.launch {
+            _events.send(NoteDetailEvents.ShowToast(selectedMode = selectedMode))
         }
     }
 
@@ -276,8 +283,12 @@ class NoteDetailViewModel(
                     Timber.tag("MyTag")
                         .d("upsertNoteViewModel: saveNote: success: ${saveNoteResult.data}")
 
-                    //set view mode if the new note is saved
-                    setViewMode()
+                    if(!isAdd) {
+                        //set view mode if the new note is saved
+                        setViewMode()
+                    }else{
+                        _events.send(NoteDetailEvents.NavigateToNoteList)
+                    }
                 }
             }
         }

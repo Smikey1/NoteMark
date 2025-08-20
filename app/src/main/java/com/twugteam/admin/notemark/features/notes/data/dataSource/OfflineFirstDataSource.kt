@@ -11,18 +11,17 @@ import com.twugteam.admin.notemark.core.domain.util.Result
 import com.twugteam.admin.notemark.core.domain.util.asEmptyDataResult
 import com.twugteam.admin.notemark.core.presentation.ui.formatToString
 import com.twugteam.admin.notemark.features.notes.constant.Constants
-import com.twugteam.admin.notemark.features.notes.data.model.toDto
 import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.LocalNoteDataSource
-import com.twugteam.admin.notemark.features.notes.data.dataSource.localSyncDataSource.LocalSyncDataSource
 import com.twugteam.admin.notemark.features.notes.data.dataSource.localNoteDataSource.NoteId
-import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
+import com.twugteam.admin.notemark.features.notes.data.dataSource.localSyncDataSource.LocalSyncDataSource
 import com.twugteam.admin.notemark.features.notes.data.dataSource.remoteDataSource.RemoteNoteDataSource
+import com.twugteam.admin.notemark.features.notes.data.model.toDto
+import com.twugteam.admin.notemark.features.notes.domain.NoteRepository
 import com.twugteam.admin.notemark.features.notes.domain.SyncIntervalDataStore
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.authProvider
 import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.ZoneId
@@ -42,11 +41,8 @@ class OfflineFirstDataSource(
         return localNoteDataSource.getNotesById(id)
     }
 
-    override fun getNotes(): Flow<List<Note>> {
-        return localNoteDataSource.getAllNotes()
-    }
-
     override suspend fun upsertNote(note: Note, isAdd: Boolean): EmptyResult<DataError> {
+        Timber.tag("MyTag").d("upsertNote: noteId: ${note.id}")
         val localResult = localNoteDataSource.upsertNote(note)
         if (localResult !is Result.Success) {
             return localResult.asEmptyDataResult()
@@ -59,6 +55,7 @@ class OfflineFirstDataSource(
             //note(id = "") but when being saved it will randomly generate it so we have to return it in result
             val noteWithId = note.copy(id = localResult.data)
 
+            Timber.tag("MyTag").d("upsertNote: noteWithId: ${localResult.data}")
 
             //adding new note (isAdd)
             //updating existing note (!isAdd)
@@ -70,12 +67,15 @@ class OfflineFirstDataSource(
 
             when (remoteDataSource) {
                 is Result.Error -> {
+                    Timber.tag("MyTag")
+                        .e("remoteDataSource: upsertNote error is : ${remoteDataSource.error}")
                     //get userId
                     val userId = sessionStorage.getAuthInfo()?.userId ?: ""
 
                     //noteWithId.d?
                     //converting to noteDto to serialize the data as (json encode/decode)
                     val noteDto = note.copy(id = noteWithId.id ?: "").toDto()
+                    Timber.tag("MyTag").d("upsertNote: noteDTO: ${noteDto.id}")
 
                     //get sync entity with this noteId if already exist in table
                     val syncEntityExist =
@@ -98,8 +98,7 @@ class OfflineFirstDataSource(
                         timeStamp = ZonedDateTime.now(ZoneId.of("UTC")).formatToString()
                     )
                     localSyncDataSource.upsertSyncOperation(syncEntity = syncEntity)
-                    Timber.tag("MyTag")
-                        .e("remoteDataSource: upsertNote error is : ${remoteDataSource.error}")
+
                 }
 
                 is Result.Success -> {
@@ -139,9 +138,8 @@ class OfflineFirstDataSource(
                 is Result.Error -> {
                     Timber.tag("MyTag")
                         .e("remoteDataSource: deleteNoteById error is : ${remoteResult.error}")
-                    //get userId
 
-                    //
+                    //insert operation into sync table
                     localSyncDataSource.upsertSyncOperation(
                         syncEntity = SyncEntity(
                             userId = userId,
@@ -156,6 +154,13 @@ class OfflineFirstDataSource(
                 is Result.Success -> {
                     Timber.tag("MyTag")
                         .d("remoteDataSource: deleteNoteById success is")
+                    //check if it's in sync table and remove it since it was delete from server and local
+                    //syncing while it exist will lead to error since it's not in server anymore
+                    if(syncEntityExist?.operation == SyncOperation.UPDATE){
+                        //remove this sync operation from sync entity
+                        localSyncDataSource.deleteSyncOperation(userId = userId, noteId = id)
+                        return@launch
+                    }
                 }
             }
         }.join()

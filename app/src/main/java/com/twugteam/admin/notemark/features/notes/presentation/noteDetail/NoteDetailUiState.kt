@@ -6,8 +6,8 @@ import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.No
 
 data class NoteDetailUiState(
     val noteUi: NoteUi? = null,
-    val originalNote: NoteUi? = null,
     val mode: Mode = Mode(),
+    //check if this activate so show animated visibility for content and hide them check viewMode how it works
     val isReadModeActivate: Boolean = false,
     val isLoading: Boolean = false,
     val showDialog: Boolean = false,

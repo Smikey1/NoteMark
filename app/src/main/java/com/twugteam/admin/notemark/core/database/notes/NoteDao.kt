@@ -4,23 +4,22 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
+    //upsert(insert or update if exist) list of notes
     @Upsert
-    suspend fun insertAllNotes(notes: List<NoteEntity>)
+    suspend fun upsertAllNotes(notes: List<NoteEntity>)
 
+    //insert single note
     @Upsert
     suspend fun upsertNote(noteEntity: NoteEntity)
 
     @Query("select * from NoteEntity where id = :id")
     suspend fun getNoteById(id: String): NoteEntity
 
-    @Query("select * from NoteEntity order by lastEditedAt desc")
-    fun getAllNotes(): Flow<List<NoteEntity>>
-
-    @Query("SELECT * FROM NoteEntity")
+    //get all notes in Paging via RemoteMediator
+    @Query("SELECT * FROM NoteEntity ORDER BY lastEditedAt DESC")
     fun getPagingNotes(): PagingSource<Int, NoteEntity>
 
     @Query("delete from NoteEntity where id = :id")

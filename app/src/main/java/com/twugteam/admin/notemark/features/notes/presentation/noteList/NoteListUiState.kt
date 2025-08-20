@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.emptyFlow
 
 data class NoteListUiState(
     val notesPagingFlow: Flow<PagingData<NoteUi>> = emptyFlow(),
-    val isLoading: Boolean = true,
     val notes: List<NoteUi> = emptyList(),
     val username: String = "PL",
     val showDialog: Boolean = false,

@@ -7,8 +7,6 @@ import com.twugteam.admin.notemark.core.database.notes.NoteDao
 import com.twugteam.admin.notemark.core.domain.notes.Note
 import com.twugteam.admin.notemark.core.domain.util.DataError
 import com.twugteam.admin.notemark.core.domain.util.Result
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import timber.log.Timber
 
 class RoomLocalNoteDataSource(
@@ -17,7 +15,7 @@ class RoomLocalNoteDataSource(
 
     override suspend fun upsertAllNotes(notes: List<Note>) {
         try {
-            noteDao.insertAllNotes(notes = notes.map {
+            noteDao.upsertAllNotes(notes = notes.map {
                 it.toNoteEntity()
             })
             Timber.tag("MyTag").d("insertAllNotes: success")
@@ -28,14 +26,6 @@ class RoomLocalNoteDataSource(
 
     override suspend fun getNotesById(id: NoteId): Note {
         return noteDao.getNoteById(id).toNote()
-    }
-
-    override fun getAllNotes(): Flow<List<Note>> {
-        return noteDao.getAllNotes().map { entities ->
-            entities.map {
-                it.toNote()
-            }
-        }
     }
 
     override suspend fun upsertNote(note: Note): Result<NoteId, DataError.Local> {

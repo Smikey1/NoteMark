@@ -5,13 +5,14 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.R
+import com.twugteam.admin.notemark.core.presentation.ui.UiText
 import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.NoteDetailActions
 import com.twugteam.admin.notemark.features.notes.presentation.noteDetail.NoteDetailUiState
 
@@ -63,33 +65,55 @@ fun NoteDetailBottomBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
-                IconButton(
+                Box(
                     modifier = Modifier
+                        .size(48.dp)
                         .padding(4.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(
                             color = if (state.mode.isEdit) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surface
+                        )
+                        .combinedClickable(
+                            onClick = {
+                                onActions(NoteDetailActions.EditMode)
+                            },
+                            onLongClick = {
+                                onActions(
+                                    NoteDetailActions.ShowSelectedBottomBar(
+                                        UiText.StringResource(
+                                            R.string.edit
+                                        )
+                                    )
+                                )
+                            }
                         ),
-                    onClick = {
-                        onActions(NoteDetailActions.EditMode)
-                    }
+                    contentAlignment = Alignment.Center
                 ) {
                     Icon(
+
                         imageVector = ImageVector.vectorResource(R.drawable.edit),
                         contentDescription = stringResource(R.string.edit),
                         tint = if (state.mode.isEdit) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                     )
                 }
-                IconButton(
+
+                Box(
                     modifier = Modifier
+                        .size(48.dp)
                         .padding(top = 4.dp, bottom = 4.dp, end = 4.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(
                             if (state.mode.isReader) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surface
+                        )
+                        .combinedClickable(
+                            onClick = {
+                                onActions(NoteDetailActions.ReaderMode)
+                            },
+                            onLongClick = {
+                                onActions(NoteDetailActions.ShowSelectedBottomBar(UiText.StringResource(R.string.reader)))
+                            }
                         ),
-                    onClick = {
-                        onActions(NoteDetailActions.ReaderMode)
-                    }
+                    contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.reader),

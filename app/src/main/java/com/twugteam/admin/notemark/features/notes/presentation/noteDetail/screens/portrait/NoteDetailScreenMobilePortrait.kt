@@ -115,7 +115,7 @@ fun NoteDetailEditOrAddMobilePortraitTopBar(
             Icon(
                 modifier = Modifier,
                 imageVector = NoteMarkIcons.Close,
-                contentDescription = "Close",
+                contentDescription = stringResource(R.string.close),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }

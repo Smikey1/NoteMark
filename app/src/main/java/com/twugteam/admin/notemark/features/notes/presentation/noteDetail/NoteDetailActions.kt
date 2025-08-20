@@ -1,5 +1,6 @@
 package com.twugteam.admin.notemark.features.notes.presentation.noteDetail
 
+import com.twugteam.admin.notemark.core.presentation.ui.UiText
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.model.NoteUi
 
 sealed interface NoteDetailActions {
@@ -15,4 +16,5 @@ sealed interface NoteDetailActions {
     data object ReaderMode: NoteDetailActions
     data object OnScreenTap: NoteDetailActions
     data class SetReadModeActivate(val isReadModeActivate: Boolean): NoteDetailActions
+    data class ShowSelectedBottomBar(val selectedMode: UiText): NoteDetailActions
 }

@@ -29,7 +29,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -49,6 +48,7 @@ import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
+import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkSnackBar
 import com.twugteam.admin.notemark.core.presentation.ui.formatToUiText
 import com.twugteam.admin.notemark.features.notes.data.model.SyncInterval
 import com.twugteam.admin.notemark.features.notes.presentation.settings.SettingsActions
@@ -69,7 +69,7 @@ fun SettingsSharedScreen(
 
     LaunchedEffect(state.showSnackBar) {
         if (state.showSnackBar) {
-            snackBarHostState.showSnackbar(message = state.snackBarText.asString(context))
+            snackBarHostState.showSnackbar(message = state.snackBarText.asString(context), withDismissAction = true)
         }
     }
 
@@ -89,13 +89,9 @@ fun SettingsSharedScreen(
             SnackbarHost(
                 hostState = snackBarHostState,
                 snackbar = { data ->
-                    Snackbar(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = SurfaceLowest,
-                        actionColor = Color.Green,
-                        actionContentColor = Color.Blue,
-                        dismissActionContentColor = Color.Red,
-                        snackbarData = data
+                    NoteMarkSnackBar(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        data = data
                     )
                 })
         }

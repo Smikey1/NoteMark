@@ -69,20 +69,8 @@ class NoteListViewModel(
             NoteListActions.OnDialogConfirm -> deleteNote()
             NoteListActions.OnDialogDismiss -> onDialogCancel()
             NoteListActions.NavigateToSettings -> navigateToSettings()
-            is NoteListActions.IsLoading -> isLoading(isLoading = noteListActions.isLoading)
         }
     }
-
-    private fun isLoading(isLoading: Boolean) {
-        viewModelScope.launch {
-        _state.update { newState ->
-            newState.copy(
-                isLoading = isLoading
-            )
-        }
-            }
-    }
-
 
     private fun getNetworkConnectivity() {
         viewModelScope.launch {

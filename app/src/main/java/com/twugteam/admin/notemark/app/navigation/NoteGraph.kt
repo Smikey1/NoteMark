@@ -3,6 +3,7 @@ package com.twugteam.admin.notemark.app.navigation
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.widget.Toast
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -76,6 +77,11 @@ fun NavGraphBuilder.noteGraph(
                 Timber.tag("MyTag").d("event: $event")
                 when (event) {
                     NoteDetailEvents.Close -> navController.navigateUp()
+                    NoteDetailEvents.NavigateToNoteList -> navController.navigateUp()
+                    is NoteDetailEvents.ShowToast -> Toast.makeText(
+                        context, event.selectedMode.asString(context),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
 

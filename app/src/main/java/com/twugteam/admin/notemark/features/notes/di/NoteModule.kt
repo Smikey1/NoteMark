@@ -57,7 +57,9 @@ val noteModule = module {
         NoteRemoteMediator(
             database = get(),
             remoteNoteDataSource = get(),
-            localNoteDataSource = get()
+            localNoteDataSource = get(),
+            sessionStorage = get(),
+            localSyncDataSource = get()
         )
     }
 
@@ -72,7 +74,9 @@ val noteModule = module {
             remoteMediator = NoteRemoteMediator(
                 database = get(),
                 remoteNoteDataSource = get(),
-                localNoteDataSource = get()
+                localNoteDataSource = get(),
+                sessionStorage = get(),
+                localSyncDataSource = get()
             ),
             pagingSourceFactory = {
                 get<NoteDao>().getPagingNotes()

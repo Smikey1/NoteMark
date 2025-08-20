@@ -126,7 +126,6 @@ fun NoteListSharedScreen(
                     .fillMaxSize()
                     .padding(noteMarkListPaddingValues)
                     .padding(innerPadding),
-                isLoading = state.isLoading,
                 verticalSpace = verticalSpace,
                 horizontalSpace = horizontalSpace,
                 notePagingFlow = notePagingFlow,
@@ -136,9 +135,6 @@ fun NoteListSharedScreen(
                 },
                 onNoteDelete = { noteUi ->
                     onActions(NoteListActions.OnNoteDelete(noteId = noteUi.id!!))
-                },
-                refreshNotLoading = {
-                    onActions(NoteListActions.IsLoading(isLoading = false))
                 },
                 windowSizeClass = windowSizeClass,
             )
@@ -237,19 +233,21 @@ fun NoteListTopBar(
 @Composable
 fun NoteMarkList(
     modifier: Modifier = Modifier,
-    isLoading: Boolean,
     verticalSpace: Dp,
     horizontalSpace: Dp,
     notePagingFlow: LazyPagingItems<NoteUi>,
     staggeredGridCells: StaggeredGridCells,
     onNoteClick: (NoteUi) -> Unit,
     onNoteDelete: (NoteUi) -> Unit,
-    refreshNotLoading: () -> Unit,
     windowSizeClass: WindowSizeClass
 ) {
     val state = rememberLazyStaggeredGridState()
 
     val loadState = notePagingFlow.loadState
+
+    val isRefreshing = loadState.refresh is LoadState.Loading
+
+    val notesIsEmpty = notePagingFlow.itemCount == 0
 
     Column(
         modifier = modifier,
@@ -258,8 +256,6 @@ fun NoteMarkList(
         when (loadState.refresh) {
             is LoadState.Error -> {
                 Timber.tag("NoteRemoteMediator").d("refresh: error")
-                //set loading to false
-                refreshNotLoading()
                 PagingError(
                     modifier = Modifier,
                     id = R.string.refresh,
@@ -270,10 +266,26 @@ fun NoteMarkList(
             }
 
             LoadState.Loading -> Timber.tag("NoteRemoteMediator").d("refresh: loading")
+
             is LoadState.NotLoading -> {
                 Timber.tag("NoteRemoteMediator").d("refresh: notLoading")
-                //set loading to false
-                refreshNotLoading()
+                if (notesIsEmpty) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(top = 80.dp)
+                                .align(Alignment.TopCenter),
+                            text = stringResource(R.string.empty_notes),
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center
+                            ),
+                        )
+                    }
+                }
             }
         }
 
@@ -283,12 +295,12 @@ fun NoteMarkList(
             is LoadState.NotLoading -> Timber.tag("NoteRemoteMediator").d("prepend: notLoading")
         }
 
-        if (isLoading) {
+        if (isRefreshing) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(modifier = Modifier.size(200.dp))
             }
         } else {
-            if (notePagingFlow.itemCount != 0) {
+            if (!notesIsEmpty) {
                 LazyVerticalStaggeredGrid(
                     modifier = Modifier.fillMaxWidth(),
                     columns = staggeredGridCells,
@@ -335,24 +347,9 @@ fun NoteMarkList(
                             }
                         }
 
-                        is LoadState.NotLoading -> Timber.tag("NoteRemoteMediator").d("append: notLoading")
+                        is LoadState.NotLoading -> Timber.tag("NoteRemoteMediator")
+                            .d("append: notLoading")
                     }
-                }
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(top = 80.dp)
-                            .align(Alignment.TopCenter),
-                        text = stringResource(R.string.empty_notes),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center
-                        ),
-                    )
                 }
             }
         }

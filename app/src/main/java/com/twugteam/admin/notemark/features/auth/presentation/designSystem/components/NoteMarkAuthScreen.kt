@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -34,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.twugteam.admin.notemark.core.presentation.designsystem.ScaffoldLinearGradientFirst
 import com.twugteam.admin.notemark.core.presentation.designsystem.ScaffoldLinearGradientSecond
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
+import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkSnackBar
 
 @Composable
 fun NoteMarkAuthScreen(
@@ -58,7 +58,7 @@ fun NoteMarkAuthScreen(
 
     LaunchedEffect(showSnackBar) {
         if (showSnackBar) {
-            snackBarHostState.showSnackbar(message = snackBarText)
+            snackBarHostState.showSnackbar(message = snackBarText, withDismissAction = true)
         }
     }
 
@@ -73,13 +73,9 @@ fun NoteMarkAuthScreen(
                 SnackbarHost(
                     hostState = snackBarHostState,
                     snackbar = { data ->
-                        Snackbar(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = SurfaceLowest,
-                            actionColor = Color.Green,
-                            actionContentColor = Color.Blue,
-                            dismissActionContentColor = Color.Red,
-                            snackbarData = data
+                        NoteMarkSnackBar(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                            data = data
                         )
                     })
             }

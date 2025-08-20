@@ -48,7 +48,7 @@ class SyncingWorker(
                     localSyncDataSource.getAllSyncOperationsByUserId(userId = userId)
 
                 syncOperations?.let { syncOperation ->
-                    syncOperations.forEach { sync ->
+                    syncOperation.forEach { sync ->
                         result = when (sync.operation) {
                             SyncOperation.ADD -> {
                                 remoteNoteDataSource.postNote(note = sync.payload!!.toNote())
