@@ -33,16 +33,68 @@
 
 ## 📲 Screenshots
 
-<div style = "text-align: center;">
-  <img src="screenshots/splash_screen.png" width="400" alt="Splash Screen"/>
-  <img src="screenshots/landing_screen.png" width="400" alt="Landing Screen"/>
- <img src="screenshots/register_screen.png" width="400" alt="Register Screen"/>
- <img src="screenshots/login_screen.png" width="400" alt="LogIn Screen"/>
- <img src="screenshots/noteList_screen.png" width="400" alt="NoteList Screen"/>
- <img src="screenshots/noteDetail_screen.png" width="400" alt="NoteDetail Screen"/>
- <img src="screenshots/noteEdit_screen.png" width="400" alt="NoteEdit Screen"/>
- <img src="screenshots/settings_screen.png" width="400" alt="Settings Screen"/>
-</div>  
+<div style="text-align: center;">
+  <figure>
+    <p>Splash Screen</p>
+    <img src="screenshots/splash_screen.png" width="400" alt="Splash Screen"/>
+  </figure>
+
+  <figure>
+    <p>Landing Screen</p>
+    <img src="screenshots/landing_screen.png" width="400" alt="Landing Screen"/>
+  </figure>
+
+  <figure>
+    <p>LogIn Screen</p>
+    <img src="screenshots/login_screen.png" width="400" alt="LogIn Screen"/>
+  </figure>
+
+  <figure>
+    <p>Register Screen</p>
+    <img src="screenshots/register_screen.png" width="400" alt="Register Screen"/>
+  </figure>
+
+  <figure>
+    <p>NoteList Mobile Loading Screen</p>
+    <img src="screenshots/noteList_loading_screen.png" width="400" alt="NoteList Mobile Loading Screen"/>
+  </figure>
+
+  <figure>
+    <p>NoteList Mobile Portrait Screen</p>
+    <img src="screenshots/noteList_mobile_screen.png" width="400" alt="NoteList Mobile Portrait Screen"/>
+  </figure>
+
+  <figure>
+    <p>NoteList Mobile Landscape Screen</p>
+    <img src="screenshots/noteList_mobile_landscape_screen.png" width="400" alt="NoteList Mobile Landscape Screen"/>
+  </figure>
+
+  <figure>
+    <p>NoteList Tablet Portrait Screen</p>
+    <img src="screenshots/noteList_tablet_screen.png" width="400" alt="NoteList Tablet Portrait Screen"/>
+  </figure>
+
+  <figure>
+    <p>NoteList Tablet Landscape Screen</p>
+    <img src="screenshots/noteList_tablet_landscape_screen.png" width="400" alt="NoteList Tablet Landscape Screen"/>
+  </figure>
+
+  <figure>
+    <p>NoteDetail Screen</p>
+    <img src="screenshots/noteDetail_screen.png" width="400" alt="NoteDetail Screen"/>
+  </figure>
+
+  <figure>
+    <p>NoteEdit Screen</p>
+    <img src="screenshots/noteEdit_screen.png" width="400" alt="NoteEdit Screen"/>
+  </figure>
+
+  <figure>
+    <p>Settings Screen</p>
+    <img src="screenshots/settings_screen.png" width="400" alt="Settings Screen"/>
+  </figure>
+</div>
+
 
 ---
 
