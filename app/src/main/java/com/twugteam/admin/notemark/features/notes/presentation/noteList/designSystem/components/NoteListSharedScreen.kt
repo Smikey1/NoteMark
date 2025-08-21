@@ -31,6 +31,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,9 +50,9 @@ import androidx.paging.compose.itemKey
 import com.twugteam.admin.notemark.R
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons
 import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkIcons.CloudOff
-import com.twugteam.admin.notemark.core.presentation.designsystem.NoteMarkTheme
 import com.twugteam.admin.notemark.core.presentation.designsystem.SurfaceLowest
 import com.twugteam.admin.notemark.core.presentation.designsystem.components.NoteMarkDialog
+import com.twugteam.admin.notemark.core.presentation.designsystem.components.ShimmerEffect
 import com.twugteam.admin.notemark.core.presentation.ui.formatAsNoteDate
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListActions
 import com.twugteam.admin.notemark.features.notes.presentation.noteList.NoteListUiState
@@ -297,7 +298,12 @@ fun NoteMarkList(
 
         if (isRefreshing) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(modifier = Modifier.size(200.dp))
+                ShimmerNoteList(
+                    modifier = Modifier,
+                    verticalSpace = verticalSpace,
+                    horizontalSpace = horizontalSpace,
+                    staggeredGridCells = staggeredGridCells
+                )
             }
         } else {
             if (!notesIsEmpty) {
@@ -364,7 +370,6 @@ fun NoteListItem(
     onNoteDelete: (NoteUi) -> Unit,
     windowSizeClass: WindowSizeClass
 ) {
-    NoteMarkTheme {
         Surface(
             //clip is used because when using shape if we click. longClick on the item it will show background
             //without roundedCornerRadius
@@ -409,7 +414,6 @@ fun NoteListItem(
                 )
             }
         }
-    }
 }
 
 @Composable
@@ -462,6 +466,48 @@ fun LoadingItems() {
             strokeWidth = 5.dp,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
         )
+    }
+}
+
+@Composable
+fun ShimmerNoteList(
+    modifier: Modifier = Modifier,
+    verticalSpace: Dp,
+    horizontalSpace: Dp,
+    staggeredGridCells: StaggeredGridCells,
+) {
+    //here show 20 items and each should have different height
+    val randomHeights = rememberSaveable { List(20) { (80..220).random().dp } }
+
+    LazyVerticalStaggeredGrid(
+        modifier = modifier,
+        columns = staggeredGridCells,
+        verticalItemSpacing = verticalSpace,
+        horizontalArrangement = Arrangement.spacedBy(horizontalSpace)
+    ) {
+        items(count = 20){ index->
+            NoteListItemShimmer(
+                modifier = Modifier.fillMaxWidth(),
+                height = randomHeights[index]
+            )
+        }
+    }
+}
+
+@Composable
+fun NoteListItemShimmer(
+    modifier: Modifier = Modifier,
+    height: Dp
+) {
+    Surface(
+        modifier = modifier
+            .height(height)
+            .clip(MaterialTheme.shapes.small),
+        color = SurfaceLowest
+    ) {
+        Box(Modifier.fillMaxSize()) {
+            ShimmerEffect(modifier = Modifier.matchParentSize())
+        }
     }
 }
 
