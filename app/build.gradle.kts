@@ -49,6 +49,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String","NOTEMARK_API_BASE_URL","\"${localProperties.getProperty("NOTEMARK_API_BASE_URL")}\"")
+            buildConfigField("String","AUTH_ENDPOINT","\"${localProperties.getProperty("AUTH_ENDPOINT")}\"")
+            buildConfigField("String","NOTES_ENDPOINT","\"${localProperties.getProperty("NOTES_ENDPOINT")}\"")
+            buildConfigField("String","EMAIL","\"${localProperties.getProperty("EMAIL")}\"")
+            buildConfigField("String","DELETE_ENDPOINT","\"${localProperties.getProperty("DELETE_ENDPOINT")}\"")
         }
     }
     compileOptions {
