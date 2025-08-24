@@ -71,6 +71,9 @@ fun NoteListSharedScreen(
     staggeredGridCells: StaggeredGridCells,
     state: NoteListUiState,
     onActions: (NoteListActions) -> Unit,
+    //windowSizeClass is used here because the textLimit is dependent on a function
+    //that takes text: String, and windowSizeClass that will return if the text needs to be
+    //ellipsis(...) or not
     windowSizeClass: WindowSizeClass
 ) {
     val notePagingFlow = state.notesPagingFlow.collectAsLazyPagingItems()

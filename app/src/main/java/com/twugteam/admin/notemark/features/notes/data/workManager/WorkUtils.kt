@@ -9,11 +9,11 @@ import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.twugteam.admin.notemark.R
-import com.twugteam.admin.notemark.core.constant.ApiEndpoints.CHANNEL_ID
-import com.twugteam.admin.notemark.core.constant.ApiEndpoints.NOTIFICATION_ID
-import com.twugteam.admin.notemark.core.constant.ApiEndpoints.NOTIFICATION_TITLE
-import com.twugteam.admin.notemark.core.constant.ApiEndpoints.VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION
-import com.twugteam.admin.notemark.core.constant.ApiEndpoints.VERBOSE_NOTIFICATION_CHANNEL_NAME
+import com.twugteam.admin.notemark.core.constant.NotificationConstants.CHANNEL_ID
+import com.twugteam.admin.notemark.core.constant.NotificationConstants.NOTIFICATION_ID
+import com.twugteam.admin.notemark.core.constant.NotificationConstants.NOTIFICATION_TITLE
+import com.twugteam.admin.notemark.core.constant.NotificationConstants.VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION
+import com.twugteam.admin.notemark.core.constant.NotificationConstants.VERBOSE_NOTIFICATION_CHANNEL_NAME
 import timber.log.Timber
 
 //google codeLab Background Work with WorkManager
